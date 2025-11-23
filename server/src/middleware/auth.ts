@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
 export function auth(requiredRole?: "globalAdmin" | "provinceAdmin") {
-	return (req: Request, res: Response, next: NextFunction) => {
+	return (req: any, res: Response, next: NextFunction) => {
 		const header = req.headers.authorization;
 		if (!header) return res.status(401).json({ error: "No token" });
 

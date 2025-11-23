@@ -1,25 +1,13 @@
-import "reflect-metadata";
-import { DataSource } from "typeorm";
-import { User } from "./entities/User";
-import { Province } from "./entities/Province";
-import { Employee } from "./entities/Employee";
-import { BasicInfo } from './entities/Employee/BasicInfo';
-import { WorkPlace } from './entities/Employee/WorkPlace';
-import { AdditionalSpecifications } from './entities/Employee/AdditionalSpecifications';
+import mongoose from 'mongoose';
 
-export const AppDataSource = new DataSource({
-  type: "sqlite",
-  database: "db.sqlite",
-  synchronize: true,
-  logging: false,
-  entities: [
-    User,
-    Province,
-    Employee,
-    // employee sub-entities
-    BasicInfo,
-    WorkPlace,
-    Performance,
-    AdditionalSpecifications,
-  ],
-});
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/ircdb';
+
+export const connectDB = async () => {
+  try {
+    await mongoose.connect(MONGODB_URI);
+    console.log('MongoDB connected');
+  } catch (err) {
+    console.error('MongoDB connection error:', err);
+    process.exit(1);
+  }
+};
