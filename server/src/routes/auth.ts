@@ -1,28 +1,27 @@
 import { Router } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { AppDataSource } from "../data-source";
 import { User } from "../entities/User";
 
 const router = Router();
-const userRepo = AppDataSource.getRepository(User);
+const UserModel = User;
 
 router.post("/login", async (req, res) => {
     const { username, password } = req.body;
 
-    const user = await userRepo.findOne({ where: { username }, relations: ["province"] });
+    const user = await UserModel.findOne({ username }).populate('provinceAdmin');
     if (!user) return res.status(401).json({ error: "Invalid credentials" });
 
     const valid = await bcrypt.compare(password, user.passwordHash);
     if (!valid) return res.status(401).json({ error: "Invalid credentials" });
 
     const token = jwt.sign(
-        { id: user.id, role: user.role, provinceId: user.provinceAdmin?.id },
+        { id: user._id, role: user.role, provinceId: user.provinceAdmin?._id },
         process.env.JWT_SECRET || "secret",
         { expiresIn: "1d" }
     );
 
-    res.json({ token, role: user.role, provinceId: user.provinceAdmin?.id });
+    res.json({ token, role: user.role, provinceId: user.provinceAdmin?._id });
 });
 
 export default router;

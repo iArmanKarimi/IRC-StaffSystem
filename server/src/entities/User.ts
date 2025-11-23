@@ -1,20 +1,19 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne } from "typeorm";
+import { Schema, model, models } from "mongoose";
 import { Province } from "./Province";
 
-@Entity()
-export class User {
-  @PrimaryGeneratedColumn()
-  id!: number;
+const UserSchema = new Schema({
+  username: {
+    type: String,
+    unique: true,
+    required: true,
+  },
+  passwordHash: { type: String, required: true },
+  role: {
+    type: String,
+    enum: ["globalAdmin", "provinceAdmin"],
+    required: true,
+  },
+  provinceAdmin: { type: Schema.Types.ObjectId, ref: "Province" },
+});
 
-  @Column({ unique: true })
-  username!: string;
-
-  @Column()
-  passwordHash!: string;
-
-  @Column({ type: "text" })
-  role!: "globalAdmin" | "provinceAdmin";
-
-  @OneToOne(() => Province, (province) => province.admin, { nullable: true })
-  provinceAdmin?: Province;
-}
+export const User = models.User || model("User", UserSchema);
