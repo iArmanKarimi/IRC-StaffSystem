@@ -4,7 +4,6 @@ import { User } from "../models/User";
 import { USER_ROLE } from "../types/roles";
 
 const router = Router();
-const UserModel = User;
 
 type LoginBody = {
     username: string;
@@ -19,7 +18,7 @@ router.post("/login", async (req: Request<Record<string, never>, any, LoginBody>
             return res.status(400).json({ error: "Username and password required" });
         }
 
-        const user = await UserModel.findOne({ username }).populate('provinceAdmin');
+        const user = await User.findOne({ username }).populate('provinceAdmin');
         if (!user) return res.status(401).json({ error: "Invalid credentials" });
 
         const valid = await bcrypt.compare(password, user.passwordHash);

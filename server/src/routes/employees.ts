@@ -4,6 +4,7 @@ import { auth, requireAnyRole, canAccessProvince, AuthenticatedUser } from "../m
 import { USER_ROLE } from "../types/roles";
 import mongoose from "mongoose";
 import { Province } from "../models/Province";
+import { HttpError } from "../utils/errors";
 
 
 const router = Router();
@@ -11,14 +12,6 @@ const router = Router();
 type EmployeeParams = { id: string };
 type ProvinceScopedBody = Record<string, unknown> & { provinceId?: string };
 type EmployeeDocument = NonNullable<Awaited<ReturnType<typeof Employee.findById>>>;
-
-// Custom error class for HTTP errors
-class HttpError extends Error {
-    constructor(public statusCode: number, message: string) {
-        super(message);
-        this.name = 'HttpError';
-    }
-}
 
 const ensureUser = (req: Request): AuthenticatedUser => {
     if (!req.user) {
