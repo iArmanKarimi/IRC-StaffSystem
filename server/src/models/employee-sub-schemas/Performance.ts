@@ -10,11 +10,11 @@ export interface IPerformance {
   absence: number;
   volunteerShiftCount: number;
   truckDriver: boolean;
-  monthYear: string;
+  month: string;
   notes?: string;
 }
 
-export const PerformanceSchema = new Schema({
+export const PerformanceSchema = new Schema<IPerformance>({
   dailyPerformance: { type: Number, required: true, min: 0 },
   shiftCountPerLocation: { type: Number, required: true, min: 0 },
   shiftDuration: { type: Number, required: true, enum: [8, 16, 24] },
@@ -24,6 +24,6 @@ export const PerformanceSchema = new Schema({
   absence: { type: Number, default: 0, min: 0 },
   volunteerShiftCount: { type: Number, default: 0, min: 0 },
   truckDriver: { type: Boolean, default: false },
-  monthYear: { type: String, required: true /* match: /^\d{4}-(0[1-9]|1[0-2])$/ */ },
+  month: { type: String, required: true /* match: /^\d{4}-(0[1-9]|1[0-2])$/ */ },
   notes: { type: String, trim: true }
 });

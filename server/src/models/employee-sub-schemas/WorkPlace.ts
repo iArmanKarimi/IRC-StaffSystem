@@ -8,7 +8,7 @@ export interface IWorkPlace {
   travelAssignment: boolean;
 }
 
-export const WorkPlaceSchema = new Schema({
+export const WorkPlaceSchema = new Schema<IWorkPlace>({
   provinceName: { type: String, required: true, trim: true },
   branch: { type: String, required: true, trim: true },
   rank: { type: String, required: true, trim: true },

@@ -70,7 +70,7 @@ export function requireAnyRole(req: Request, res: Response, next: NextFunction) 
 }
 
 // Helper function to check if user can access a specific province's resources
-// Returns true if user is globalAdmin or if provinceAdmin matches the resource's province
+// Returns true if user is globalAdmin or if provinceId matches the resource's province
 const normalizeProvinceId = (province: unknown): string | undefined => {
 	if (typeof province === "string") {
 		return province;

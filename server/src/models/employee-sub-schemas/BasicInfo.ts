@@ -9,7 +9,7 @@ export interface IBasicInfo {
   childrenCount: number;
 }
 
-export const BasicInfoSchema = new Schema({
+export const BasicInfoSchema = new Schema<IBasicInfo>({
   firstName: { type: String, required: true, trim: true },
   lastName: { type: String, required: true, trim: true },
   nationalID: { type: String, unique: true, required: true, trim: true },

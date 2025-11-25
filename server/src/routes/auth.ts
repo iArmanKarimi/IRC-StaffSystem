@@ -18,7 +18,7 @@ router.post("/login", async (req: Request<Record<string, never>, any, LoginBody>
             return res.status(400).json({ error: "Username and password required" });
         }
 
-        const user = await User.findOne({ username }).populate('provinceAdmin');
+        const user = await User.findOne({ username }).populate('provinceId');
         if (!user) return res.status(401).json({ error: "Invalid credentials" });
 
         const valid = await bcrypt.compare(password, user.passwordHash);
@@ -27,12 +27,12 @@ router.post("/login", async (req: Request<Record<string, never>, any, LoginBody>
         // Set session data
         req.session.userId = user._id.toString();
         req.session.role = user.role;
-        req.session.provinceId = user.provinceAdmin?._id.toString();
+        req.session.provinceId = user.provinceId?._id.toString();
 
         res.json({
             message: "Logged in successfully",
             role: user.role,
-            provinceId: user.provinceAdmin?._id
+            provinceId: user.provinceId?._id
         });
     } catch (err: unknown) {
         console.error("Error during login:", err);

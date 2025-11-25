@@ -8,7 +8,7 @@ export interface IUser extends Document {
   username: string;
   passwordHash: string;
   role: UserRole;
-  provinceAdmin?: Schema.Types.ObjectId;
+  provinceId?: Schema.Types.ObjectId;
 }
 
 const UserSchema = new Schema<IUser>({
@@ -23,12 +23,12 @@ const UserSchema = new Schema<IUser>({
     enum: UserRoleValues,
     required: true,
   },
-  provinceAdmin: { type: Schema.Types.ObjectId, ref: "Province" },
+  provinceId: { type: Schema.Types.ObjectId, ref: "Province" },
 });
 
 // Indexes for better query performance
 UserSchema.index({ username: 1 });
 UserSchema.index({ role: 1 });
-UserSchema.index({ provinceAdmin: 1 });
+UserSchema.index({ provinceId: 1 });
 
 export const User = models.User || model<IUser>("User", UserSchema);
