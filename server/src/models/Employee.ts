@@ -1,8 +1,8 @@
-import { Schema, model, models } from 'mongoose';
-import { IBasicInfo, BasicInfoSchema } from './employee-sub-schemas/BasicInfoSchema';
-import { IWorkPlace, WorkPlaceSchema } from './employee-sub-schemas/WorkPlaceSchema';
-import { IAdditionalSpecifications, AdditionalSpecificationsSchema } from './employee-sub-schemas/AdditionalSpecificationsSchema';
-import { IPerformance, PerformanceSchema } from './employee-sub-schemas/PerformanceSchema';
+import { Schema, model, models, Document } from 'mongoose';
+import { IBasicInfo, BasicInfoSchema } from './employee-sub-schemas/BasicInfo';
+import { IWorkPlace, WorkPlaceSchema } from './employee-sub-schemas/WorkPlace';
+import { IAdditionalSpecifications, AdditionalSpecificationsSchema } from './employee-sub-schemas/AdditionalSpecifications';
+import { IPerformance, PerformanceSchema } from './employee-sub-schemas/Performance';
 
 export interface IEmployee extends Document {
 	provinceId: Schema.Types.ObjectId;
@@ -14,12 +14,17 @@ export interface IEmployee extends Document {
 	updatedAt: Date;
 }
 
-const EmployeeSchema = new Schema({
+const EmployeeSchema = new Schema<IEmployee>({
 	provinceId: { type: Schema.Types.ObjectId, ref: 'Province', required: true },
 	basicInfo: { type: BasicInfoSchema, required: true },
 	workPlace: { type: WorkPlaceSchema, required: true },
 	additionalSpecifications: { type: AdditionalSpecificationsSchema, required: true },
-	performances: [PerformanceSchema]
+	performances: { type: [PerformanceSchema], required: true }
 }, { timestamps: true });
+
+// Indexes for better query performance
+EmployeeSchema.index({ provinceId: 1 });
+EmployeeSchema.index({ 'basicInfo.nationalID': 1 });
+EmployeeSchema.index({ createdAt: -1 });
 
 export const Employee = models.Employee || model<IEmployee>('Employee', EmployeeSchema);

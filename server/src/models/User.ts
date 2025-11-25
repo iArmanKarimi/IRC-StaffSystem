@@ -1,7 +1,17 @@
-import { Schema, model, models } from "mongoose";
+import { Schema, model, models, Document } from "mongoose";
 import { Province } from "./Province";
 
-const UserSchema = new Schema({
+type UserRole = "globalAdmin" | "provinceAdmin";
+const UserRoleValues: UserRole[] = ["globalAdmin", "provinceAdmin"];
+
+export interface IUser extends Document {
+  username: string;
+  passwordHash: string;
+  role: UserRole;
+  provinceAdmin?: Schema.Types.ObjectId;
+}
+
+const UserSchema = new Schema<IUser>({
   username: {
     type: String,
     unique: true,
@@ -10,10 +20,15 @@ const UserSchema = new Schema({
   passwordHash: { type: String, required: true },
   role: {
     type: String,
-    enum: ["globalAdmin", "provinceAdmin"],
+    enum: UserRoleValues,
     required: true,
   },
   provinceAdmin: { type: Schema.Types.ObjectId, ref: "Province" },
 });
 
-export const User = models.User || model("User", UserSchema);
+// Indexes for better query performance
+UserSchema.index({ username: 1 });
+UserSchema.index({ role: 1 });
+UserSchema.index({ provinceAdmin: 1 });
+
+export const User = models.User || model<IUser>("User", UserSchema);

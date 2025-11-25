@@ -1,10 +1,20 @@
-import { Schema, model, models } from "mongoose";
+import { Schema, model, models, Document } from "mongoose";
 import { User } from "./User";
 
-const ProvinceSchema = new Schema({
+export interface IProvince extends Document {
+  name: string;
+  admin: Schema.Types.ObjectId;
+  employees: Schema.Types.ObjectId[];
+}
+
+const ProvinceSchema = new Schema<IProvince>({
   name: { type: String, unique: true, required: true },
   admin: { type: Schema.Types.ObjectId, ref: "User", required: true },
   employees: [{ type: Schema.Types.ObjectId, ref: "Employee" }],
 });
 
-export const Province = models.Province || model("Province", ProvinceSchema);
+// Indexes for better query performance
+ProvinceSchema.index({ name: 1 });
+ProvinceSchema.index({ admin: 1 });
+
+export const Province = models.Province || model<IProvince>("Province", ProvinceSchema);
