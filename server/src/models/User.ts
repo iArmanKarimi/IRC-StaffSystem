@@ -1,15 +1,14 @@
 import { Schema, model, models, Document } from "mongoose";
-import { Province } from "./Province";
-
-type UserRole = "globalAdmin" | "provinceAdmin";
-const UserRoleValues: UserRole[] = ["globalAdmin", "provinceAdmin"];
+import { USER_ROLE, UserRoleType } from "../types/roles";
 
 export interface IUser extends Document {
 	username: string;
 	passwordHash: string;
-	role: UserRole;
+	role: UserRoleType;
 	provinceId?: Schema.Types.ObjectId;
 }
+
+const UserRoleValues: UserRoleType[] = [USER_ROLE.GLOBAL_ADMIN, USER_ROLE.PROVINCE_ADMIN];
 
 const UserSchema = new Schema<IUser>({
 	username: {
