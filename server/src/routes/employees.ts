@@ -1,13 +1,13 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { Employee } from "../models/Employee";
-import { auth, requireAnyRole, canAccessProvince, AuthenticatedUser } from "../middleware/auth";
+import { requireAnyRole, canAccessProvince, AuthenticatedUser } from "../middleware/auth";
 import { USER_ROLE } from "../types/roles";
 import { HttpError } from "../utils/errors";
 import { validateAndResolveProvinceId } from "../utils/provinceValidation";
 
-const router = Router();
+const router = Router({ mergeParams: true });
 
-type EmployeeParams = { id: string };
+type EmployeeParams = { provinceId: string; employeeId: string };
 type ProvinceScopedBody = Record<string, unknown> & { provinceId?: string };
 type EmployeeDocument = NonNullable<Awaited<ReturnType<typeof Employee.findById>>>;
 
@@ -18,66 +18,60 @@ const ensureUser = (req: Request): AuthenticatedUser => {
 	return req.user;
 };
 
-// Helper function to fetch employee and check province access
+// Helper function to validate user can access the province and fetch employee
 // Throws HttpError if employee not found or access denied
-const getEmployeeOrThrow = async (req: Request<EmployeeParams>): Promise<EmployeeDocument> => {
+const getEmployeeInProvinceOrThrow = async (
+	req: Request<EmployeeParams>,
+	provinceId: string
+): Promise<EmployeeDocument> => {
 	const user = ensureUser(req);
-	const employee = await Employee.findById(req.params.id).populate('provinceId');
+
+	// Check if user can access this province
+	if (!canAccessProvince(user, provinceId)) {
+		throw new HttpError(403, "Cannot access employees from another province");
+	}
+
+	const employee = await Employee.findById(req.params.employeeId).populate('provinceId');
 	if (!employee) {
 		throw new HttpError(404, "Employee not found");
 	}
 
 	const employeeProvinceId = employee.provinceId?._id?.toString?.();
-	if (!employeeProvinceId) {
-		throw new HttpError(400, "Employee has invalid or missing province reference");
-	}
-
-	if (!canAccessProvince(user, employeeProvinceId)) {
-		throw new HttpError(403, "Cannot access employee from another province");
+	if (employeeProvinceId !== provinceId) {
+		throw new HttpError(400, "Employee does not belong to the specified province");
 	}
 
 	return employee;
 };
 
-// Global admin only: see all employees
-router.get("/", auth(USER_ROLE.GLOBAL_ADMIN), async (_req: Request, res: Response, next: NextFunction) => {
+// GET /provinces/:provinceId/employees - List employees of a province
+router.get("/", requireAnyRole, async (req: Request<{ provinceId: string }>, res: Response, next: NextFunction) => {
 	try {
-		const employees = await Employee.find().populate('provinceId');
+		const user = ensureUser(req);
+		const { provinceId } = req.params;
+
+		// Check if user can access this province
+		if (!canAccessProvince(user, provinceId)) {
+			throw new HttpError(403, "Cannot access employees from another province");
+		}
+
+		const employees = await Employee.find({ provinceId }).populate('provinceId');
 		res.json(employees);
 	} catch (err: unknown) {
 		next(err);
 	}
 });
 
-// Province admin only: see their province employees
-router.get("/my-province", auth(USER_ROLE.PROVINCE_ADMIN), async (req: Request, res: Response, next: NextFunction) => {
+// POST /provinces/:provinceId/employees - Create employee in a province
+router.post("/", requireAnyRole, async (req: Request<{ provinceId: string }, any, ProvinceScopedBody>, res: Response, next: NextFunction) => {
 	try {
 		const user = ensureUser(req);
-		const employees = await Employee.find({ provinceId: user.provinceId }).populate('provinceId');
-		res.json(employees);
-	} catch (err: unknown) {
-		next(err);
-	}
-});
+		const { provinceId } = req.params;
 
-// Get single employee - Global admin can view any employee, province admin can view their province employees
-router.get("/:id", requireAnyRole, async (req: Request<EmployeeParams>, res: Response, next: NextFunction) => {
-	try {
-		const employee = await getEmployeeOrThrow(req);
-		res.json(employee);
-	} catch (err: unknown) {
-		next(err);
-	}
-});
-
-// Create employee - Global admin can create for any province, province admin for their own (server-enforced)
-router.post("/", requireAnyRole, async (req: Request<Record<string, never>, any, ProvinceScopedBody>, res: Response, next: NextFunction) => {
-	try {
-		const user = ensureUser(req);
-		const requestedProvinceId = typeof req.body.provinceId === "string" ? req.body.provinceId : undefined;
-		
-		// Validate and resolve provinceId (handles province admin restrictions)
-		const provinceId = await validateAndResolveProvinceId(user, requestedProvinceId);
+		// Check if user can access this province
+		if (!canAccessProvince(user, provinceId)) {
+			throw new HttpError(403, "Cannot create employee in another province");
+		}
 
 		const employee = new Employee({
 			...req.body,
@@ -90,38 +84,54 @@ router.post("/", requireAnyRole, async (req: Request<Record<string, never>, any,
 	}
 });
 
-// Update employee - Global admin can update any employee, province admin can update their own province employees
-router.put("/:id", requireAnyRole, async (req: Request<EmployeeParams, any, ProvinceScopedBody>, res: Response, next: NextFunction) => {
+// GET /provinces/:provinceId/employees/:employeeId - Get single employee
+router.get("/:employeeId", requireAnyRole, async (req: Request<EmployeeParams>, res: Response, next: NextFunction) => {
+	try {
+		const { provinceId, employeeId } = req.params;
+		const employee = await getEmployeeInProvinceOrThrow(req, provinceId);
+		res.json(employee);
+	} catch (err: unknown) {
+		next(err);
+	}
+});
+
+// PUT /provinces/:provinceId/employees/:employeeId - Update employee
+router.put("/:employeeId", requireAnyRole, async (req: Request<EmployeeParams, any, ProvinceScopedBody>, res: Response, next: NextFunction) => {
 	try {
 		const user = ensureUser(req);
-		await getEmployeeOrThrow(req);
+		const { provinceId, employeeId } = req.params;
 
-		// If provinceId is being updated, validate it
-		if (req.body.provinceId !== undefined || user.role === USER_ROLE.PROVINCE_ADMIN) {
-			const requestedProvinceId = typeof req.body.provinceId === "string" ? req.body.provinceId : undefined;
-			const validatedProvinceId = await validateAndResolveProvinceId(user, requestedProvinceId);
-			req.body.provinceId = validatedProvinceId;
+		// Verify employee exists and belongs to province
+		await getEmployeeInProvinceOrThrow(req, provinceId);
+
+		// Prevent provinceId from being changed via PUT
+		const updateData = { ...req.body };
+		if (updateData.provinceId && updateData.provinceId !== provinceId) {
+			throw new HttpError(400, "Cannot move employee to a different province");
 		}
+		delete updateData.provinceId;
 
-		const updated = await Employee.findByIdAndUpdate(req.params.id, req.body, { new: true }).populate('provinceId');
-		
+		const updated = await Employee.findByIdAndUpdate(employeeId, updateData, { new: true }).populate('provinceId');
+
 		if (!updated) {
 			throw new HttpError(404, "Employee not found");
 		}
-		
+
 		res.json(updated);
 	} catch (err: unknown) {
 		next(err);
 	}
 });
 
-// Delete employee - Global admin can delete any employee, province admin can delete their own province employees
-router.delete("/:id", requireAnyRole, async (req: Request<EmployeeParams>, res: Response, next: NextFunction) => {
+// DELETE /provinces/:provinceId/employees/:employeeId - Delete employee
+router.delete("/:employeeId", requireAnyRole, async (req: Request<EmployeeParams>, res: Response, next: NextFunction) => {
 	try {
-		ensureUser(req);
-		await getEmployeeOrThrow(req);
+		const { provinceId, employeeId } = req.params;
 
-		const deleted = await Employee.findByIdAndDelete(req.params.id);
+		// Verify employee exists and belongs to province
+		await getEmployeeInProvinceOrThrow(req, provinceId);
+
+		const deleted = await Employee.findByIdAndDelete(employeeId);
 		if (!deleted) {
 			throw new HttpError(404, "Employee not found");
 		}

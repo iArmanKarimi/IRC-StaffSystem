@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import authRoutes from "./routes/auth";
+import provinceRoutes from "./routes/provinces";
 import employeeRoutes from './routes/employees';
 import { errorHandler } from "./middleware/errorHandler";
 import { COOKIE_NAME } from "./const";
@@ -40,7 +41,8 @@ const sessionConfig: session.SessionOptions = {
 app.use(session(sessionConfig));
 
 app.use('/auth', authRoutes)
-app.use('/employees', employeeRoutes)
+app.use('/provinces', provinceRoutes)
+app.use('/provinces/:provinceId/employees', employeeRoutes)
 // health check
 app.get("/health", (_, res) => res.json({ ok: true }));
 
