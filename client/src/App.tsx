@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Employees from "./pages/Employees";
-import ENDPOINTS from "./cont/endpoints";
+import ENDPOINTS from "./const/endpoints";
 
 function App() {
 	return (

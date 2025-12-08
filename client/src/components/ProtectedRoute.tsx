@@ -1,7 +1,7 @@
 import { Navigate } from "react-router-dom";
 import api from "../api/api";
 import { useEffect, useState } from "react";
-import ENDPOINTS from "../cont/endpoints";
+import ENDPOINTS from "../const/endpoints";
 
 export default function ProtectedRoute({ children }) {
 	const [loading, setLoading] = useState(true);

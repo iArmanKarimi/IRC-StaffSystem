@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import { User } from "../models/User";
 import { authRateLimiter } from "../middleware/rateLimit";
 import { HttpError } from "../utils/errors";
+import { COOKIE_NAME } from "../const";
 
 const router = Router();
 
@@ -50,13 +51,12 @@ router.post("/login", authRateLimiter, async (req: Request<Record<string, never>
 });
 
 router.post("/logout", (req: Request, res: Response) => {
-	const cookieName = req.session?.cookie?.name || "connect.sid";
 	req.session.destroy((err: Error | null) => {
 		if (err) {
 			console.error("Error during logout:", err);
 			return res.status(500).json({ error: "Logout failed" });
 		}
-		res.clearCookie(cookieName);
+		res.clearCookie(COOKIE_NAME);
 		res.json({ message: "Logged out successfully" });
 	});
 });

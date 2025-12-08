@@ -6,6 +6,7 @@ import MongoStore from "connect-mongo";
 import authRoutes from "./routes/auth";
 import employeeRoutes from './routes/employees';
 import { errorHandler } from "./middleware/errorHandler";
+import { COOKIE_NAME } from "./const";
 
 dotenv.config();
 
@@ -22,7 +23,7 @@ app.use(express.json());
 
 // Session middleware
 const sessionConfig: session.SessionOptions = {
-	name: "irc.sid",
+	name: COOKIE_NAME,
 	secret: sessionSecret || "your-secret-key",
 	resave: false,
 	saveUninitialized: false,
