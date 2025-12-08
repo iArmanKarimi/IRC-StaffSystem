@@ -22,6 +22,7 @@ app.use(express.json());
 
 // Session middleware
 const sessionConfig: session.SessionOptions = {
+	name: "irc.sid",
 	secret: sessionSecret || "your-secret-key",
 	resave: false,
 	saveUninitialized: false,

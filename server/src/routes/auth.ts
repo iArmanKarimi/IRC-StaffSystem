@@ -1,8 +1,6 @@
 import { Router, Request, Response } from "express";
 import bcrypt from "bcrypt";
-import session from "express-session";
 import { User } from "../models/User";
-import { USER_ROLE } from "../types/roles";
 import { authRateLimiter } from "../middleware/rateLimit";
 import { HttpError } from "../utils/errors";
 
