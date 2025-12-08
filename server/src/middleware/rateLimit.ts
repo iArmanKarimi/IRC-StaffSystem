@@ -1,11 +1,19 @@
 import rateLimit from "express-rate-limit";
+import { getConfig } from "../config";
+
+const config = getConfig();
 
 // Rate limiter for authentication routes to prevent brute force attacks
 export const authRateLimiter = rateLimit({
-	windowMs: 15 * 60 * 1000, // 15 minutes
-	max: 5, // Limit each IP to 5 requests per windowMs
+	windowMs: config.rateLimit.windowMs,
+	max: config.rateLimit.maxRequests,
 	message: "Too many login attempts, please try again later",
 	standardHeaders: true,
 	legacyHeaders: false,
+	skip: (req) => {
+		// Skip rate limiting in development mode
+		return config.nodeEnv === 'development';
+	}
 });
+
 
