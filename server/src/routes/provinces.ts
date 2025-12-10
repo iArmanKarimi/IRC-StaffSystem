@@ -3,6 +3,8 @@ import { Province } from "../models/Province";
 import { auth } from "../middleware/auth";
 import { USER_ROLE } from "../types/roles";
 import { HttpError } from "../utils/errors";
+import { sendSuccess } from "../utils/response";
+import { logger } from "../middleware/logger";
 
 const router = Router();
 
@@ -10,7 +12,8 @@ const router = Router();
 router.get("/", auth(USER_ROLE.GLOBAL_ADMIN), async (_req: Request, res: Response, next: NextFunction) => {
 	try {
 		const provinces = await Province.find().populate('admin');
-		res.json(provinces);
+		logger.debug("Provinces listed", { count: provinces.length });
+		sendSuccess(res, provinces, 200, "Provinces retrieved successfully");
 	} catch (err: unknown) {
 		next(err);
 	}
@@ -23,7 +26,8 @@ router.get("/:provinceId", async (req: Request, res: Response, next: NextFunctio
 		if (!province) {
 			throw new HttpError(404, "Province not found");
 		}
-		res.json(province);
+		logger.debug("Province retrieved", { provinceId: req.params.provinceId });
+		sendSuccess(res, province, 200, "Province retrieved successfully");
 	} catch (err: unknown) {
 		next(err);
 	}

@@ -4,6 +4,9 @@ import { requireAnyRole, canAccessProvince, AuthenticatedUser } from "../middlew
 import { USER_ROLE } from "../types/roles";
 import { HttpError } from "../utils/errors";
 import { validateAndResolveProvinceId } from "../utils/provinceValidation";
+import { sendSuccess, sendError, sendPaginated } from "../utils/response";
+import { getPaginationParams, buildPaginationLinks } from "../utils/pagination";
+import { logger } from "../middleware/logger";
 
 const router = Router({ mergeParams: true });
 
@@ -44,7 +47,7 @@ const getEmployeeInProvinceOrThrow = async (
 	return employee;
 };
 
-// GET /provinces/:provinceId/employees - List employees of a province
+// GET /provinces/:provinceId/employees - List employees of a province with pagination
 router.get("/", requireAnyRole, async (req: Request<{ provinceId: string }>, res: Response, next: NextFunction) => {
 	try {
 		const user = ensureUser(req);
@@ -55,8 +58,35 @@ router.get("/", requireAnyRole, async (req: Request<{ provinceId: string }>, res
 			throw new HttpError(403, "Cannot access employees from another province");
 		}
 
-		const employees = await Employee.find({ provinceId }).populate('provinceId');
-		res.json(employees);
+		// Get pagination parameters from query
+		const { page, limit, skip } = getPaginationParams(req, 20, 100);
+
+		// Get total count for pagination
+		const total = await Employee.countDocuments({ provinceId });
+
+		// Get paginated results
+		const employees = await Employee.find({ provinceId })
+			.populate('provinceId')
+			.skip(skip)
+			.limit(limit)
+			.lean();
+
+		const pages = Math.ceil(total / limit);
+		const links = buildPaginationLinks(`/provinces/${provinceId}/employees`, page, limit, pages);
+
+		logger.debug("Employees listed", { provinceId, page, limit, count: employees.length, total });
+
+		return res.status(200).json({
+			success: true,
+			data: employees,
+			pagination: {
+				total,
+				page,
+				limit,
+				pages
+			},
+			_links: links
+		});
 	} catch (err: unknown) {
 		next(err);
 	}
@@ -78,7 +108,8 @@ router.post("/", requireAnyRole, async (req: Request<{ provinceId: string }, any
 			provinceId
 		});
 		await employee.save();
-		res.status(201).json(employee);
+		logger.info("Employee created", { provinceId, employeeId: employee._id });
+		sendSuccess(res, employee, 201, "Employee created successfully");
 	} catch (err: unknown) {
 		next(err);
 	}
@@ -89,7 +120,8 @@ router.get("/:employeeId", requireAnyRole, async (req: Request<EmployeeParams>, 
 	try {
 		const { provinceId, employeeId } = req.params;
 		const employee = await getEmployeeInProvinceOrThrow(req, provinceId);
-		res.json(employee);
+		logger.debug("Employee retrieved", { provinceId, employeeId });
+		sendSuccess(res, employee, 200, "Employee retrieved successfully");
 	} catch (err: unknown) {
 		next(err);
 	}
@@ -117,7 +149,8 @@ router.put("/:employeeId", requireAnyRole, async (req: Request<EmployeeParams, a
 			throw new HttpError(404, "Employee not found");
 		}
 
-		res.json(updated);
+		logger.info("Employee updated", { provinceId, employeeId });
+		sendSuccess(res, updated, 200, "Employee updated successfully");
 	} catch (err: unknown) {
 		next(err);
 	}
@@ -135,7 +168,8 @@ router.delete("/:employeeId", requireAnyRole, async (req: Request<EmployeeParams
 		if (!deleted) {
 			throw new HttpError(404, "Employee not found");
 		}
-		res.json({ message: "Employee deleted" });
+		logger.info("Employee deleted", { provinceId, employeeId });
+		sendSuccess(res, { message: "Employee deleted" }, 200, "Employee deleted successfully");
 	} catch (err: unknown) {
 		next(err);
 	}

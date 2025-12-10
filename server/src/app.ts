@@ -8,6 +8,9 @@ import employeeRoutes from './routes/employees';
 import apiDocsRoutes from './routes/api-docs';
 import { errorHandler } from "./middleware/errorHandler";
 import { requestLogger } from "./middleware/logger";
+import { sanitizeInput } from "./middleware/sanitize";
+import { auditLog } from "./middleware/audit";
+import { performanceMonitor } from "./middleware/performance";
 import { getConfig } from "./config";
 
 const config = getConfig();
@@ -23,6 +26,12 @@ app.use(express.urlencoded({ extended: true }));
 
 // Request logging
 app.use(requestLogger);
+
+// Performance monitoring (slow query detection)
+app.use(performanceMonitor);
+
+// Input sanitization (prevent injection attacks)
+app.use(sanitizeInput);
 
 // Session middleware
 const sessionConfig: session.SessionOptions = {
@@ -41,6 +50,9 @@ const sessionConfig: session.SessionOptions = {
 };
 
 app.use(session(sessionConfig));
+
+// Audit logging for mutations (POST, PUT, DELETE)
+app.use(auditLog);
 
 // API Documentation routes (no auth required)
 app.use('/api-docs', apiDocsRoutes);

@@ -3,6 +3,7 @@ import { Province } from "../models/Province";
 import { AuthenticatedUser } from "../middleware/auth";
 import { USER_ROLE } from "../types/roles";
 import { HttpError } from "./errors";
+import { logger } from "../middleware/logger";
 
 /**
  * Validates and resolves provinceId for employee operations
@@ -22,7 +23,11 @@ export async function validateAndResolveProvinceId(
 			throw new HttpError(400, "Province context missing for province admin");
 		}
 		if (provinceId && provinceId !== user.provinceId) {
-			console.warn(`Province admin ${user.id} attempted to use province ${provinceId} instead of ${user.provinceId}`);
+			logger.warn("Province admin attempted unauthorized access", {
+				userId: user.id,
+				attemptedProvince: provinceId,
+				authorizedProvince: user.provinceId
+			});
 		}
 		provinceId = user.provinceId;
 	}
