@@ -348,35 +348,6 @@ export default function EmployeePage() {
 							)}
 						</CardContent>
 					</Card>
-
-					{/* Metadata */}
-					<Card>
-						<CardContent>
-							<Typography variant="h6" gutterBottom>
-								Metadata
-							</Typography>
-							<Divider sx={{ mb: 2 }} />
-							<Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
-								<InfoField label="Employee ID" value={employee._id} />
-								<InfoField
-									label="Province ID"
-									value={
-										typeof employee.provinceId === "string"
-											? employee.provinceId
-											: employee.provinceId._id
-									}
-								/>
-								<InfoField
-									label="Created At"
-									value={new Date(employee.createdAt).toLocaleString()}
-								/>
-								<InfoField
-									label="Updated At"
-									value={new Date(employee.updatedAt).toLocaleString()}
-								/>
-							</Box>
-						</CardContent>
-					</Card>
 				</Stack>
 
 				<Box sx={{ mt: 3 }}>
