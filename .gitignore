@@ -81,6 +81,7 @@ web_modules/
 
 # Admin credentials (contains passwords)
 server/admins.json
+server/seed-config.json
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
