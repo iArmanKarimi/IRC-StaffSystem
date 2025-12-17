@@ -33,18 +33,34 @@ export default function NavBar({
 	};
 
 	return (
-		<AppBar position="static">
-			<Toolbar>
-				<Typography variant="h6" component="h1" sx={{ flexGrow: 1 }}>
+		<AppBar position="static" color="primary">
+			<Toolbar sx={{ minHeight: 64 }}>
+				<Typography
+					variant="h6"
+					component="h1"
+					sx={{
+						flexGrow: 1,
+						fontWeight: 600,
+						letterSpacing: "0.02em",
+						color: "white",
+					}}
+				>
 					{title}
 				</Typography>
 				{showLogout && (
 					<Button
-						color="error"
-						variant="contained"
+						color="inherit"
+						variant="outlined"
 						onClick={handleLogout}
 						disabled={loading}
 						startIcon={<LogoutIcon />}
+						sx={{
+							borderColor: "rgba(255, 255, 255, 0.3)",
+							"&:hover": {
+								borderColor: "rgba(255, 255, 255, 0.5)",
+								backgroundColor: "rgba(255, 255, 255, 0.1)",
+							},
+						}}
 					>
 						{loading ? "Logging out..." : "Logout"}
 					</Button>
