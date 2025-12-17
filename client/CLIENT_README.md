@@ -9,6 +9,8 @@ React + TypeScript + Vite frontend application for the IRC Employee Management S
 - **Vite** - Fast build tool and dev server
 - **React Router** - Client-side routing
 - **Axios** - HTTP client for API calls
+- **Material-UI (MUI) v5** - UI component library
+- **@emotion/react** & **@emotion/styled** - Styling engine
 
 ## 📁 Project Structure
 
@@ -18,21 +20,37 @@ client/
 │   ├── api/
 │   │   └── api.ts              # API client and service functions
 │   ├── components/
-│   │   ├── NavBar.tsx          # Navigation bar with logout
-│   │   └── ProtectedRoute.tsx  # Route protection wrapper
+│   │   ├── dialogs/
+│   │   │   ├── ConfirmDialog.tsx      # Reusable confirmation dialog
+│   │   │   ├── EditEmployeeDialog.tsx # Employee edit dialog
+│   │   │   ├── FormDialog.tsx         # Generic form dialog wrapper
+│   │   │   └── PerformanceDialog.tsx  # Add/edit performance dialog
+│   │   ├── states/
+│   │   │   ├── ErrorView.tsx          # Error state component
+│   │   │   └── LoadingView.tsx        # Loading state component
+│   │   ├── NavBar.tsx                 # Navigation bar with logout
+│   │   ├── PerformanceAccordion.tsx   # Collapsible performance list
+│   │   ├── PerformanceCard.tsx        # Single performance record display
+│   │   ├── PerformanceManager.tsx     # Performance CRUD orchestrator
+│   │   └── ProtectedRoute.tsx         # Route protection wrapper
+│   ├── hooks/
+│   │   ├── useApiMutation.ts   # Generic mutation hook with loading/error states
+│   │   └── useEmployee.ts      # Employee data fetching hook
 │   ├── pages/
 │   │   ├── LoginFormPage.tsx           # User authentication
 │   │   ├── GlobalAdminDashboardPage.tsx # Province list (Global Admin)
 │   │   ├── ProvinceEmployeesPage.tsx   # Employee list with pagination
-│   │   ├── EmployeePage.tsx            # Employee details & delete
+│   │   ├── EmployeePage.tsx            # Employee details & edit
 │   │   └── NewEmployeeFormPage.tsx     # Create new employee
+│   ├── theme/
+│   │   └── theme.ts            # MUI custom theme configuration
 │   ├── types/
 │   │   └── models.ts           # TypeScript interfaces matching server models
 │   ├── const/
 │   │   ├── endpoints.ts        # API endpoints and route constants
 │   │   └── cookie.ts           # Cookie-related constants
 │   ├── App.tsx                 # Main app with routing
-│   └── main.tsx               # Entry point
+│   └── main.tsx               # Entry point with ThemeProvider
 ├── public/                     # Static assets
 ├── index.html                  # HTML template
 ├── vite.config.ts             # Vite configuration
@@ -145,21 +163,24 @@ Each employee includes:
 - ✅ Global Admin province dashboard
 - ✅ Employee listing with pagination
 - ✅ Create employee with comprehensive form
-- ✅ View employee details
+- ✅ View and **edit** employee details
 - ✅ Delete employee with confirmation
+- ✅ **Add, edit, and delete performance records**
 - ✅ Navigation bar with logout
 - ✅ Protected routes
 - ✅ Error handling and loading states
+- ✅ Material-UI component library with custom theme
+- ✅ Custom hooks for data fetching and mutations
+- ✅ Reusable dialog components
 
 ### Future Enhancements
 
-- Edit employee functionality
 - Search and filter employees
-- Add/edit performance records
 - Province management (Global Admin)
 - User management
 - Export to CSV/PDF
-- Dark mode
+- Dark mode toggle
+- Dashboard with statistics
 
 ## 🧪 Development Notes
 
@@ -173,7 +194,19 @@ Currently using React hooks (useState, useEffect). Consider adding Context API o
 
 ### Styling
 
-Using inline styles and CSS modules. Consider migrating to a UI library like Material-UI or Tailwind CSS for consistency.
+The application uses **Material-UI (MUI) v5** with a custom theme defined in [theme/theme.ts](src/theme/theme.ts).
+
+**Theme Features:**
+- Custom color palette with primary blue (#1976d2)
+- Consistent spacing and typography
+- Responsive breakpoints for mobile/tablet/desktop
+
+**Key MUI Components:**
+- Layout: `Box`, `Container`, `Paper`, `Grid`
+- Forms: `TextField`, `Select`, `Button`
+- Data Display: `Table`, `Card`, `Chip`, `Accordion`
+- Feedback: `Dialog`, `Alert`, `CircularProgress`
+- Navigation: `Breadcrumbs`
 
 ## 🐛 Troubleshooting
 
