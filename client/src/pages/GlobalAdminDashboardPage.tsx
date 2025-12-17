@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
@@ -10,52 +9,29 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
-import CircularProgress from "@mui/material/CircularProgress";
-import Alert from "@mui/material/Alert";
 import PeopleIcon from "@mui/icons-material/People";
-import { provinceApi, type Province } from "../api/api";
+import type { Province } from "../api/api";
 import { ROUTES } from "../const/endpoints";
 import NavBar from "../components/NavBar";
+import { useProvinces } from "../hooks/useProvinces";
+import { LoadingView } from "../components/states/LoadingView";
+import { ErrorView } from "../components/states/ErrorView";
+import { EmptyState } from "../components/states/EmptyState";
 
 export default function GlobalAdminDashboardPage() {
-	const [provinces, setProvinces] = useState<Province[]>([]);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState<string | null>(null);
-
-	useEffect(() => {
-		const fetchProvinces = async () => {
-			try {
-				const response = await provinceApi.list();
-				setProvinces(response.data ?? []);
-			} catch (err) {
-				setError("Failed to load provinces");
-			} finally {
-				setLoading(false);
-			}
-		};
-
-		fetchProvinces();
-	}, []);
+	const { provinces, loading, error, refetch } = useProvinces();
 
 	if (loading) {
-		return (
-			<>
-				<NavBar title="Provinces - Global Admin" />
-				<Container sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
-					<CircularProgress />
-				</Container>
-			</>
-		);
+		return <LoadingView title="Provinces - Global Admin" />;
 	}
 
 	if (error) {
 		return (
-			<>
-				<NavBar title="Provinces - Global Admin" />
-				<Container sx={{ mt: 4 }}>
-					<Alert severity="error">{error}</Alert>
-				</Container>
-			</>
+			<ErrorView
+				title="Provinces - Global Admin"
+				message={error}
+				onRetry={refetch}
+			/>
 		);
 	}
 
@@ -64,7 +40,7 @@ export default function GlobalAdminDashboardPage() {
 			<>
 				<NavBar title="Provinces - Global Admin" />
 				<Container sx={{ mt: 4 }}>
-					<Alert severity="info">No provinces found.</Alert>
+					<EmptyState message="No provinces found." />
 				</Container>
 			</>
 		);

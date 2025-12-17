@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
@@ -12,113 +12,44 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
-import CircularProgress from "@mui/material/CircularProgress";
-import Alert from "@mui/material/Alert";
 import Pagination from "@mui/material/Pagination";
 import AddIcon from "@mui/icons-material/Add";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import {
-	provinceApi,
-	type Employee,
-	type PaginatedResponse,
-	type Pagination as PaginationType,
-} from "../api/api";
 import { ROUTES } from "../const/endpoints";
 import NavBar from "../components/NavBar";
-
-type BasicName = { firstName?: string; lastName?: string; fullName?: string };
-
-type EmployeesState = {
-	data: Employee[];
-	pagination: PaginationType | null;
-	_links?: Record<string, string>;
-};
-
-const formatEmployeeName = (emp: Employee): string => {
-	const info = emp.basicInfo as BasicName | undefined;
-	const full = info?.fullName?.trim();
-	if (full) return full;
-
-	const first = info?.firstName?.trim();
-	const last = info?.lastName?.trim();
-	const nameParts = [first, last].filter(Boolean);
-	if (nameParts.length) return nameParts.join(" ");
-
-	return emp._id;
-};
+import { useEmployees } from "../hooks/useEmployees";
+import { LoadingView } from "../components/states/LoadingView";
+import { ErrorView } from "../components/states/ErrorView";
+import { EmptyState } from "../components/states/EmptyState";
+import { formatEmployeeName } from "../utils/formatters";
 
 export default function ProvinceEmployeesPage() {
 	const { provinceId } = useParams<{ provinceId: string }>();
-	const [state, setState] = useState<EmployeesState>({
-		data: [],
-		pagination: null,
-	});
 	const [page, setPage] = useState(1);
-	const [limit] = useState(20);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState<string | null>(null);
-	const [provinceName, setProvinceName] = useState<string | null>(null);
+	const limit = 20;
+	const { employees, pagination, loading, error, refetch } = useEmployees(
+		provinceId,
+		page,
+		limit
+	);
 
-	useEffect(() => {
-		if (!provinceId) {
-			setError("Province ID is missing");
-			setLoading(false);
-			return;
-		}
-
-		const fetchEmployees = async () => {
-			setLoading(true);
-			setError(null);
-			try {
-				const response: PaginatedResponse<Employee> =
-					await provinceApi.listEmployees(provinceId, page, limit);
-				setState({
-					data: response.data ?? [],
-					pagination: response.pagination,
-					_links: response._links,
-				});
-				// Extract province name from first employee if available
-				if (response.data && response.data.length > 0) {
-					const firstEmployee = response.data[0];
-					if (
-						typeof firstEmployee.provinceId === "object" &&
-						firstEmployee.provinceId?.name
-					) {
-						setProvinceName(firstEmployee.provinceId.name);
-					} else if (firstEmployee.workPlace?.provinceName) {
-						setProvinceName(firstEmployee.workPlace.provinceName);
-					}
-				}
-			} catch (err) {
-				setError("Failed to load employees");
-			} finally {
-				setLoading(false);
-			}
-		};
-
-		fetchEmployees();
-	}, [provinceId, page, limit]);
+	// Extract province name from first employee if available
+	const provinceName =
+		employees.length > 0
+			? typeof employees[0].provinceId === "object" &&
+			  employees[0].provinceId?.name
+				? employees[0].provinceId.name
+				: employees[0].workPlace?.provinceName
+			: null;
 
 	if (loading) {
-		return (
-			<>
-				<NavBar title="Province Employees" />
-				<Container sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
-					<CircularProgress />
-				</Container>
-			</>
-		);
+		return <LoadingView title="Province Employees" />;
 	}
 
 	if (error) {
 		return (
-			<>
-				<NavBar title="Province Employees" />
-				<Container sx={{ mt: 4 }}>
-					<Alert severity="error">{error}</Alert>
-				</Container>
-			</>
+			<ErrorView title="Province Employees" message={error} onRetry={refetch} />
 		);
 	}
 
@@ -155,8 +86,8 @@ export default function ProvinceEmployeesPage() {
 						</Typography>
 					</Box>
 					<Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-						{state.pagination && (
-							<Chip label={`${state.pagination.total} total`} color="primary" />
+						{pagination && (
+							<Chip label={`${pagination.total} total`} color="primary" />
 						)}
 						<Button
 							component={Link}
@@ -173,8 +104,8 @@ export default function ProvinceEmployeesPage() {
 					</Box>
 				</Box>
 
-				{state.data.length === 0 ? (
-					<Alert severity="info">No employees found.</Alert>
+				{employees.length === 0 ? (
+					<EmptyState message="No employees found." />
 				) : (
 					<TableContainer component={Paper}>
 						<Table>
@@ -186,7 +117,7 @@ export default function ProvinceEmployeesPage() {
 								</TableRow>
 							</TableHead>
 							<TableBody>
-								{state.data.map((emp) => (
+								{employees.map((emp) => (
 									<TableRow
 										key={emp._id}
 										sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -216,10 +147,10 @@ export default function ProvinceEmployeesPage() {
 					</TableContainer>
 				)}
 
-				{state.pagination && state.pagination.pages > 1 && (
+				{pagination && pagination.pages > 1 && (
 					<Box sx={{ mt: 3, display: "flex", justifyContent: "center" }}>
 						<Pagination
-							count={state.pagination.pages}
+							count={pagination.pages}
 							page={page}
 							onChange={(_, value) => setPage(value)}
 							color="primary"
