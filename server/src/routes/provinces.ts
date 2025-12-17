@@ -1,4 +1,5 @@
 import { Router, Request, Response, NextFunction } from "express";
+import { isValidObjectId } from "mongoose";
 import { Province } from "../models/Province";
 import { auth } from "../middleware/auth";
 import { USER_ROLE } from "../types/roles";
@@ -7,6 +8,15 @@ import { sendSuccess } from "../utils/response";
 import { logger } from "../middleware/logger";
 
 const router = Router();
+
+// Middleware to validate provinceId parameter
+const validateProvinceId = (req: Request, res: Response, next: NextFunction) => {
+	const { provinceId } = req.params;
+	if (!isValidObjectId(provinceId)) {
+		return res.status(400).json({ success: false, error: "Invalid province ID format" });
+	}
+	next();
+};
 
 // GET /provinces - List all provinces (Global Admin only)
 router.get("/", auth(USER_ROLE.GLOBAL_ADMIN), async (_req: Request, res: Response, next: NextFunction) => {
@@ -23,7 +33,7 @@ router.get("/", auth(USER_ROLE.GLOBAL_ADMIN), async (_req: Request, res: Respons
 });
 
 // GET /provinces/:provinceId - Get a specific province (Global Admin only)
-router.get("/:provinceId", auth(USER_ROLE.GLOBAL_ADMIN), async (req: Request, res: Response, next: NextFunction) => {
+router.get("/:provinceId", validateProvinceId, auth(USER_ROLE.GLOBAL_ADMIN), async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const province = await Province.findById(req.params.provinceId).populate({
 			path: 'admin',
@@ -38,5 +48,9 @@ router.get("/:provinceId", auth(USER_ROLE.GLOBAL_ADMIN), async (req: Request, re
 		next(err);
 	}
 });
+
+// Mount employee routes as nested routes
+import employeeRoutes from './employees';
+router.use('/:provinceId/employees', employeeRoutes);
 
 export default router;

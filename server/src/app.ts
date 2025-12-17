@@ -58,10 +58,11 @@ app.use(auditLog);
 // API Documentation routes (no auth required)
 app.use('/api-docs', apiDocsRoutes);
 
-// Routes
+// Auth routes
 app.use('/auth', authRoutes);
+
+// Province routes (includes employee routes as nested)
 app.use('/provinces', provinceRoutes);
-app.use('/provinces/:provinceId/employees', employeeRoutes);
 
 // Health check endpoint
 app.get("/health", (_req, res) => {

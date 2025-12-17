@@ -1,4 +1,5 @@
 import { Router, Request, Response, NextFunction } from "express";
+import { isValidObjectId } from "mongoose";
 import { Employee } from "../models/Employee";
 import { requireAnyRole, canAccessProvince, AuthenticatedUser } from "../middleware/auth";
 import { USER_ROLE } from "../types/roles";
@@ -13,6 +14,27 @@ const router = Router({ mergeParams: true });
 type EmployeeParams = { provinceId: string; employeeId: string };
 type ProvinceScopedBody = Record<string, unknown> & { provinceId?: string };
 type EmployeeDocument = NonNullable<Awaited<ReturnType<typeof Employee.findById>>>;
+
+// Middleware to validate provinceId parameter
+const validateProvinceId = (req: Request, res: Response, next: NextFunction) => {
+	const { provinceId } = req.params;
+	if (!isValidObjectId(provinceId)) {
+		return res.status(400).json({ success: false, error: "Invalid province ID format" });
+	}
+	next();
+};
+
+// Middleware to validate employeeId parameter
+const validateEmployeeId = (req: Request, res: Response, next: NextFunction) => {
+	const { employeeId } = req.params;
+	if (!isValidObjectId(employeeId)) {
+		return res.status(400).json({ success: false, error: "Invalid employee ID format" });
+	}
+	next();
+};
+
+// Apply provinceId validation to all routes
+router.use(validateProvinceId);
 
 const ensureUser = (req: Request): AuthenticatedUser => {
 	if (!req.user) {
@@ -52,14 +74,6 @@ router.get("/", requireAnyRole, async (req: Request<{ provinceId: string }>, res
 	try {
 		const user = ensureUser(req);
 		const { provinceId } = req.params;
-
-		// Debug logging
-		logger.debug("Employee list access check", {
-			userRole: user.role,
-			userProvinceId: user.provinceId,
-			requestedProvinceId: provinceId,
-			match: user.provinceId === provinceId
-		});
 
 		// Check if user can access this province
 		if (!canAccessProvince(user, provinceId)) {
@@ -124,7 +138,7 @@ router.post("/", requireAnyRole, async (req: Request<{ provinceId: string }, any
 });
 
 // GET /provinces/:provinceId/employees/:employeeId - Get single employee
-router.get("/:employeeId", requireAnyRole, async (req: Request<EmployeeParams>, res: Response, next: NextFunction) => {
+router.get("/:employeeId", validateEmployeeId, requireAnyRole, async (req: Request<EmployeeParams>, res: Response, next: NextFunction) => {
 	try {
 		const { provinceId, employeeId } = req.params;
 		const employee = await getEmployeeInProvinceOrThrow(req, provinceId);
@@ -136,7 +150,7 @@ router.get("/:employeeId", requireAnyRole, async (req: Request<EmployeeParams>, 
 });
 
 // PUT /provinces/:provinceId/employees/:employeeId - Update employee
-router.put("/:employeeId", requireAnyRole, async (req: Request<EmployeeParams, any, ProvinceScopedBody>, res: Response, next: NextFunction) => {
+router.put("/:employeeId", validateEmployeeId, requireAnyRole, async (req: Request<EmployeeParams, any, ProvinceScopedBody>, res: Response, next: NextFunction) => {
 	try {
 		const user = ensureUser(req);
 		const { provinceId, employeeId } = req.params;
@@ -165,7 +179,7 @@ router.put("/:employeeId", requireAnyRole, async (req: Request<EmployeeParams, a
 });
 
 // DELETE /provinces/:provinceId/employees/:employeeId - Delete employee
-router.delete("/:employeeId", requireAnyRole, async (req: Request<EmployeeParams>, res: Response, next: NextFunction) => {
+router.delete("/:employeeId", validateEmployeeId, requireAnyRole, async (req: Request<EmployeeParams>, res: Response, next: NextFunction) => {
 	try {
 		const { provinceId, employeeId } = req.params;
 
