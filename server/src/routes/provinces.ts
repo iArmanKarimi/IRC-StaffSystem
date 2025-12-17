@@ -8,10 +8,16 @@ import { logger } from "../middleware/logger";
 
 const router = Router();
 
+// All province routes are restricted to global administrators
+router.use(auth(USER_ROLE.GLOBAL_ADMIN));
+
 // GET /provinces - List all provinces (Global Admin only)
-router.get("/", /*auth(USER_ROLE.GLOBAL_ADMIN),*/ async (_req: Request, res: Response, next: NextFunction) => {
+router.get("/", async (_req: Request, res: Response, next: NextFunction) => {
 	try {
-		const provinces = await Province.find().populate('admin');
+		const provinces = await Province.find().populate({
+			path: 'admin',
+			select: '_id username role provinceId'
+		});
 		logger.debug("Provinces listed", { count: provinces.length });
 		sendSuccess(res, provinces, 200, "Provinces retrieved successfully");
 	} catch (err: unknown) {
@@ -22,7 +28,10 @@ router.get("/", /*auth(USER_ROLE.GLOBAL_ADMIN),*/ async (_req: Request, res: Res
 // GET /provinces/:provinceId - Get a specific province
 router.get("/:provinceId", async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const province = await Province.findById(req.params.provinceId).populate('admin');
+		const province = await Province.findById(req.params.provinceId).populate({
+			path: 'admin',
+			select: '_id username role provinceId'
+		});
 		if (!province) {
 			throw new HttpError(404, "Province not found");
 		}
