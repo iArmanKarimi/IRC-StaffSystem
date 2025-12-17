@@ -1,9 +1,11 @@
 # IRC Employee System – API Structure
 
-_Last updated: 2025_
+_Last updated: December 2025_
 
 This document describes the finalized backend API routes designed for the IRC Employee System.  
 It reflects the simplified hierarchical structure that supports both **Global Admin** and **Province Admin** flows.
+
+**Status**: ✅ All API endpoints implemented and fully integrated with React + Material-UI frontend.
 
 ## 🔐 Auth Routes
 
@@ -89,12 +91,21 @@ DELETE `/provinces/:provinceId/employees/:employeeId`
 
 - GET `/provinces`
 - Navigate to `/provinces/:provinceId/employees`
-- CRUD employees
+- **Full CRUD** on employees (create, read, update, delete)
+- **Performance management** (add, edit, delete records)
 
 ### Province Admin
 
 - Redirect to `/provinces/:provinceId/employees`
-- CRUD employees only inside their province
+- **Full CRUD** on employees only inside their province
+- **Performance management** for their province's employees
+
+### UI Features
+
+- Material-UI components with custom theme
+- Reusable dialogs (EditEmployeeDialog, PerformanceDialog, ConfirmDialog)
+- Custom hooks for data fetching (useEmployee, useApiMutation)
+- Loading and error states with feedback components
 
 ---
 

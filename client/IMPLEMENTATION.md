@@ -123,22 +123,26 @@ All server endpoints mapped:
 ### ✅ Components & Reusability
 
 **Dialog Components**
+
 - `EditEmployeeDialog` - Full employee edit form
 - `PerformanceDialog` - Add/edit performance records
 - `ConfirmDialog` - Reusable confirmation dialogs
 - `FormDialog` - Generic form dialog wrapper
 
 **State Components**
+
 - `LoadingView` - Centralized loading state with CircularProgress
 - `ErrorView` - Error display with Alert component
 
 **Feature Components**
+
 - `PerformanceManager` - Orchestrates performance CRUD operations
 - `PerformanceCard` - Displays single performance record
 - `PerformanceAccordion` - Collapsible performance list
 - `NavBar` - Top navigation
 
 **Custom Hooks**
+
 - `useEmployee` - Employee data fetching with loading/error states
 - `useApiMutation` - Generic mutation hook for API calls
 

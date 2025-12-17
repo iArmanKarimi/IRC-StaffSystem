@@ -5,7 +5,23 @@ The system provides a clean separation of access, scoped data visibility, and a 
 
 ---
 
-## 🚀 Overview
+## �️ Tech Stack
+
+**Backend**
+
+- Node.js + Express + TypeScript
+- MongoDB with TypeORM
+- Session-based authentication
+
+**Frontend**
+
+- React 18 + TypeScript + Vite
+- Material-UI (MUI) v5
+- React Router + Axios
+
+---
+
+## �🚀 Overview
 
 The system manages employees across multiple provinces.  
 There are **only two roles**:
@@ -22,8 +38,10 @@ Province admins themselves are **fixed** (not created through the UI or API).
 - Secure login (`/auth/login`)
 - Global Admin dashboard showing all provinces
 - Province‑scoped employee management
-- Create, edit, delete employees (province‑scoped)
+- **Create, edit, delete employees** (province‑scoped)
+- **Performance record management** (add, edit, delete)
 - Fetch employees belonging to a selected province
+- Material-UI frontend with custom theme
 - No generic `/employees` root — everything is province‑scoped
 
 ---
@@ -99,6 +117,8 @@ Actions:
 
 - "Create Employee" → `NewEmployeeFormPage`
 - Select employee → `EmployeePage` (`/provinces/:provinceId/employees/:employeeId`)
+- Edit employee → `EditEmployeeDialog` (modal)
+- Manage performance → `PerformanceManager` component
 
 ---
 

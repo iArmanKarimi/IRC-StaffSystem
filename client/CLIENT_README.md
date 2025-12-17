@@ -197,11 +197,13 @@ Currently using React hooks (useState, useEffect). Consider adding Context API o
 The application uses **Material-UI (MUI) v5** with a custom theme defined in [theme/theme.ts](src/theme/theme.ts).
 
 **Theme Features:**
+
 - Custom color palette with primary blue (#1976d2)
 - Consistent spacing and typography
 - Responsive breakpoints for mobile/tablet/desktop
 
 **Key MUI Components:**
+
 - Layout: `Box`, `Container`, `Paper`, `Grid`
 - Forms: `TextField`, `Select`, `Button`
 - Data Display: `Table`, `Card`, `Chip`, `Accordion`
