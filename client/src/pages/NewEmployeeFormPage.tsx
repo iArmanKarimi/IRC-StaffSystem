@@ -375,8 +375,9 @@ export default function NewEmployeeFormPage() {
 											sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
 											required
 										>
-											<InputLabel>Status</InputLabel>
+											<InputLabel htmlFor="status-select">Status</InputLabel>
 											<Select
+												id="status-select"
 												value={form.additionalSpecifications.status}
 												label="Status"
 												onChange={(e) =>
