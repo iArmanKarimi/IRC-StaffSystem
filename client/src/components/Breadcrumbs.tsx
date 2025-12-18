@@ -40,8 +40,13 @@ export default function Breadcrumbs({
 			location.pathname ===
 			ROUTES.PROVINCE_EMPLOYEES.replace(":provinceId", provinceId);
 
+		// Defensive: Only show provinceName if it's a non-empty string and not a single character
+		let label =
+			provinceName && provinceName.trim().length > 1
+				? provinceName
+				: "Employees";
 		breadcrumbItems.push({
-			label: provinceName || "Employees",
+			label,
 			path: isOnEmployeesPage
 				? null
 				: ROUTES.PROVINCE_EMPLOYEES.replace(":provinceId", provinceId),
