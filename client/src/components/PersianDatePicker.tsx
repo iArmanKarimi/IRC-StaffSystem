@@ -7,6 +7,18 @@ import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import { g2j } from "jalaali-js";
+
+// Get current Shamsi date
+function getCurrentShamsiDate(): { year: number; month: number; day: number } {
+	const today = new Date();
+	const [jy, jm, jd] = g2j(
+		today.getFullYear(),
+		today.getMonth() + 1,
+		today.getDate()
+	);
+	return { year: jy, month: jm, day: jd };
+}
 
 interface PersianDatePickerProps {
 	label: string;
@@ -31,10 +43,13 @@ export function PersianDatePicker({
 	error = false,
 	helperText,
 }: PersianDatePickerProps) {
+	const currentShamsi = getCurrentShamsiDate();
 	const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 	const [inputValue, setInputValue] = useState<string>("");
-	const [selectedYear, setSelectedYear] = useState<number>(1403);
-	const [selectedMonth, setSelectedMonth] = useState<number>(1);
+	const [selectedYear, setSelectedYear] = useState<number>(currentShamsi.year);
+	const [selectedMonth, setSelectedMonth] = useState<number>(
+		currentShamsi.month
+	);
 
 	useEffect(() => {
 		// Convert prop value to string format for display
