@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
@@ -68,6 +68,7 @@ export function PersianDatePicker({
 	const [calYear, setCalYear] = useState<number>(1403);
 	const [calMonth, setCalMonth] = useState<number>(1);
 	const [viewMode, setViewMode] = useState<"day" | "year">("day");
+	const lastSentValueRef = useRef<string>("");
 
 	// Sync inputValue with value prop only when prop actually changes to something different
 	useEffect(() => {
@@ -80,8 +81,8 @@ export function PersianDatePicker({
 				dateStr = isoStr.replace(/-/g, "/");
 			}
 
-			// Only update if the normalized value is different from current input
-			if (dateStr !== inputValue) {
+			// Only update if the value is different from both current input AND what we last sent
+			if (dateStr !== inputValue && dateStr !== lastSentValueRef.current) {
 				setInputValue(dateStr);
 
 				const persian = gregorianToPersian(dateStr);
@@ -94,10 +95,11 @@ export function PersianDatePicker({
 					}
 				}
 			}
-		} else if (inputValue !== "") {
-			// Only clear if not already empty
+		} else if (inputValue !== "" && lastSentValueRef.current !== "") {
+			// Only clear if not already empty and we didn't just send a value
 			setInputValue("");
 			setPersianValue("");
+			lastSentValueRef.current = "";
 		}
 	}, [value]);
 
@@ -128,6 +130,7 @@ export function PersianDatePicker({
 				// Validate it's a real date
 				const [y, m, d] = newValue.split("/").map(Number);
 				if (y > 1900 && y < 2100 && m >= 1 && m <= 12 && d >= 1 && d <= 31) {
+					lastSentValueRef.current = newValue;
 					onChange(newValue);
 				}
 			} catch {
@@ -157,6 +160,8 @@ export function PersianDatePicker({
 			setPersianValue(persianStr);
 			setCalYear(year);
 			setCalMonth(month);
+			// Track what we're sending to prevent useEffect from overwriting
+			lastSentValueRef.current = gregorian;
 			// Notify parent
 			onChange(gregorian);
 			setAnchorEl(null);
