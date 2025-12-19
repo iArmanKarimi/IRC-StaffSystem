@@ -55,7 +55,6 @@ export default function NewEmployeeFormPage() {
 			branch: "",
 			rank: "",
 			licensedWorkplace: "",
-			travelAssignment: false,
 		},
 		additionalSpecifications: {
 			educationalDegree: "",
@@ -75,6 +74,7 @@ export default function NewEmployeeFormPage() {
 			absence: 0,
 			volunteerShiftCount: 0,
 			truckDriver: false,
+			travelAssignment: 0,
 			month: new Date().toISOString().slice(0, 7),
 			notes: "",
 		},
@@ -92,7 +92,7 @@ export default function NewEmployeeFormPage() {
 		}));
 	};
 
-	const updateWorkPlace = (key: keyof IWorkPlace, value: string | boolean) => {
+	const updateWorkPlace = (key: keyof IWorkPlace, value: string) => {
 		setForm((prev) => ({
 			...prev,
 			workPlace: { ...prev.workPlace, [key]: value },
@@ -281,17 +281,6 @@ export default function NewEmployeeFormPage() {
 											}
 										/>
 									</Box>
-									<FormControlLabel
-										control={
-											<Checkbox
-												checked={form.workPlace.travelAssignment}
-												onChange={(e) =>
-													updateWorkPlace("travelAssignment", e.target.checked)
-												}
-											/>
-										}
-										label="Travel Assignment"
-									/>
 								</Stack>
 							</Box>
 

@@ -21,7 +21,6 @@ export interface IWorkPlace {
 	branch: string;
 	rank: string;
 	licensedWorkplace: string;
-	travelAssignment: boolean;
 }
 
 // Additional Specifications sub-schema
@@ -45,6 +44,7 @@ export interface IPerformance {
 	absence: number;
 	volunteerShiftCount: number;
 	truckDriver: boolean;
+	travelAssignment: number;
 	month: string; // Format: YYYY-MM
 	notes?: string;
 }

@@ -284,10 +284,6 @@ export default function EmployeePage() {
 										label="Licensed Workplace"
 										value={employee.workPlace.licensedWorkplace}
 									/>
-									<InfoField
-										label="Travel Assignment"
-										value={employee.workPlace.travelAssignment ? "Yes" : "No"}
-									/>
 								</Stack>
 							</CardContent>
 						</Card>

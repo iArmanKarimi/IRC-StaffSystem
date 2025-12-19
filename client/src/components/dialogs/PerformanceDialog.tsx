@@ -155,6 +155,18 @@ export function PerformanceDialog({
 						}
 					/>
 				</Box>
+				<Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+					<TextField
+						label="Travel Assignment (days)"
+						type="number"
+						inputProps={{ min: 0, max: 31 }}
+						sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
+						value={formData.travelAssignment}
+						onChange={(e) =>
+							handleFieldChange("travelAssignment", Number(e.target.value))
+						}
+					/>
+				</Box>
 				<FormControlLabel
 					control={
 						<Checkbox

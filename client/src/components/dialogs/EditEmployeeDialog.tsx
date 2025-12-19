@@ -162,20 +162,6 @@ export function EditEmployeeDialog({
 						fullWidth
 						required
 					/>
-					<FormControlLabel
-						control={
-							<Checkbox
-								checked={formData.workPlace?.travelAssignment || false}
-								onChange={(e) =>
-									handleFieldChange(
-										"workPlace.travelAssignment",
-										e.target.checked
-									)
-								}
-							/>
-						}
-						label="Travel Assignment"
-					/>
 				</Stack>
 
 				{/* Additional Specifications */}

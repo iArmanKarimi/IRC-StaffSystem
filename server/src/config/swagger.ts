@@ -70,8 +70,7 @@ const swaggerDefinition = {
 						properties: {
 							branch: { type: "string" },
 							rank: { type: "string" },
-							licensedWorkplace: { type: "string" },
-							travelAssignment: { type: "boolean" }
+							licensedWorkplace: { type: "string" }
 						}
 					},
 					additionalSpecifications: { type: "object" },
