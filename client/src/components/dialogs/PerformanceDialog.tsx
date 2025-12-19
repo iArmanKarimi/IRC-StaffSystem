@@ -51,13 +51,16 @@ export function PerformanceDialog({
 		>
 			<Stack spacing={2}>
 				<TextField
-					label="Month (YYYY-MM)"
+					label=""
+					placeholder="Month (YYYY-MM)"
 					type="month"
 					required
 					value={formData.month}
 					onChange={(e) => handleFieldChange("month", e.target.value)}
 					InputLabelProps={{ shrink: true }}
+					helperText="Month (YYYY-MM)"
 					fullWidth
+					sx={{ mt: 2 }}
 				/>
 				<Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
 					<TextField

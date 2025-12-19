@@ -38,7 +38,7 @@ const PerformanceAccordion: React.FC<PerformanceAccordionProps> = ({
 				</Typography>
 			</AccordionSummary>
 			<AccordionDetails>
-				<Stack spacing={2}>
+				<Stack spacing={2} sx={{ mt: 2 }}>
 					<TextField
 						label="Month (YYYY-MM)"
 						type="month"
@@ -47,6 +47,7 @@ const PerformanceAccordion: React.FC<PerformanceAccordionProps> = ({
 						onChange={(e) => onChange("month", e.target.value)}
 						InputLabelProps={{ shrink: true }}
 						fullWidth
+						sx={{ mt: 2 }}
 					/>
 					<Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
 						<TextField
