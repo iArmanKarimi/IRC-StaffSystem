@@ -5,7 +5,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { FormDialog } from "./FormDialog";
-import { PersianDatePicker } from "../PersianDatePicker";
+import { PersianDatePicker } from "../../components/PersianDatePicker";
 import type { IEmployee, UpdateEmployeeInput } from "../../types/models";
 
 interface EditEmployeeDialogProps {
@@ -188,7 +188,7 @@ export function EditEmployeeDialog({
 										.split("T")[0]
 								: ""
 						}
-						onChange={(value) =>
+						onChange={(value: string) =>
 							handleFieldChange("additionalSpecifications.dateOfBirth", value)
 						}
 						fullWidth
@@ -217,7 +217,7 @@ export function EditEmployeeDialog({
 										.split("T")[0]
 								: ""
 						}
-						onChange={(value) =>
+						onChange={(value: string) =>
 							handleFieldChange("additionalSpecifications.jobStartDate", value)
 						}
 						fullWidth
@@ -233,7 +233,7 @@ export function EditEmployeeDialog({
 										.split("T")[0]
 								: ""
 						}
-						onChange={(value) =>
+						onChange={(value: string) =>
 							handleFieldChange(
 								"additionalSpecifications.jobEndDate",
 								value ? value : undefined

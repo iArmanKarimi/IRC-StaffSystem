@@ -310,7 +310,7 @@ export default function NewEmployeeFormPage() {
 											InputLabelProps={{ shrink: true }}
 											sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
 											value={form.additionalSpecifications.dateOfBirth}
-											onChange={(value) =>
+											onChange={(value: string) =>
 												updateAdditionalSpecs("dateOfBirth", value)
 											}
 										/>
@@ -333,7 +333,7 @@ export default function NewEmployeeFormPage() {
 											InputLabelProps={{ shrink: true }}
 											sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
 											value={form.additionalSpecifications.jobStartDate}
-											onChange={(value) =>
+											onChange={(value: string) =>
 												updateAdditionalSpecs("jobStartDate", value)
 											}
 										/>
@@ -344,7 +344,7 @@ export default function NewEmployeeFormPage() {
 											InputLabelProps={{ shrink: true }}
 											sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
 											value={form.additionalSpecifications.jobEndDate || ""}
-											onChange={(value) =>
+											onChange={(value: string) =>
 												updateAdditionalSpecs("jobEndDate", value)
 											}
 										/>
