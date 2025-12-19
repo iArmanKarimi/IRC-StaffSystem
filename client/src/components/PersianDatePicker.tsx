@@ -81,27 +81,33 @@ export function PersianDatePicker({
 				dateStr = isoStr.replace(/-/g, "/");
 			}
 
-			// Only update if the value is different from both current input AND what we last sent
-			if (dateStr !== inputValue && dateStr !== lastSentValueRef.current) {
-				setInputValue(dateStr);
+			// Always sync from prop, but preserve our input if prop matches what we sent
+			if (lastSentValueRef.current === dateStr) {
+				// This is our own value coming back, keep the input as is
+				return;
+			}
 
-				const persian = gregorianToPersian(dateStr);
-				setPersianValue(persian);
-				if (persian) {
-					const [py, pm] = persian.split(/[-\/]/).map(Number);
-					if (!isNaN(py) && !isNaN(pm)) {
-						setCalYear(py);
-						setCalMonth(pm);
-					}
+			// Different value from parent, update everything
+			setInputValue(dateStr);
+			const persian = gregorianToPersian(dateStr);
+			setPersianValue(persian);
+			if (persian) {
+				const [py, pm] = persian.split(/[-\/]/).map(Number);
+				if (!isNaN(py) && !isNaN(pm)) {
+					setCalYear(py);
+					setCalMonth(pm);
 				}
 			}
-		} else if (inputValue !== "" && lastSentValueRef.current !== "") {
-			// Only clear if not already empty and we didn't just send a value
-			setInputValue("");
-			setPersianValue("");
-			lastSentValueRef.current = "";
+		} else {
+			// Parent cleared the value
+			if (inputValue !== "" || lastSentValueRef.current !== "") {
+				setInputValue("");
+				setPersianValue("");
+				lastSentValueRef.current = "";
+			}
 		}
-	}, [value]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [value]); // Intentionally not including inputValue to avoid infinite loops
 
 	const handleGregorianChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		let newValue = e.target.value;
