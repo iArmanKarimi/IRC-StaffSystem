@@ -9,6 +9,7 @@ import Checkbox from "@mui/material/Checkbox";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import { FormDialog } from "./FormDialog";
+import { PersianDatePicker } from "../PersianDatePicker";
 import type { IPerformance } from "../../types/models";
 
 type PerformanceDialogProps = {
@@ -50,16 +51,16 @@ export function PerformanceDialog({
 			onSave={handleSave}
 		>
 			<Stack spacing={2}>
-				<TextField
-					label=""
-					placeholder="Month (YYYY-MM)"
-					type="month"
+				<PersianDatePicker
+					label="Performance Month"
+					value={formData.month ? `${formData.month}-01` : ""}
+					onChange={(value: string) => {
+						const [year, month] = value.split("-");
+						handleFieldChange("month", `${year}-${month}`);
+					}}
 					required
-					value={formData.month}
-					onChange={(e) => handleFieldChange("month", e.target.value)}
-					InputLabelProps={{ shrink: true }}
-					helperText="Month (YYYY-MM)"
 					fullWidth
+					InputLabelProps={{ shrink: true }}
 					sx={{ mt: 2 }}
 				/>
 				<Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>

@@ -15,6 +15,7 @@ import {
 	Stack,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { PersianDatePicker } from "./PersianDatePicker";
 import type { IPerformance } from "../types/models";
 
 interface PerformanceAccordionProps {
@@ -39,14 +40,16 @@ const PerformanceAccordion: React.FC<PerformanceAccordionProps> = ({
 			</AccordionSummary>
 			<AccordionDetails>
 				<Stack spacing={2} sx={{ mt: 2 }}>
-					<TextField
-						label="Month (YYYY-MM)"
-						type="month"
+					<PersianDatePicker
+						label="Performance Month"
+						value={performance.month ? `${performance.month}-01` : ""}
+						onChange={(value: string) => {
+							const [year, month] = value.split("-");
+							onChange("month", `${year}-${month}`);
+						}}
 						required
-						value={performance.month}
-						onChange={(e) => onChange("month", e.target.value)}
-						InputLabelProps={{ shrink: true }}
 						fullWidth
+						InputLabelProps={{ shrink: true }}
 						sx={{ mt: 2 }}
 					/>
 					<Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
