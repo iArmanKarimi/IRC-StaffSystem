@@ -38,11 +38,10 @@ export default function ProvinceEmployeesPage() {
 
 	// Extract province name from first employee if available
 	const provinceName =
-		employees.length > 0
-			? typeof employees[0].provinceId === "object" &&
-			  employees[0].provinceId?.name
-				? employees[0].provinceId.name
-				: employees[0].workPlace?.provinceName
+		employees.length > 0 &&
+		typeof employees[0].provinceId === "object" &&
+		employees[0].provinceId?.name
+			? employees[0].provinceId.name
 			: null;
 
 	if (loading) {

@@ -18,7 +18,6 @@ export interface IBasicInfo {
 
 // WorkPlace sub-schema
 export interface IWorkPlace {
-	provinceName: string;
 	branch: string;
 	rank: string;
 	licensedWorkplace: string;

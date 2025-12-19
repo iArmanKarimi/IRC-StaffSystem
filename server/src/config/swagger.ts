@@ -68,7 +68,6 @@ const swaggerDefinition = {
 					workPlace: {
 						type: "object",
 						properties: {
-							provinceName: { type: "string" },
 							branch: { type: "string" },
 							rank: { type: "string" },
 							licensedWorkplace: { type: "string" },

@@ -186,7 +186,11 @@ export default function EmployeePage() {
 			/>
 			<Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
 				<Breadcrumbs
-					provinceName={employee.workPlace?.provinceName}
+					provinceName={
+						typeof employee.provinceId === "object"
+							? employee.provinceId.name
+							: undefined
+					}
 					employeeName={formatEmployeeName(employee)}
 					showProvincesLink={isGlobalAdmin}
 				/>
@@ -274,10 +278,6 @@ export default function EmployeePage() {
 								</Typography>
 								<Divider sx={{ mb: 2 }} />
 								<Stack spacing={1.5}>
-									<InfoField
-										label="Province Name"
-										value={employee.workPlace.provinceName}
-									/>
 									<InfoField label="Branch" value={employee.workPlace.branch} />
 									<InfoField label="Rank" value={employee.workPlace.rank} />
 									<InfoField

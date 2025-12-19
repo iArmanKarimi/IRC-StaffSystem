@@ -52,7 +52,6 @@ export default function NewEmployeeFormPage() {
 			childrenCount: 0,
 		},
 		workPlace: {
-			provinceName: "",
 			branch: "",
 			rank: "",
 			licensedWorkplace: "",
@@ -254,15 +253,6 @@ export default function NewEmployeeFormPage() {
 								</Typography>
 								<Stack spacing={2}>
 									<Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
-										<TextField
-											label="Province Name"
-											required
-											sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
-											value={form.workPlace.provinceName}
-											onChange={(e) =>
-												updateWorkPlace("provinceName", e.target.value)
-											}
-										/>
 										<TextField
 											label="Branch"
 											required
