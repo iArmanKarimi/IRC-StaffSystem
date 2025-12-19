@@ -110,8 +110,12 @@ export default function ProvinceEmployeesPage() {
 						<Table>
 							<TableHead>
 								<TableRow>
-									<TableCell>Name</TableCell>
-
+									<TableCell>Full Name</TableCell>
+									<TableCell>National ID</TableCell>
+									<TableCell>Branch</TableCell>
+									<TableCell>Rank</TableCell>
+									<TableCell>Status</TableCell>
+									<TableCell>Contact Number</TableCell>
 									<TableCell align="right">Actions</TableCell>
 								</TableRow>
 							</TableHead>
@@ -124,7 +128,28 @@ export default function ProvinceEmployeesPage() {
 										<TableCell component="th" scope="row">
 											{formatEmployeeName(emp)}
 										</TableCell>
-
+										<TableCell>{emp.basicInfo?.nationalID}</TableCell>
+										<TableCell>{emp.workPlace?.branch}</TableCell>
+										<TableCell>{emp.workPlace?.rank}</TableCell>
+										<TableCell>
+											<Chip
+												label={emp.additionalSpecifications?.status
+													?.replace("_", " ")
+													.toUpperCase()}
+												color={
+													emp.additionalSpecifications?.status === "active"
+														? "success"
+														: emp.additionalSpecifications?.status ===
+														  "inactive"
+														? "error"
+														: "warning"
+												}
+												size="small"
+											/>
+										</TableCell>
+										<TableCell>
+											{emp.additionalSpecifications?.contactNumber}
+										</TableCell>
 										<TableCell align="right">
 											<Button
 												component={Link}
