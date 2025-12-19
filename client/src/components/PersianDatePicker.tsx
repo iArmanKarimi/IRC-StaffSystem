@@ -43,12 +43,13 @@ export function PersianDatePicker({
 	error = false,
 	helperText,
 }: PersianDatePickerProps) {
-	const currentShamsi = getCurrentShamsiDate();
 	const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 	const [inputValue, setInputValue] = useState<string>("");
-	const [selectedYear, setSelectedYear] = useState<number>(currentShamsi.year);
+	const [selectedYear, setSelectedYear] = useState<number>(
+		() => getCurrentShamsiDate().year
+	);
 	const [selectedMonth, setSelectedMonth] = useState<number>(
-		currentShamsi.month
+		() => getCurrentShamsiDate().month
 	);
 
 	useEffect(() => {
