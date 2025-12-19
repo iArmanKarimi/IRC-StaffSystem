@@ -42,9 +42,13 @@ const PerformanceAccordion: React.FC<PerformanceAccordionProps> = ({
 				<Stack spacing={2} sx={{ mt: 2 }}>
 					<PersianDatePicker
 						label="Performance Month"
-						value={performance.month ? `${performance.month}-01` : ""}
+						value={
+							performance.month
+								? `${performance.month.replace("-", "/")}/01`
+								: ""
+						}
 						onChange={(value: string) => {
-							const [year, month] = value.split("-");
+							const [year, month] = value.split(/[-\/]/);
 							onChange("month", `${year}-${month}`);
 						}}
 						required

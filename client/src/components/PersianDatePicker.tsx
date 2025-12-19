@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import Popover from "@mui/material/Popover";
 import IconButton from "@mui/material/IconButton";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import { jd2j, j2d } from "jalaali-js";
+import { g2j, j2g, j2d } from "jalaali-js";
 
 interface PersianDatePickerProps {
 	label: string;
@@ -21,29 +21,34 @@ interface PersianDatePickerProps {
 	helperText?: string;
 }
 
-// Convert Gregorian date string (YYYY-MM-DD) to Persian (YYYY-MM-DD)
+// Convert Gregorian date string (YYYY/MM/DD) to Persian (YYYY/MM/DD)
 function gregorianToPersian(gregorianStr: string): string {
 	if (!gregorianStr) return "";
-	const [year, month, day] = gregorianStr.split("-").map(Number);
-	const jDate = new Date(year, month - 1, day);
-	const gregorianDayNumber =
-		Math.floor(
-			(jDate.getTime() - new Date(1970, 0, 1).getTime()) / (24 * 60 * 60 * 1000)
-		) + 1;
-	const [jy, jm, jd] = jd2j(gregorianDayNumber);
-	return `${jy}-${String(jm).padStart(2, "0")}-${String(jd).padStart(2, "0")}`;
+	try {
+		const [gy, gm, gd] = gregorianStr.split(/[-\/]/).map(Number);
+		const [jy, jm, jd] = g2j(gy, gm, gd);
+		return `${jy}/${String(jm).padStart(2, "0")}/${String(jd).padStart(
+			2,
+			"0"
+		)}`;
+	} catch {
+		return "";
+	}
 }
 
-// Convert Persian date string (YYYY-MM-DD) to Gregorian (YYYY-MM-DD)
+// Convert Persian date string (YYYY/MM/DD) to Gregorian (YYYY/MM/DD)
 function persianToGregorian(persianStr: string): string {
 	if (!persianStr) return "";
-	const [jy, jm, jd] = persianStr.split("-").map(Number);
-	const gregorianDayNumber = j2d(jy, jm, jd);
-	const date = new Date(1970, 0, gregorianDayNumber);
-	const year = date.getFullYear();
-	const month = String(date.getMonth() + 1).padStart(2, "0");
-	const day = String(date.getDate()).padStart(2, "0");
-	return `${year}-${month}-${day}`;
+	try {
+		const [jy, jm, jd] = persianStr.split(/[-\/]/).map(Number);
+		const [gy, gm, gd] = j2g(jy, jm, jd);
+		return `${gy}/${String(gm).padStart(2, "0")}/${String(gd).padStart(
+			2,
+			"0"
+		)}`;
+	} catch {
+		return "";
+	}
 }
 
 export function PersianDatePicker({
@@ -73,16 +78,34 @@ export function PersianDatePicker({
 			setGregorianValue(dateStr);
 			const persian = gregorianToPersian(dateStr);
 			setPersianValue(persian);
-			const [py, pm] = persian.split("-").map(Number);
+			const [py, pm] = persian.split(/[-\/]/).map(Number);
 			setCalYear(py);
 			setCalMonth(pm);
 		}
 	}, [value]);
 
 	const handleGregorianChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const newValue = e.target.value;
+		let newValue = e.target.value;
+
+		// Allow only digits and slashes
+		newValue = newValue.replace(/[^\d\/]/g, "");
+
+		// Auto-format as user types
+		if (newValue.length === 4 && gregorianValue.length === 3) {
+			newValue += "/";
+		} else if (newValue.length === 7 && gregorianValue.length === 6) {
+			newValue += "/";
+		}
+
+		// Limit to YYYY/MM/DD format length (10 characters)
+		if (newValue.length > 10) {
+			newValue = newValue.slice(0, 10);
+		}
+
 		setGregorianValue(newValue);
-		if (newValue) {
+
+		// Only process and notify parent if we have a complete date
+		if (newValue.length === 10 && newValue.match(/^\d{4}\/\d{2}\/\d{2}$/)) {
 			const persian = gregorianToPersian(newValue);
 			setPersianValue(persian);
 			onChange(newValue);
@@ -98,7 +121,7 @@ export function PersianDatePicker({
 	};
 
 	const handleDateSelect = (year: number, month: number, day: number) => {
-		const persianStr = `${year}-${String(month).padStart(2, "0")}-${String(
+		const persianStr = `${year}/${String(month).padStart(2, "0")}/${String(
 			day
 		).padStart(2, "0")}`;
 		try {
@@ -171,7 +194,7 @@ export function PersianDatePicker({
 	};
 
 	const selectedDay = persianValue
-		? parseInt(persianValue.split("-")[2])
+		? parseInt(persianValue.split(/[-\/]/)[2])
 		: null;
 
 	return (
@@ -179,7 +202,8 @@ export function PersianDatePicker({
 			<Stack direction="row" spacing={1} sx={{ alignItems: "flex-start" }}>
 				<TextField
 					label={label}
-					type="date"
+					type="text"
+					placeholder="YYYY/MM/DD"
 					value={gregorianValue}
 					onChange={handleGregorianChange}
 					required={required}
