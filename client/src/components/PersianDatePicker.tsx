@@ -69,7 +69,7 @@ export function PersianDatePicker({
 	const [calMonth, setCalMonth] = useState<number>(1);
 	const [viewMode, setViewMode] = useState<"day" | "year">("day");
 
-	// Sync inputValue with value prop
+	// Sync inputValue with value prop only when prop actually changes to something different
 	useEffect(() => {
 		if (value) {
 			let dateStr: string;
@@ -79,18 +79,23 @@ export function PersianDatePicker({
 				const isoStr = new Date(value).toISOString().split("T")[0];
 				dateStr = isoStr.replace(/-/g, "/");
 			}
-			setInputValue(dateStr);
 
-			const persian = gregorianToPersian(dateStr);
-			setPersianValue(persian);
-			if (persian) {
-				const [py, pm] = persian.split(/[-\/]/).map(Number);
-				if (!isNaN(py) && !isNaN(pm)) {
-					setCalYear(py);
-					setCalMonth(pm);
+			// Only update if the normalized value is different from current input
+			if (dateStr !== inputValue) {
+				setInputValue(dateStr);
+
+				const persian = gregorianToPersian(dateStr);
+				setPersianValue(persian);
+				if (persian) {
+					const [py, pm] = persian.split(/[-\/]/).map(Number);
+					if (!isNaN(py) && !isNaN(pm)) {
+						setCalYear(py);
+						setCalMonth(pm);
+					}
 				}
 			}
-		} else {
+		} else if (inputValue !== "") {
+			// Only clear if not already empty
 			setInputValue("");
 			setPersianValue("");
 		}
