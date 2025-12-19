@@ -53,10 +53,14 @@ export function PerformanceDialog({
 			<Stack spacing={2}>
 				<PersianDatePicker
 					label="Performance Month"
-					value={formData.month ? `${formData.month.replace("-", "/")}/01` : ""}
+					value={
+						formData.month ? `${formData.month.replace(/-/g, "/")}/01` : ""
+					}
 					onChange={(value: string) => {
-						const [year, month] = value.split(/[-\/]/);
-						handleFieldChange("month", `${year}-${month}`);
+						const [year, month] = value.split(/[\/]/);
+						if (year && month) {
+							handleFieldChange("month", `${year}-${month}`);
+						}
 					}}
 					required
 					fullWidth

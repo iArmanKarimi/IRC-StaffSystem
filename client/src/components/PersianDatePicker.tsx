@@ -71,16 +71,28 @@ export function PersianDatePicker({
 	// Initialize with value
 	useEffect(() => {
 		if (value) {
-			const dateStr =
-				typeof value === "string"
-					? value
-					: new Date(value).toISOString().split("T")[0];
+			let dateStr: string;
+			if (typeof value === "string") {
+				// Convert from YYYY-MM-DD to YYYY/MM/DD if needed
+				dateStr = value.replace(/-/g, "/");
+			} else {
+				// Convert Date object to YYYY/MM/DD
+				const isoStr = new Date(value).toISOString().split("T")[0];
+				dateStr = isoStr.replace(/-/g, "/");
+			}
 			setGregorianValue(dateStr);
 			const persian = gregorianToPersian(dateStr);
 			setPersianValue(persian);
-			const [py, pm] = persian.split(/[-\/]/).map(Number);
-			setCalYear(py);
-			setCalMonth(pm);
+			if (persian) {
+				const [py, pm] = persian.split(/[-\/]/).map(Number);
+				if (!isNaN(py) && !isNaN(pm)) {
+					setCalYear(py);
+					setCalMonth(pm);
+				}
+			}
+		} else {
+			setGregorianValue("");
+			setPersianValue("");
 		}
 	}, [value]);
 
@@ -128,6 +140,8 @@ export function PersianDatePicker({
 			const gregorian = persianToGregorian(persianStr);
 			setGregorianValue(gregorian);
 			setPersianValue(persianStr);
+			setCalYear(year);
+			setCalMonth(month);
 			onChange(gregorian);
 			setAnchorEl(null);
 		} catch {

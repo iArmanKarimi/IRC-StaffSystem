@@ -44,12 +44,14 @@ const PerformanceAccordion: React.FC<PerformanceAccordionProps> = ({
 						label="Performance Month"
 						value={
 							performance.month
-								? `${performance.month.replace("-", "/")}/01`
+								? `${performance.month.replace(/-/g, "/")}/01`
 								: ""
 						}
 						onChange={(value: string) => {
-							const [year, month] = value.split(/[-\/]/);
-							onChange("month", `${year}-${month}`);
+							const [year, month] = value.split(/[\/]/);
+							if (year && month) {
+								onChange("month", `${year}-${month}`);
+							}
 						}}
 						required
 						fullWidth
