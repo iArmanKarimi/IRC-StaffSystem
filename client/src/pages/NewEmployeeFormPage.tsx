@@ -17,21 +17,18 @@ import { provinceApi } from "../api/api";
 import { ROUTES } from "../const/endpoints";
 import NavBar from "../components/NavBar";
 import Breadcrumbs from "../components/Breadcrumbs";
-import PerformanceAccordion from "../components/PerformanceAccordion";
 import { useIsGlobalAdmin } from "../hooks/useAuth";
 import type {
 	CreateEmployeeInput,
 	IBasicInfo,
 	IWorkPlace,
 	IAdditionalSpecifications,
-	IPerformance,
 } from "../types/models";
 
 type EmployeeFormData = {
 	basicInfo: IBasicInfo;
 	workPlace: IWorkPlace;
 	additionalSpecifications: IAdditionalSpecifications;
-	performance: IPerformance;
 };
 
 export default function NewEmployeeFormPage() {
@@ -58,20 +55,6 @@ export default function NewEmployeeFormPage() {
 			contactNumber: "",
 			jobStartDate: "",
 			jobEndDate: undefined,
-		},
-		performance: {
-			dailyPerformance: 0,
-			shiftCountPerLocation: 0,
-			shiftDuration: 8,
-			overtime: 0,
-			dailyLeave: 0,
-			sickLeave: 0,
-			absence: 0,
-			truckDriver: false,
-			travelAssignment: 0,
-			month: new Date().toISOString().slice(0, 7),
-			status: "active",
-			notes: "",
 		},
 	});
 	const [loading, setLoading] = useState(false);
@@ -107,16 +90,6 @@ export default function NewEmployeeFormPage() {
 		}));
 	};
 
-	const updatePerformance = (key: keyof IPerformance, value: any) => {
-		setForm((prev) => ({
-			...prev,
-			performance: {
-				...prev.performance,
-				[key]: value,
-			},
-		}));
-	};
-
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
 		if (!provinceId) {
@@ -131,7 +104,6 @@ export default function NewEmployeeFormPage() {
 				basicInfo: form.basicInfo,
 				workPlace: form.workPlace,
 				additionalSpecifications: form.additionalSpecifications,
-				performance: form.performance,
 			};
 			await provinceApi.createEmployee(provinceId, payload);
 			navigate(ROUTES.PROVINCE_EMPLOYEES.replace(":provinceId", provinceId), {
@@ -348,13 +320,6 @@ export default function NewEmployeeFormPage() {
 									</Box>
 								</Stack>
 							</Box>
-
-							{/* Performance Section */}
-							<PerformanceAccordion
-								performance={form.performance}
-								index={0}
-								onChange={updatePerformance}
-							/>
 
 							<Box sx={{ display: "flex", gap: 2, justifyContent: "flex-end" }}>
 								<Button

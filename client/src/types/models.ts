@@ -77,5 +77,5 @@ export interface IUser {
 }
 
 // Form types for creating/updating
-export type CreateEmployeeInput = Omit<IEmployee, '_id' | 'createdAt' | 'updatedAt'>;
+export type CreateEmployeeInput = Omit<IEmployee, '_id' | 'createdAt' | 'updatedAt' | 'performance'> & { performance?: IPerformance };
 export type UpdateEmployeeInput = Partial<Omit<IEmployee, '_id' | 'provinceId' | 'createdAt' | 'updatedAt'>>;
