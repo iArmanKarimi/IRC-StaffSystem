@@ -7,7 +7,8 @@
 		"dev": "nodemon --exec ts-node src/index.ts",
 		"build": "tsc",
 		"start": "node dist/index.js",
-		"seed:db": "ts-node src/scripts/seed-db.ts"
+		"seed:db": "ts-node src/scripts/seed-db.ts",
+		"seed:emp": "ts-node src/scripts/seed-emp.ts"
 	},
 	"keywords": [],
 	"author": "",
