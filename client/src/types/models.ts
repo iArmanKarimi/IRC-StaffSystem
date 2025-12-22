@@ -55,7 +55,7 @@ export interface IEmployee {
 	basicInfo: IBasicInfo;
 	workPlace: IWorkPlace;
 	additionalSpecifications: IAdditionalSpecifications;
-	performance: IPerformance;
+	performance?: IPerformance;
 	createdAt: Date | string;
 	updatedAt: Date | string;
 }
