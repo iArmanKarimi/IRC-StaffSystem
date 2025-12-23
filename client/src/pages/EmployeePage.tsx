@@ -20,7 +20,7 @@ import Breadcrumbs from "../components/Breadcrumbs";
 import { LoadingView } from "../components/states/LoadingView";
 import { ErrorView } from "../components/states/ErrorView";
 import { EditEmployeeDialog } from "../components/dialogs/EditEmployeeDialog";
-import { PerformanceAccordion } from "../components/PerformanceAccordion";
+import PerformanceAccordion from "../components/PerformanceAccordion";
 import { ConfirmDialog } from "../components/dialogs/ConfirmDialog";
 import { useEmployee } from "../hooks/useEmployee";
 import { useApiMutation } from "../hooks/useApiMutation";
@@ -309,14 +309,13 @@ export default function EmployeePage() {
 									</Typography>
 									<Box sx={{ mt: 0.5 }}>
 										<Chip
-											label={employee.additionalSpecifications.status
+											label={employee.performance.status
 												.replace("_", " ")
 												.toUpperCase()}
 											color={
-												employee.additionalSpecifications.status === "active"
+												employee.performance.status === "active"
 													? "success"
-													: employee.additionalSpecifications.status ===
-													  "inactive"
+													: employee.performance.status === "inactive"
 													? "error"
 													: "warning"
 											}

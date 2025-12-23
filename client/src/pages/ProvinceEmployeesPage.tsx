@@ -132,13 +132,13 @@ export default function ProvinceEmployeesPage() {
 										<TableCell>{emp.workPlace?.rank}</TableCell>
 										<TableCell>
 											<Chip
-												label={emp.additionalSpecifications?.status
+												label={emp.performance?.status
 													?.replace("_", " ")
 													.toUpperCase()}
 												color={
-													emp.additionalSpecifications?.status === "active"
+													emp.performance?.status === "active"
 														? "success"
-														: emp.additionalSpecifications?.status ===
+														: emp.performance?.status ===
 														  "inactive"
 														? "error"
 														: "warning"

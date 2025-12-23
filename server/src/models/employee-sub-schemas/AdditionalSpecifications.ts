@@ -6,7 +6,6 @@ export interface IAdditionalSpecifications {
 	contactNumber: string;
 	jobStartDate: Date;
 	jobEndDate?: Date;
-	status: string;
 }
 
 export const AdditionalSpecificationsSchema = new Schema<IAdditionalSpecifications>({
@@ -14,6 +13,5 @@ export const AdditionalSpecificationsSchema = new Schema<IAdditionalSpecificatio
 	dateOfBirth: { type: Date, required: true },
 	contactNumber: { type: String, required: true, trim: true, match: /^\d{10}$/ },
 	jobStartDate: { type: Date, required: true },
-	jobEndDate: { type: Date },
-	status: { type: String, default: 'active', enum: ['active', 'inactive', 'on_leave'] }
+	jobEndDate: { type: Date }
 });

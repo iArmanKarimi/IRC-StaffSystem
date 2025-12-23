@@ -8,10 +8,6 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
 import Paper from "@mui/material/Paper";
 import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
@@ -62,7 +58,6 @@ export default function NewEmployeeFormPage() {
 			contactNumber: "",
 			jobStartDate: "",
 			jobEndDate: undefined,
-			status: "active",
 		},
 		performance: {
 			dailyPerformance: 0,
@@ -75,6 +70,7 @@ export default function NewEmployeeFormPage() {
 			truckDriver: false,
 			travelAssignment: 0,
 			month: new Date().toISOString().slice(0, 7),
+			status: "active",
 			notes: "",
 		},
 	});
@@ -349,24 +345,6 @@ export default function NewEmployeeFormPage() {
 												updateAdditionalSpecs("jobEndDate", e.target.value)
 											}
 										/>
-										<FormControl
-											sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
-											required
-										>
-											<InputLabel htmlFor="status-select">Status</InputLabel>
-											<Select
-												id="status-select"
-												value={form.additionalSpecifications.status}
-												label="Status"
-												onChange={(e) =>
-													updateAdditionalSpecs("status", e.target.value)
-												}
-											>
-												<MenuItem value="active">Active</MenuItem>
-												<MenuItem value="inactive">Inactive</MenuItem>
-												<MenuItem value="on_leave">On Leave</MenuItem>
-											</Select>
-										</FormControl>
 									</Box>
 								</Stack>
 							</Box>

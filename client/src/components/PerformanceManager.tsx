@@ -47,6 +47,7 @@ export function PerformanceManager({
 			truckDriver: false,
 			travelAssignment: 0,
 			month: currentMonth,
+			status: "active",
 			notes: "",
 		});
 		setEditingIndex(null);

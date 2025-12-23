@@ -127,8 +127,17 @@ const PerformanceAccordion: React.FC<PerformanceAccordionProps> = ({
 							value={performance.absence}
 							onChange={(e) => onChange("absence", Number(e.target.value))}
 						/>
-						<TextField
-					</Box>
+<TextField
+label="Travel Assignment (days)"
+type="number"
+inputProps={{ min: 0, max: 31 }}
+sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
+value={performance.travelAssignment}
+onChange={(e) =>
+onChange("travelAssignment", Number(e.target.value))
+}
+/>
+</Box>
 					<FormControlLabel
 						control={
 							<Checkbox
@@ -138,7 +147,19 @@ const PerformanceAccordion: React.FC<PerformanceAccordionProps> = ({
 						}
 						label="Truck Driver"
 					/>
-					<TextField
+<FormControl fullWidth>
+<InputLabel>Status</InputLabel>
+<Select
+value={performance.status || "active"}
+label="Status"
+onChange={(e) => onChange("status", e.target.value)}
+>
+<MenuItem value="active">Active</MenuItem>
+<MenuItem value="inactive">Inactive</MenuItem>
+<MenuItem value="on_leave">On Leave</MenuItem>
+</Select>
+</FormControl>
+<TextField
 						label="Notes"
 						multiline
 						rows={2}

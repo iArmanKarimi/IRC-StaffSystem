@@ -254,10 +254,10 @@ export function EditEmployeeDialog({
 					<TextField
 						label="Status"
 						select
-						value={formData.additionalSpecifications?.status || "active"}
+						value={formData.performance?.status || "active"}
 						onChange={(e) =>
 							handleFieldChange(
-								"additionalSpecifications.status",
+								"performance.status",
 								e.target.value
 							)
 						}
