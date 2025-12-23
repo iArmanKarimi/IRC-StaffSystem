@@ -153,7 +153,7 @@ Each employee includes:
 - **Basic Info**: Name, national ID, gender, marital status, children count
 - **WorkPlace**: Province, branch, rank, workplace, travel assignment
 - **Additional Specs**: Education, dates, contact, job dates, status
-- **Performances**: Monthly performance records (optional array)
+- **Performances**: Current month performance record
 
 ## 🎨 Features
 

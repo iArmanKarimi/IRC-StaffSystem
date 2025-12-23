@@ -20,7 +20,7 @@ import Breadcrumbs from "../components/Breadcrumbs";
 import { LoadingView } from "../components/states/LoadingView";
 import { ErrorView } from "../components/states/ErrorView";
 import { EditEmployeeDialog } from "../components/dialogs/EditEmployeeDialog";
-import { PerformanceManager } from "../components/PerformanceManager";
+import { PerformanceAccordion } from "../components/PerformanceAccordion";
 import { ConfirmDialog } from "../components/dialogs/ConfirmDialog";
 import { useEmployee } from "../hooks/useEmployee";
 import { useApiMutation } from "../hooks/useApiMutation";
@@ -94,9 +94,9 @@ export default function EmployeePage() {
 		}
 	};
 
-	// Helper to update performance records
-	async function updatePerformanceRecords(
-		updatedPerformances: IPerformance[],
+	// Helper to update performance record
+	async function updatePerformance(
+		updatedPerformance: IPerformance,
 		errorMsg: string
 	) {
 		if (!provinceId || !employeeId) return;
@@ -104,7 +104,7 @@ export default function EmployeePage() {
 		setSaveError(null);
 		try {
 			const res = await provinceApi.updateEmployee(provinceId, employeeId, {
-				performances: updatedPerformances,
+				performance: updatedPerformance,
 			});
 			if (!res.success || !res.data) {
 				setSaveError(
@@ -125,37 +125,15 @@ export default function EmployeePage() {
 		}
 	}
 
-	const handleAddPerformance = async (performance: IPerformance) => {
-		if (!employee) return;
-		const updatedPerformances = [...employee.performances, performance];
-		await updatePerformanceRecords(
-			updatedPerformances,
-			"Failed to add performance record. Please try again or contact support if the issue persists."
-		);
-	};
-
-	const handleEditPerformance = async (
-		index: number,
-		performance: IPerformance
+	const handlePerformanceChange = async (
+		key: keyof IPerformance,
+		value: any
 	) => {
 		if (!employee) return;
-		const updatedPerformances = employee.performances.map((perf, i) =>
-			i === index ? performance : perf
-		);
-		await updatePerformanceRecords(
-			updatedPerformances,
+		const updatedPerformance = { ...employee.performance, [key]: value };
+		await updatePerformance(
+			updatedPerformance,
 			"Failed to update performance record. Please try again or contact support if the issue persists."
-		);
-	};
-
-	const handleDeletePerformance = async (index: number) => {
-		if (!employee) return;
-		const updatedPerformances = employee.performances.filter(
-			(_, i) => i !== index
-		);
-		await updatePerformanceRecords(
-			updatedPerformances,
-			"Failed to delete performance record. Please try again or contact support if the issue persists."
 		);
 	};
 
@@ -350,14 +328,19 @@ export default function EmployeePage() {
 						</CardContent>
 					</Card>
 
-					{/* Performance Records */}
-					<PerformanceManager
-						performances={employee.performances}
-						saving={saving}
-						onAdd={handleAddPerformance}
-						onEdit={handleEditPerformance}
-						onDelete={handleDeletePerformance}
-					/>
+					{/* Performance Record */}
+					<Card>
+						<CardContent>
+							<Typography variant="h6" gutterBottom>
+								Current Month Performance
+							</Typography>
+							<PerformanceAccordion
+								performance={employee.performance}
+								index={0}
+								onChange={handlePerformanceChange}
+							/>
+						</CardContent>
+					</Card>
 				</Stack>
 
 				<Box sx={{ mt: 3 }}>

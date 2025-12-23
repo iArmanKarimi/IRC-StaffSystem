@@ -135,7 +135,7 @@ export default function NewEmployeeFormPage() {
 				basicInfo: form.basicInfo,
 				workPlace: form.workPlace,
 				additionalSpecifications: form.additionalSpecifications,
-				performances: [form.performance],
+				performance: form.performance,
 			};
 			await provinceApi.createEmployee(provinceId, payload);
 			navigate(ROUTES.PROVINCE_EMPLOYEES.replace(":provinceId", provinceId), {

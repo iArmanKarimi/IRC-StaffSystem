@@ -74,7 +74,7 @@ const swaggerDefinition = {
 						}
 					},
 					additionalSpecifications: { type: "object" },
-					performances: { type: "array" },
+					performance: { type: "object" },
 					createdAt: { type: "string", format: "date-time" },
 					updatedAt: { type: "string", format: "date-time" }
 				}

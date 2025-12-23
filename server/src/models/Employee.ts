@@ -9,7 +9,7 @@ export interface IEmployee extends Document {
 	basicInfo: IBasicInfo;
 	workPlace: IWorkPlace;
 	additionalSpecifications: IAdditionalSpecifications;
-	performances: IPerformance[];
+	performance: IPerformance;
 	createdAt: Date;
 	updatedAt: Date;
 }
@@ -19,7 +19,7 @@ const EmployeeSchema = new Schema<IEmployee>({
 	basicInfo: { type: BasicInfoSchema, required: true },
 	workPlace: { type: WorkPlaceSchema, required: true },
 	additionalSpecifications: { type: AdditionalSpecificationsSchema, required: true },
-	performances: { type: [PerformanceSchema], required: true }
+	performance: { type: PerformanceSchema, required: true }
 }, { timestamps: true });
 
 // Indexes for better query performance
