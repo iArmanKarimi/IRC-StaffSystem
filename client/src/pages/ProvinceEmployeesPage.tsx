@@ -72,6 +72,8 @@ export default function ProvinceEmployeesPage() {
 			headerName: "Full Name",
 			flex: 1,
 			minWidth: 150,
+			align: "center",
+			headerAlign: "center",
 			renderCell: (params: GridRenderCellParams<IEmployee>) => {
 				return formatEmployeeName(params.row);
 			},
@@ -81,6 +83,8 @@ export default function ProvinceEmployeesPage() {
 			headerName: "National ID",
 			flex: 0.8,
 			minWidth: 120,
+			align: "center",
+			headerAlign: "center",
 			valueGetter: (_, row: IEmployee) => row.basicInfo?.nationalID || "-",
 		},
 		{
@@ -88,6 +92,8 @@ export default function ProvinceEmployeesPage() {
 			headerName: "Status",
 			flex: 0.8,
 			minWidth: 120,
+			align: "center",
+			headerAlign: "center",
 			renderCell: (params: GridRenderCellParams<IEmployee>) => {
 				const employee = params.row;
 				return employee.performance ? (
@@ -113,6 +119,8 @@ export default function ProvinceEmployeesPage() {
 			headerName: "Actions",
 			flex: 0.6,
 			minWidth: 100,
+			align: "center",
+			headerAlign: "center",
 			sortable: false,
 			renderCell: (params) => {
 				const viewUrl = ROUTES.PROVINCE_EMPLOYEE_DETAIL.replace(
@@ -152,13 +160,7 @@ export default function ProvinceEmployeesPage() {
 				backLabel="Back to Provinces"
 			/>
 			<Container
-				sx={{
-					mt: 1,
-					mb: 2,
-					display: "flex",
-					flexDirection: "column",
-					gap: 1.5,
-				}}
+				sx={{ mt: 2, mb: 4, display: "flex", flexDirection: "column", gap: 3 }}
 			>
 				<Breadcrumbs
 					provinceName={provinceName || undefined}
@@ -178,8 +180,8 @@ export default function ProvinceEmployeesPage() {
 					alignItems="center"
 					gap={2}
 				>
-					<Stack spacing={0.5}>
-						<Typography variant="h5" component="h1">
+					<Stack>
+						<Typography variant="h4" component="h1" gutterBottom>
 							Employees
 						</Typography>
 						<Typography variant="body2" color="text.secondary">
@@ -232,6 +234,9 @@ export default function ProvinceEmployeesPage() {
 							hideFooterPagination
 							hideFooter={false}
 							sx={{
+								borderRadius: 2,
+								border: "1px solid",
+								borderColor: theme.palette.grey[400],
 								"& .custom-row": {
 									alignItems: "center",
 								},
@@ -244,6 +249,10 @@ export default function ProvinceEmployeesPage() {
 								},
 								"& .MuiDataGrid-footerContainer": {
 									display: "none",
+								},
+								"& .MuiDataGrid-columnHeaders": {
+									borderBottom: "1px solid",
+									borderColor: theme.palette.grey[300],
 								},
 							}}
 						/>
