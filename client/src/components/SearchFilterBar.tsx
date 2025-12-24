@@ -17,18 +17,29 @@ import SearchIcon from "@mui/icons-material/Search";
 interface SearchFilterBarProps {
 	onSearchChange: (searchTerm: string) => void;
 	onFilterChange: (filter: string) => void;
+	onPerformanceFilterChange?: (metric: string, value: number | null) => void;
 	searchValue?: string;
 	filterValue?: string;
+	performanceMetric?: string;
+	performanceValue?: number;
 }
 
 export function SearchFilterBar({
 	onSearchChange,
 	onFilterChange,
+	onPerformanceFilterChange,
 	searchValue = "",
 	filterValue = "",
+	performanceMetric = "",
+	performanceValue,
 }: SearchFilterBarProps) {
 	const [localSearch, setLocalSearch] = useState(searchValue);
-	const [localFilter, setLocalFilter] = useState(""); // Default to 'All' (empty string)
+	const [localFilter, setLocalFilter] = useState("");
+	const [localPerformanceMetric, setLocalPerformanceMetric] =
+		useState(performanceMetric);
+	const [localPerformanceValue, setLocalPerformanceValue] = useState(
+		performanceValue || ""
+	);
 
 	const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value;
@@ -45,6 +56,30 @@ export function SearchFilterBar({
 		const value = e.target.value;
 		setLocalFilter(value);
 		onFilterChange(value);
+	};
+
+	const handlePerformanceMetricChange = (e: any) => {
+		const metric = e.target.value;
+		setLocalPerformanceMetric(metric);
+		if (localPerformanceValue !== "") {
+			onPerformanceFilterChange?.(metric, Number(localPerformanceValue));
+		}
+	};
+
+	const handlePerformanceValueChange = (
+		e: React.ChangeEvent<HTMLInputElement>
+	) => {
+		const value = e.target.value;
+		setLocalPerformanceValue(value);
+		if (value !== "" && localPerformanceMetric) {
+			onPerformanceFilterChange?.(localPerformanceMetric, Number(value));
+		}
+	};
+
+	const handleClearPerformanceFilter = () => {
+		setLocalPerformanceMetric("");
+		setLocalPerformanceValue("");
+		onPerformanceFilterChange?.("", null);
 	};
 
 	return (
@@ -107,6 +142,57 @@ export function SearchFilterBar({
 					<MenuItem value="on_leave">On Leave</MenuItem>
 				</Select>
 			</FormControl>
+
+			{/* Performance Metric Filter */}
+			<Stack direction="row" spacing={1} alignItems="flex-end">
+				<FormControl size="small" sx={{ minWidth: 180 }}>
+					<InputLabel>Performance Metric</InputLabel>
+					<Select
+						value={localPerformanceMetric}
+						onChange={handlePerformanceMetricChange}
+						label="Performance Metric"
+					>
+						<MenuItem value="">
+							<em>Select metric...</em>
+						</MenuItem>
+						<MenuItem value="dailyPerformance">Daily Performance</MenuItem>
+						<MenuItem value="shiftCountPerLocation">
+							Shift Count per Location
+						</MenuItem>
+						<MenuItem value="shiftDuration">Shift Duration (hours)</MenuItem>
+						<MenuItem value="overtime">Overtime (hours)</MenuItem>
+						<MenuItem value="dailyLeave">Daily Leave</MenuItem>
+						<MenuItem value="sickLeave">Sick Leave</MenuItem>
+						<MenuItem value="absence">Absence</MenuItem>
+						<MenuItem value="travelAssignment">
+							Travel Assignment (days)
+						</MenuItem>
+					</Select>
+				</FormControl>
+
+				{/* Performance Value Filter */}
+				{localPerformanceMetric && (
+					<>
+						<TextField
+							label="Value"
+							type="number"
+							size="small"
+							value={localPerformanceValue}
+							onChange={handlePerformanceValueChange}
+							inputProps={{ min: 0 }}
+							sx={{ width: 100 }}
+						/>
+						<IconButton
+							size="small"
+							onClick={handleClearPerformanceFilter}
+							title="Clear performance filter"
+							sx={{ mb: 0.5 }}
+						>
+							<ClearIcon fontSize="small" />
+						</IconButton>
+					</>
+				)}
+			</Stack>
 		</Box>
 	);
 }

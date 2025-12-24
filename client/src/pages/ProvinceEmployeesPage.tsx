@@ -32,6 +32,8 @@ export default function ProvinceEmployeesPage() {
 	const limit = 20;
 	const [searchTerm, setSearchTerm] = useState("");
 	const [statusFilter, setStatusFilter] = useState("");
+	const [performanceMetric, setPerformanceMetric] = useState("");
+	const [performanceValue, setPerformanceValue] = useState<number | null>(null);
 	const { isGlobalAdmin } = useIsGlobalAdmin();
 	const theme = useTheme();
 	const { employees, pagination, loading, error, refetch } = useEmployees(
@@ -40,7 +42,7 @@ export default function ProvinceEmployeesPage() {
 		limit
 	);
 
-	// Filter employees based on search and status filter
+	// Filter employees based on search, status, and performance filters
 	const filteredEmployees = employees.filter((employee) => {
 		const matchesSearch =
 			searchTerm === "" ||
@@ -54,7 +56,18 @@ export default function ProvinceEmployeesPage() {
 		const matchesStatus =
 			statusFilter === "" || employee.performance?.status === statusFilter;
 
-		return matchesSearch && matchesStatus;
+		let matchesPerformance = true;
+		if (performanceMetric && performanceValue !== null && employee.performance) {
+			const perfData = employee.performance as Record<string, any>;
+			const metricValue = perfData[performanceMetric];
+			if (metricValue !== undefined && metricValue !== null) {
+				matchesPerformance = Number(metricValue) >= performanceValue;
+			} else {
+				matchesPerformance = false;
+			}
+		}
+
+		return matchesSearch && matchesStatus && matchesPerformance;
 	});
 
 	// Extract province name from first employee if available
@@ -170,8 +183,14 @@ export default function ProvinceEmployeesPage() {
 				<SearchFilterBar
 					onSearchChange={setSearchTerm}
 					onFilterChange={setStatusFilter}
+					onPerformanceFilterChange={(metric, value) => {
+						setPerformanceMetric(metric);
+						setPerformanceValue(value);
+					}}
 					searchValue={searchTerm}
 					filterValue={statusFilter}
+					performanceMetric={performanceMetric}
+					performanceValue={performanceValue ?? undefined}
 				/>
 
 				<Stack
