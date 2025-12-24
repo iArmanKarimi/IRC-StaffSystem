@@ -10,7 +10,6 @@ export interface IPerformance {
 	absence: number;
 	truckDriver: boolean;
 	travelAssignment: number;
-	month: string;
 	status: string;
 	notes?: string;
 }
@@ -25,7 +24,6 @@ export const PerformanceSchema = new Schema<IPerformance>({
 	absence: { type: Number, default: 0, min: 0 },
 	truckDriver: { type: Boolean, default: false },
 	travelAssignment: { type: Number, default: 0, min: 0, max: 31 },
-	month: { type: String, required: true /* match: /^\d{4}-(0[1-9]|1[0-2])$/ */ },
 	status: { type: String, default: 'active', enum: ['active', 'inactive', 'on_leave'] },
 	notes: { type: String, trim: true }
 });

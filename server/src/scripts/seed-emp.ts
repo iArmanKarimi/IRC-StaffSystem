@@ -37,7 +37,6 @@ async function seedEmployees() {
 		const absence = i % 2;
 		const truckDriver = i % 5 === 0;
 		const travelAssignment = i % 10;
-		const month = '2025-12';
 		const status = ["active", "inactive", "on_leave"][i % 3];
 		const notes = `Sample employee ${i}`;
 		return {
@@ -71,7 +70,6 @@ async function seedEmployees() {
 				absence,
 				truckDriver,
 				travelAssignment,
-				month,
 				status,
 				notes,
 			},

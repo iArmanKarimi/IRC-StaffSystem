@@ -43,7 +43,6 @@ export interface IPerformance {
 	absence: number;
 	truckDriver: boolean;
 	travelAssignment: number;
-	month: string; // Format: YYYY-MM
 	status: 'active' | 'inactive' | 'on_leave';
 	notes?: string;
 }

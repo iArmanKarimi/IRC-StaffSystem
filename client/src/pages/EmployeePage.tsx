@@ -20,7 +20,7 @@ import Breadcrumbs from "../components/Breadcrumbs";
 import { LoadingView } from "../components/states/LoadingView";
 import { ErrorView } from "../components/states/ErrorView";
 import { EditEmployeeDialog } from "../components/dialogs/EditEmployeeDialog";
-import PerformanceAccordion from "../components/PerformanceAccordion";
+import PerformanceDisplay from "../components/PerformanceDisplay";
 import { ConfirmDialog } from "../components/dialogs/ConfirmDialog";
 import { useEmployee } from "../hooks/useEmployee";
 import { useApiMutation } from "../hooks/useApiMutation";
@@ -130,7 +130,79 @@ export default function EmployeePage() {
 		value: any
 	) => {
 		if (!employee) return;
-		const updatedPerformance = { ...employee.performance, [key]: value };
+		if (!employee.performance) return;
+		// Ensure all required fields are present and not undefined
+		const updatedPerformance: IPerformance = {
+			dailyPerformance:
+				typeof (key === "dailyPerformance"
+					? value
+					: employee.performance.dailyPerformance) === "number"
+					? key === "dailyPerformance"
+						? value
+						: employee.performance.dailyPerformance
+					: 0,
+			shiftCountPerLocation:
+				typeof (key === "shiftCountPerLocation"
+					? value
+					: employee.performance.shiftCountPerLocation) === "number"
+					? key === "shiftCountPerLocation"
+						? value
+						: employee.performance.shiftCountPerLocation
+					: 0,
+			shiftDuration:
+				(key === "shiftDuration"
+					? value
+					: employee.performance.shiftDuration) ?? 8,
+			overtime:
+				typeof (key === "overtime" ? value : employee.performance.overtime) ===
+				"number"
+					? key === "overtime"
+						? value
+						: employee.performance.overtime
+					: 0,
+			dailyLeave:
+				typeof (key === "dailyLeave"
+					? value
+					: employee.performance.dailyLeave) === "number"
+					? key === "dailyLeave"
+						? value
+						: employee.performance.dailyLeave
+					: 0,
+			sickLeave:
+				typeof (key === "sickLeave"
+					? value
+					: employee.performance.sickLeave) === "number"
+					? key === "sickLeave"
+						? value
+						: employee.performance.sickLeave
+					: 0,
+			absence:
+				typeof (key === "absence" ? value : employee.performance.absence) ===
+				"number"
+					? key === "absence"
+						? value
+						: employee.performance.absence
+					: 0,
+			truckDriver:
+				typeof (key === "truckDriver"
+					? value
+					: employee.performance.truckDriver) === "boolean"
+					? key === "truckDriver"
+						? value
+						: employee.performance.truckDriver
+					: false,
+			travelAssignment:
+				typeof (key === "travelAssignment"
+					? value
+					: employee.performance.travelAssignment) === "number"
+					? key === "travelAssignment"
+						? value
+						: employee.performance.travelAssignment
+					: 0,
+			status:
+				(key === "status" ? value : employee.performance.status) ?? "active",
+			notes: (key === "notes" ? value : employee.performance.notes) ?? "",
+		};
 		await updatePerformance(
 			updatedPerformance,
 			"Failed to update performance record. Please try again or contact support if the issue persists."
@@ -338,11 +410,16 @@ export default function EmployeePage() {
 							<Typography variant="h6" gutterBottom>
 								Current Month Performance
 							</Typography>
-							<PerformanceAccordion
-								performance={employee.performance}
-								index={0}
-								onChange={handlePerformanceChange}
-							/>
+							{employee.performance ? (
+								<PerformanceDisplay
+									performance={employee.performance}
+									onChange={handlePerformanceChange}
+								/>
+							) : (
+								<Typography color="text.secondary">
+									No performance data available for this employee.
+								</Typography>
+							)}
 						</CardContent>
 					</Card>
 				</Stack>
