@@ -49,7 +49,7 @@ export function FormDialog({
 		>
 			<form onSubmit={handleSubmit}>
 				<DialogTitle>{title}</DialogTitle>
-				<DialogContent>{children}</DialogContent>
+				<DialogContent sx={{ pt: 3 }}>{children}</DialogContent>
 				<DialogActions>
 					<Button type="button" onClick={onClose} disabled={loading}>
 						{cancelLabel}

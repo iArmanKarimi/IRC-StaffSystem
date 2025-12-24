@@ -5,6 +5,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { FormDialog } from "./FormDialog";
+import Box from "@mui/material/Box";
 import type { IEmployee, UpdateEmployeeInput } from "../../types/models";
 
 interface EditEmployeeDialogProps {
@@ -66,6 +67,8 @@ export function EditEmployeeDialog({
 			onSave={handleSubmit}
 		>
 			<Stack spacing={3}>
+				{/* Add margin to top of dialog content to prevent label collision */}
+				<Box sx={{ mt: 2 }} />
 				{/* Basic Information */}
 				<Stack spacing={2}>
 					<TextField
@@ -256,10 +259,7 @@ export function EditEmployeeDialog({
 						select
 						value={formData.performance?.status || "active"}
 						onChange={(e) =>
-							handleFieldChange(
-								"performance.status",
-								e.target.value
-							)
+							handleFieldChange("performance.status", e.target.value)
 						}
 						fullWidth
 					>
