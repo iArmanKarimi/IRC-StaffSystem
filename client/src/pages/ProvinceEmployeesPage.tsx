@@ -34,11 +34,23 @@ export default function ProvinceEmployeesPage() {
 	const [statusFilter, setStatusFilter] = useState("");
 	const { isGlobalAdmin } = useIsGlobalAdmin();
 	const theme = useTheme();
+	// Fetch all employees for client-side filtering and pagination
 	const { employees, pagination, loading, error, refetch } = useEmployees(
 		provinceId,
-		page + 1,
-		limit
+		1,
+		10000
 	);
+
+	// Reset to first page when search or filter changes
+	const handleSearchChange = (value: string) => {
+		setSearchTerm(value);
+		setPage(0);
+	};
+
+	const handleFilterChange = (value: string) => {
+		setStatusFilter(value);
+		setPage(0);
+	};
 
 	// Filter employees based on search and status filter
 	const filteredEmployees = employees.filter((employee) => {
@@ -169,8 +181,8 @@ export default function ProvinceEmployeesPage() {
 				/>
 
 				<SearchFilterBar
-					onSearchChange={setSearchTerm}
-					onFilterChange={setStatusFilter}
+					onSearchChange={handleSearchChange}
+					onFilterChange={handleFilterChange}
 					searchValue={searchTerm}
 					filterValue={statusFilter}
 				/>
