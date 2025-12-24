@@ -162,7 +162,7 @@ export default function EmployeePage() {
 				}
 				backLabel="Back to Employees"
 			/>
-			<Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+			<Container maxWidth="lg">
 				<Breadcrumbs
 					provinceName={
 						typeof employee.provinceId === "object"
@@ -309,13 +309,17 @@ export default function EmployeePage() {
 									</Typography>
 									<Box sx={{ mt: 0.5 }}>
 										<Chip
-											label={employee.performance.status
-												.replace("_", " ")
-												.toUpperCase()}
+											label={
+												employee.performance?.status
+													? employee.performance.status
+															.replace("_", " ")
+															.toUpperCase()
+													: "N/A"
+											}
 											color={
-												employee.performance.status === "active"
+												employee.performance?.status === "active"
 													? "success"
-													: employee.performance.status === "inactive"
+													: employee.performance?.status === "inactive"
 													? "error"
 													: "warning"
 											}
