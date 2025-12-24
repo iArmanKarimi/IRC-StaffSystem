@@ -64,6 +64,7 @@ export const theme = createTheme({
 			lineHeight: 1.3,
 			letterSpacing: '-0.02em',
 			color: '#2c3e50',
+			marginBottom: '1.5rem',
 		},
 		h2: {
 			fontSize: '1.75rem',
@@ -71,30 +72,38 @@ export const theme = createTheme({
 			lineHeight: 1.35,
 			letterSpacing: '-0.01em',
 			color: '#2c3e50',
+			marginBottom: '1.25rem',
+			marginTop: '0.5rem',
 		},
 		h3: {
 			fontSize: '1.5rem',
 			fontWeight: 600,
 			lineHeight: 1.4,
 			color: '#2c3e50',
+			marginBottom: '1rem',
+			marginTop: '0.5rem',
 		},
 		h4: {
 			fontSize: '1.25rem',
 			fontWeight: 600,
 			lineHeight: 1.4,
 			color: '#2c3e50',
+			marginBottom: '0.875rem',
+			marginTop: '0.5rem',
 		},
 		h5: {
 			fontSize: '1.125rem',
 			fontWeight: 600,
 			lineHeight: 1.4,
 			color: '#2c3e50',
+			marginBottom: '0.75rem',
 		},
 		h6: {
 			fontSize: '1rem',
 			fontWeight: 600,
 			lineHeight: 1.5,
 			color: '#2c3e50',
+			marginBottom: '0.75rem',
 		},
 		body1: {
 			fontSize: '0.9375rem',
@@ -170,9 +179,35 @@ export const theme = createTheme({
 				},
 			},
 		},
+		MuiCardContent: {
+			styleOverrides: {
+				root: {
+					padding: '24px',
+					'&:last-child': {
+						paddingBottom: '24px',
+					},
+				},
+			},
+		},
+		MuiFormControlLabel: {
+			styleOverrides: {
+				root: {
+					marginRight: '24px',
+					marginBottom: '8px',
+				},
+			},
+		},
+		MuiFormControl: {
+			styleOverrides: {
+				root: {
+					marginBottom: '8px',
+				},
+			},
+		},
 		MuiTextField: {
 			styleOverrides: {
 				root: {
+					marginBottom: '8px',
 					'& .MuiOutlinedInput-root': {
 						backgroundColor: '#ffffff',
 						'& fieldset': {

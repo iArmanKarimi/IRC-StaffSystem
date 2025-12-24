@@ -24,14 +24,16 @@ export function PerformanceCard({
 	return (
 		<Accordion>
 			<AccordionSummary expandIcon={<ExpandMoreIcon />}>
-				<Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
+				<Box
+					sx={{ display: "flex", alignItems: "center", width: "100%", gap: 2 }}
+				>
 					<Typography sx={{ flex: 1, fontWeight: "medium" }}>
 						{performance.month
 							? `Performance: ${performance.month}`
 							: "Performance Record"}
 					</Typography>
 					<Box
-						sx={{ display: "flex", gap: 0.5 }}
+						sx={{ display: "flex", gap: 1 }}
 						onClick={(e) => e.stopPropagation()}
 					>
 						<IconButton size="small" onClick={onEdit} color="primary">
@@ -44,7 +46,7 @@ export function PerformanceCard({
 				</Box>
 			</AccordionSummary>
 			<AccordionDetails>
-				<Stack spacing={1}>
+				<Stack spacing={1.5}>
 					<Box sx={{ display: "flex", justifyContent: "space-between" }}>
 						<Typography variant="body2" color="text.secondary">
 							Daily Performance:

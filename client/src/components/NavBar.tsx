@@ -45,13 +45,13 @@ export default function NavBar({
 
 	return (
 		<AppBar position="static" color="primary">
-			<Toolbar sx={{ minHeight: 64 }}>
+			<Toolbar sx={{ minHeight: 64, px: { xs: 2, sm: 3 } }}>
 				{backTo && (
 					<IconButton
 						edge="start"
 						color="inherit"
 						onClick={() => navigate(backTo)}
-						sx={{ mr: 2 }}
+						sx={{ mr: 1.5 }}
 						aria-label={backLabel}
 					>
 						<ArrowBackIcon />
@@ -68,12 +68,13 @@ export default function NavBar({
 						overflow: "hidden",
 						textOverflow: "ellipsis",
 						whiteSpace: "nowrap",
+						ml: 1,
 					}}
 				>
 					{title}
 				</Typography>
 				{showLogout && (
-					<Box>
+					<Box sx={{ ml: 2 }}>
 						{isMobile ? (
 							<IconButton
 								color="inherit"

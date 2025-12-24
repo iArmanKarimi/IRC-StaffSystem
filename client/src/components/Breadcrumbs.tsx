@@ -74,7 +74,7 @@ export default function Breadcrumbs({
 	}
 
 	return (
-		<Box sx={{ mt: 0, mb: 1 }}>
+		<Box sx={{ mb: 2.5, mt: 1 }}>
 			<MuiBreadcrumbs
 				separator={<NavigateNextIcon fontSize="small" />}
 				aria-label="breadcrumb"

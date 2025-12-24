@@ -64,11 +64,18 @@ export default function LoginFormPage() {
 					display: "flex",
 					alignItems: "center",
 					justifyContent: "center",
+					py: 4,
 				}}
 			>
 				<Card sx={{ width: "100%", maxWidth: 400 }}>
-					<CardContent sx={{ p: 4 }}>
-						<Typography variant="h4" component="h1" gutterBottom align="center">
+					<CardContent sx={{ p: 3 }}>
+						<Typography
+							variant="h4"
+							component="h1"
+							gutterBottom
+							align="center"
+							sx={{ mb: 1 }}
+						>
 							Login
 						</Typography>
 						<Typography
@@ -81,7 +88,7 @@ export default function LoginFormPage() {
 						</Typography>
 
 						<form onSubmit={handleSubmit}>
-							<Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+							<Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
 								<TextField
 									label="Username"
 									type="text"
@@ -106,7 +113,7 @@ export default function LoginFormPage() {
 									fullWidth
 									disabled={loading}
 									startIcon={<LoginIcon />}
-									sx={{ mt: 1 }}
+									sx={{ mt: 2 }}
 								>
 									{loading ? "Logging in..." : "Login"}
 								</Button>

@@ -160,7 +160,7 @@ export default function ProvinceEmployeesPage() {
 				backLabel="Back to Provinces"
 			/>
 			<Container
-				sx={{ mt: 2, mb: 4, display: "flex", flexDirection: "column", gap: 3 }}
+				sx={{ py: 2, display: "flex", flexDirection: "column", gap: 2 }}
 			>
 				<Breadcrumbs
 					provinceName={provinceName || undefined}
@@ -179,12 +179,17 @@ export default function ProvinceEmployeesPage() {
 					justifyContent="space-between"
 					alignItems="center"
 					gap={2}
+					sx={{ mb: 0 }}
 				>
 					<Stack>
-						<Typography variant="h4" component="h1" gutterBottom>
+						<Typography variant="h5" component="h1" gutterBottom sx={{ m: 0 }}>
 							Employees
 						</Typography>
-						<Typography variant="body2" color="text.secondary">
+						<Typography
+							variant="caption"
+							color="text.secondary"
+							sx={{ display: "block" }}
+						>
 							{loading ? "Loading province..." : provinceName}
 						</Typography>
 					</Stack>
@@ -228,15 +233,15 @@ export default function ProvinceEmployeesPage() {
 							disableDensitySelector
 							disableRowSelectionOnClick
 							paginationMode="client"
-							rowHeight={40}
+							rowHeight={35}
 							getRowClassName={() => "custom-row"}
 							getCellClassName={() => "custom-cell"}
 							hideFooterPagination
 							hideFooter={false}
 							sx={{
-								borderRadius: 2,
+								borderRadius: 1,
 								border: "1px solid",
-								borderColor: theme.palette.grey[400],
+								borderColor: theme.palette.grey[300],
 								"& .custom-row": {
 									alignItems: "center",
 								},

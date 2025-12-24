@@ -48,8 +48,8 @@ export default function GlobalAdminDashboardPage() {
 	return (
 		<>
 			<NavBar title="Provinces - Global Admin" />
-			<Container sx={{ mt: 4 }}>
-				<Typography variant="h4" component="h1" gutterBottom>
+			<Container sx={{ py: 4 }}>
+				<Typography variant="h4" component="h1" gutterBottom sx={{ mb: 3 }}>
 					Provinces
 				</Typography>
 

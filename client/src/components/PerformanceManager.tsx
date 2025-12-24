@@ -91,15 +91,19 @@ export function PerformanceManager({
 							display: "flex",
 							justifyContent: "space-between",
 							alignItems: "center",
-							mb: 2,
+							mb: 3,
+							gap: 2,
 						}}
 					>
-						<Typography variant="h6">Performance Records</Typography>
+						<Typography variant="h6" sx={{ m: 0 }}>
+							Performance Records
+						</Typography>
 						<Button
 							variant="contained"
 							size="small"
 							startIcon={<AddIcon />}
 							onClick={handleAddClick}
+							sx={{ whiteSpace: "nowrap" }}
 						>
 							Add Performance
 						</Button>
@@ -109,7 +113,7 @@ export function PerformanceManager({
 							No performance records yet.
 						</Typography>
 					) : (
-						<Stack spacing={1}>
+						<Stack spacing={1.5}>
 							{performances.map((perf, index) => (
 								<PerformanceCard
 									key={index}

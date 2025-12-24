@@ -38,7 +38,7 @@ const PerformanceAccordion: React.FC<PerformanceAccordionProps> = ({
 				</Typography>
 			</AccordionSummary>
 			<AccordionDetails>
-				<Stack spacing={2} sx={{ mt: 2 }}>
+				<Stack spacing={2.5} sx={{ mt: 1 }}>
 					<TextField
 						label="Month (YYYY-MM)"
 						type="month"
@@ -47,15 +47,14 @@ const PerformanceAccordion: React.FC<PerformanceAccordionProps> = ({
 						onChange={(e) => onChange("month", e.target.value)}
 						InputLabelProps={{ shrink: true }}
 						fullWidth
-						sx={{ mt: 2 }}
 					/>
-					<Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+					<Box sx={{ display: "flex", gap: 2.5, flexWrap: "wrap" }}>
 						<TextField
 							label="Daily Performance"
 							type="number"
 							required
 							inputProps={{ min: 0 }}
-							sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
+							sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
 							value={performance.dailyPerformance}
 							onChange={(e) =>
 								onChange("dailyPerformance", Number(e.target.value))
@@ -66,16 +65,16 @@ const PerformanceAccordion: React.FC<PerformanceAccordionProps> = ({
 							type="number"
 							required
 							inputProps={{ min: 0 }}
-							sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
+							sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
 							value={performance.shiftCountPerLocation}
 							onChange={(e) =>
 								onChange("shiftCountPerLocation", Number(e.target.value))
 							}
 						/>
 					</Box>
-					<Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+					<Box sx={{ display: "flex", gap: 2.5, flexWrap: "wrap" }}>
 						<FormControl
-							sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
+							sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
 							required
 						>
 							<InputLabel>Shift Duration</InputLabel>
@@ -95,17 +94,17 @@ const PerformanceAccordion: React.FC<PerformanceAccordionProps> = ({
 							label="Overtime"
 							type="number"
 							inputProps={{ min: 0 }}
-							sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
+							sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
 							value={performance.overtime}
 							onChange={(e) => onChange("overtime", Number(e.target.value))}
 						/>
 					</Box>
-					<Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+					<Box sx={{ display: "flex", gap: 2.5, flexWrap: "wrap" }}>
 						<TextField
 							label="Daily Leave"
 							type="number"
 							inputProps={{ min: 0 }}
-							sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
+							sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
 							value={performance.dailyLeave}
 							onChange={(e) => onChange("dailyLeave", Number(e.target.value))}
 						/>
@@ -113,31 +112,31 @@ const PerformanceAccordion: React.FC<PerformanceAccordionProps> = ({
 							label="Sick Leave"
 							type="number"
 							inputProps={{ min: 0 }}
-							sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
+							sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
 							value={performance.sickLeave}
 							onChange={(e) => onChange("sickLeave", Number(e.target.value))}
 						/>
 					</Box>
-					<Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+					<Box sx={{ display: "flex", gap: 2.5, flexWrap: "wrap" }}>
 						<TextField
 							label="Absence"
 							type="number"
 							inputProps={{ min: 0 }}
-							sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
+							sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
 							value={performance.absence}
 							onChange={(e) => onChange("absence", Number(e.target.value))}
 						/>
-<TextField
-label="Travel Assignment (days)"
-type="number"
-inputProps={{ min: 0, max: 31 }}
-sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
-value={performance.travelAssignment}
-onChange={(e) =>
-onChange("travelAssignment", Number(e.target.value))
-}
-/>
-</Box>
+						<TextField
+							label="Travel Assignment (days)"
+							type="number"
+							inputProps={{ min: 0, max: 31 }}
+							sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
+							value={performance.travelAssignment}
+							onChange={(e) =>
+								onChange("travelAssignment", Number(e.target.value))
+							}
+						/>
+					</Box>
 					<FormControlLabel
 						control={
 							<Checkbox
@@ -146,20 +145,21 @@ onChange("travelAssignment", Number(e.target.value))
 							/>
 						}
 						label="Truck Driver"
+						sx={{ mt: 0.5 }}
 					/>
-<FormControl fullWidth>
-<InputLabel>Status</InputLabel>
-<Select
-value={performance.status || "active"}
-label="Status"
-onChange={(e) => onChange("status", e.target.value)}
->
-<MenuItem value="active">Active</MenuItem>
-<MenuItem value="inactive">Inactive</MenuItem>
-<MenuItem value="on_leave">On Leave</MenuItem>
-</Select>
-</FormControl>
-<TextField
+					<FormControl fullWidth>
+						<InputLabel>Status</InputLabel>
+						<Select
+							value={performance.status || "active"}
+							label="Status"
+							onChange={(e) => onChange("status", e.target.value)}
+						>
+							<MenuItem value="active">Active</MenuItem>
+							<MenuItem value="inactive">Inactive</MenuItem>
+							<MenuItem value="on_leave">On Leave</MenuItem>
+						</Select>
+					</FormControl>
+					<TextField
 						label="Notes"
 						multiline
 						rows={2}

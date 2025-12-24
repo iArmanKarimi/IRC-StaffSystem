@@ -23,14 +23,14 @@ const PerformanceDisplay: React.FC<PerformanceDisplayProps> = ({
 	onChange,
 }) => {
 	return (
-		<Stack spacing={2}>
-			<Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+		<Stack spacing={2.5}>
+			<Box sx={{ display: "flex", gap: 2.5, flexWrap: "wrap" }}>
 				<TextField
 					label="Daily Performance"
 					type="number"
 					required
 					inputProps={{ min: 0 }}
-					sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
+					sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
 					value={performance.dailyPerformance}
 					onChange={(e) => onChange("dailyPerformance", Number(e.target.value))}
 				/>
@@ -39,16 +39,17 @@ const PerformanceDisplay: React.FC<PerformanceDisplayProps> = ({
 					type="number"
 					required
 					inputProps={{ min: 0 }}
-					sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
+					sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
 					value={performance.shiftCountPerLocation}
 					onChange={(e) =>
 						onChange("shiftCountPerLocation", Number(e.target.value))
 					}
 				/>
 			</Box>
-			<Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+
+			<Box sx={{ display: "flex", gap: 2.5, flexWrap: "wrap" }}>
 				<FormControl
-					sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
+					sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
 					required
 				>
 					<InputLabel>Shift Duration</InputLabel>
@@ -66,17 +67,18 @@ const PerformanceDisplay: React.FC<PerformanceDisplayProps> = ({
 					label="Overtime"
 					type="number"
 					inputProps={{ min: 0 }}
-					sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
+					sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
 					value={performance.overtime}
 					onChange={(e) => onChange("overtime", Number(e.target.value))}
 				/>
 			</Box>
-			<Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+
+			<Box sx={{ display: "flex", gap: 2.5, flexWrap: "wrap" }}>
 				<TextField
 					label="Daily Leave"
 					type="number"
 					inputProps={{ min: 0 }}
-					sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
+					sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
 					value={performance.dailyLeave}
 					onChange={(e) => onChange("dailyLeave", Number(e.target.value))}
 				/>
@@ -84,17 +86,18 @@ const PerformanceDisplay: React.FC<PerformanceDisplayProps> = ({
 					label="Sick Leave"
 					type="number"
 					inputProps={{ min: 0 }}
-					sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
+					sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
 					value={performance.sickLeave}
 					onChange={(e) => onChange("sickLeave", Number(e.target.value))}
 				/>
 			</Box>
-			<Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+
+			<Box sx={{ display: "flex", gap: 2.5, flexWrap: "wrap" }}>
 				<TextField
 					label="Absence"
 					type="number"
 					inputProps={{ min: 0 }}
-					sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
+					sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
 					value={performance.absence}
 					onChange={(e) => onChange("absence", Number(e.target.value))}
 				/>
@@ -102,11 +105,12 @@ const PerformanceDisplay: React.FC<PerformanceDisplayProps> = ({
 					label="Travel Assignment"
 					type="number"
 					inputProps={{ min: 0 }}
-					sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
+					sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
 					value={performance.travelAssignment}
 					onChange={(e) => onChange("travelAssignment", Number(e.target.value))}
 				/>
 			</Box>
+
 			<FormControlLabel
 				control={
 					<Checkbox
@@ -115,7 +119,9 @@ const PerformanceDisplay: React.FC<PerformanceDisplayProps> = ({
 					/>
 				}
 				label="Truck Driver"
+				sx={{ mt: 0.5 }}
 			/>
+
 			<FormControl fullWidth>
 				<InputLabel>Status</InputLabel>
 				<Select
@@ -127,6 +133,7 @@ const PerformanceDisplay: React.FC<PerformanceDisplayProps> = ({
 					<MenuItem value="inactive">Inactive</MenuItem>
 				</Select>
 			</FormControl>
+
 			<TextField
 				label="Notes"
 				multiline

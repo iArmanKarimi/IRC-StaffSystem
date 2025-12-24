@@ -234,7 +234,7 @@ export default function EmployeePage() {
 				}
 				backLabel="Back to Employees"
 			/>
-			<Container maxWidth="lg">
+			<Container maxWidth="lg" sx={{ py: 4 }}>
 				<Breadcrumbs
 					provinceName={
 						typeof employee.provinceId === "object"
@@ -250,18 +250,20 @@ export default function EmployeePage() {
 						justifyContent: "space-between",
 						alignItems: "center",
 						mb: 3,
+						gap: 2,
 					}}
 				>
-					<Typography variant="h4" component="h1">
+					<Typography variant="h4" component="h1" sx={{ m: 0 }}>
 						Employee Details
 					</Typography>
-					<Box sx={{ display: "flex", gap: 2 }}>
+					<Box sx={{ display: "flex", gap: 1.5 }}>
 						<Button
 							variant="contained"
 							color="primary"
 							startIcon={<EditIcon />}
 							onClick={handleEditOpen}
 							aria-label="Edit Employee"
+							size="medium"
 						>
 							Edit Employee
 						</Button>
@@ -271,6 +273,7 @@ export default function EmployeePage() {
 							startIcon={<DeleteIcon />}
 							onClick={() => setDeleteDialogOpen(true)}
 							aria-label="Delete Employee"
+							size="medium"
 						>
 							Delete Employee
 						</Button>
@@ -287,12 +290,12 @@ export default function EmployeePage() {
 					{/* Basic Info & WorkPlace - Side by side on desktop */}
 					<Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
 						<Card sx={{ flex: "1 1 400px" }}>
-							<CardContent>
-								<Typography variant="h6" gutterBottom>
+							<CardContent sx={{ pb: "24px !important" }}>
+								<Typography variant="h6" gutterBottom sx={{ mb: 1.5 }}>
 									Basic Information
 								</Typography>
-								<Divider sx={{ mb: 2 }} />
-								<Stack spacing={1.5}>
+								<Divider sx={{ mb: 2.5 }} />
+								<Stack spacing={2}>
 									<InfoField
 										label="First Name"
 										value={employee.basicInfo.firstName}
@@ -322,12 +325,12 @@ export default function EmployeePage() {
 						</Card>
 
 						<Card sx={{ flex: "1 1 400px" }}>
-							<CardContent>
-								<Typography variant="h6" gutterBottom>
+							<CardContent sx={{ pb: "24px !important" }}>
+								<Typography variant="h6" gutterBottom sx={{ mb: 1.5 }}>
 									WorkPlace Information
 								</Typography>
-								<Divider sx={{ mb: 2 }} />
-								<Stack spacing={1.5}>
+								<Divider sx={{ mb: 2.5 }} />
+								<Stack spacing={2}>
 									<InfoField label="Branch" value={employee.workPlace.branch} />
 									<InfoField label="Rank" value={employee.workPlace.rank} />
 									<InfoField
@@ -341,11 +344,11 @@ export default function EmployeePage() {
 
 					{/* Additional Specifications */}
 					<Card>
-						<CardContent>
-							<Typography variant="h6" gutterBottom>
+						<CardContent sx={{ pb: "24px !important" }}>
+							<Typography variant="h6" gutterBottom sx={{ mb: 1.5 }}>
 								Additional Specifications
 							</Typography>
-							<Divider sx={{ mb: 2 }} />
+							<Divider sx={{ mb: 2.5 }} />
 							<Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
 								<InfoField
 									label="Educational Degree"

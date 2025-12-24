@@ -51,10 +51,10 @@ export function SearchFilterBar({
 		<Box
 			sx={{
 				display: "flex",
-				gap: 2,
+				gap: 2.5,
 				alignItems: "flex-end",
 				flexWrap: "wrap",
-				padding: 1.5,
+				p: 2,
 				backgroundColor: "background.paper",
 				borderRadius: 1,
 				border: "1px solid",
