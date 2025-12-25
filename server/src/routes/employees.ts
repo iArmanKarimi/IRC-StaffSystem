@@ -87,31 +87,22 @@ const formatDate = (date: Date | string | undefined): string => {
 
 // Helper function to prepare Excel export data
 const prepareEmployeesExcel = (employees: any[]) => {
-	// Prepare Basic Info sheet
-	const basicInfoData = employees.map((emp) => ({
-		"Employee ID": emp._id?.toString() || "-",
+	// Create a single complete sheet with all employee data (no _id)
+	const completeData = employees.map((emp) => ({
+		// Basic Info
 		"First Name": emp.basicInfo?.firstName || "-",
 		"Last Name": emp.basicInfo?.lastName || "-",
 		"National ID": emp.basicInfo?.nationalID || "-",
 		Gender: emp.basicInfo?.male ? "Male" : "Female",
 		Married: emp.basicInfo?.married ? "Yes" : "No",
 		"Children Count": emp.basicInfo?.childrenCount ?? "-",
-		"Created At": formatDate(emp.createdAt),
-	}));
 
-	// Prepare WorkPlace sheet
-	const workPlaceData = employees.map((emp) => ({
-		"Employee ID": emp._id?.toString() || "-",
-		"Employee Name": `${emp.basicInfo?.firstName} ${emp.basicInfo?.lastName}`,
+		// Work Place
 		Branch: emp.workPlace?.branch || "-",
 		Rank: emp.workPlace?.rank || "-",
 		"Licensed Workplace": emp.workPlace?.licensedWorkplace || "-",
-	}));
 
-	// Prepare Additional Specifications sheet
-	const additionalSpecsData = employees.map((emp) => ({
-		"Employee ID": emp._id?.toString() || "-",
-		"Employee Name": `${emp.basicInfo?.firstName} ${emp.basicInfo?.lastName}`,
+		// Additional Specifications
 		"Educational Degree": emp.additionalSpecifications?.educationalDegree || "-",
 		"Date of Birth": formatDate(emp.additionalSpecifications?.dateOfBirth),
 		"Contact Number": emp.additionalSpecifications?.contactNumber || "-",
@@ -119,12 +110,8 @@ const prepareEmployeesExcel = (employees: any[]) => {
 		"Job End Date": emp.additionalSpecifications?.jobEndDate
 			? formatDate(emp.additionalSpecifications.jobEndDate)
 			: "-",
-	}));
 
-	// Prepare Performance sheet
-	const performanceData = employees.map((emp) => ({
-		"Employee ID": emp._id?.toString() || "-",
-		"Employee Name": `${emp.basicInfo?.firstName} ${emp.basicInfo?.lastName}`,
+		// Performance
 		"Daily Performance": emp.performance?.dailyPerformance ?? "-",
 		"Shift Count Per Location": emp.performance?.shiftCountPerLocation ?? "-",
 		"Shift Duration": emp.performance?.shiftDuration
@@ -138,25 +125,22 @@ const prepareEmployeesExcel = (employees: any[]) => {
 		"Travel Assignment": emp.performance?.travelAssignment ?? "-",
 		Status: emp.performance?.status?.toUpperCase() ?? "-",
 		Notes: emp.performance?.notes || "-",
+
+		// Meta
+		Province: typeof emp.provinceId === "string" ? emp.provinceId : emp.provinceId?.name || "-",
+		"Created At": formatDate(emp.createdAt),
+		"Updated At": formatDate(emp.updatedAt),
 	}));
 
-	// Create workbook and add sheets
+	// Create workbook with single complete sheet
 	const workbook = XLSX.utils.book_new();
-	const basicInfoSheet = XLSX.utils.json_to_sheet(basicInfoData);
-	const workPlaceSheet = XLSX.utils.json_to_sheet(workPlaceData);
-	const additionalSpecsSheet = XLSX.utils.json_to_sheet(additionalSpecsData);
-	const performanceSheet = XLSX.utils.json_to_sheet(performanceData);
+	const completeSheet = XLSX.utils.json_to_sheet(completeData);
 
-	// Set column widths
-	basicInfoSheet["!cols"] = [20, 15, 15, 15, 10, 10, 15, 15].map((width) => ({ wch: width }));
-	workPlaceSheet["!cols"] = [20, 25, 15, 15, 20].map((width) => ({ wch: width }));
-	additionalSpecsSheet["!cols"] = [20, 25, 18, 15, 15, 15, 15].map((width) => ({ wch: width }));
-	performanceSheet["!cols"] = [20, 25, 15, 18, 15, 10, 12, 12, 10, 15, 18, 12, 20].map((width) => ({ wch: width }));
+	// Set reasonable column widths
+	const colCount = Object.keys(completeData[0] || {}).length;
+	completeSheet["!cols"] = new Array(colCount).fill(0).map(() => ({ wch: 18 }));
 
-	XLSX.utils.book_append_sheet(workbook, basicInfoSheet, "Basic Info");
-	XLSX.utils.book_append_sheet(workbook, workPlaceSheet, "WorkPlace");
-	XLSX.utils.book_append_sheet(workbook, additionalSpecsSheet, "Additional Specs");
-	XLSX.utils.book_append_sheet(workbook, performanceSheet, "Performance");
+	XLSX.utils.book_append_sheet(workbook, completeSheet, "Employees");
 
 	return workbook;
 };
