@@ -20,8 +20,7 @@
 		"dayjs": "^1.11.19",
 		"react": "^19.2.0",
 		"react-dom": "^19.2.0",
-		"react-router-dom": "^7.10.1",
-		"xlsx": "^0.18.5"
+		"react-router-dom": "^7.10.1"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.39.1",
