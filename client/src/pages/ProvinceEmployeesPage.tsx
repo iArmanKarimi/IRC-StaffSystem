@@ -198,19 +198,6 @@ export default function ProvinceEmployeesPage() {
 					showProvincesLink={isGlobalAdmin}
 				/>
 
-				<SearchFilterBar
-					onSearchChange={setSearchTerm}
-					onFilterChange={setStatusFilter}
-					onPerformanceFilterChange={(metric, value) => {
-						setPerformanceMetric(metric);
-						setPerformanceValue(value);
-					}}
-					searchValue={searchTerm}
-					filterValue={statusFilter}
-					performanceMetric={performanceMetric}
-					performanceValue={performanceValue ?? undefined}
-				/>
-
 				<Stack
 					direction="row"
 					justifyContent="space-between"
@@ -270,6 +257,19 @@ export default function ProvinceEmployeesPage() {
 						</Button>
 					</Stack>
 				</Stack>
+
+				<SearchFilterBar
+					onSearchChange={setSearchTerm}
+					onFilterChange={setStatusFilter}
+					onPerformanceFilterChange={(metric, value) => {
+						setPerformanceMetric(metric);
+						setPerformanceValue(value);
+					}}
+					searchValue={searchTerm}
+					filterValue={statusFilter}
+					performanceMetric={performanceMetric}
+					performanceValue={performanceValue ?? undefined}
+				/>
 
 				{!loading && employees.length === 0 ? (
 					<EmptyState message="No employees found." />
