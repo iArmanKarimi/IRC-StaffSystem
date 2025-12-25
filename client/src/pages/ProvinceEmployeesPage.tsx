@@ -8,6 +8,7 @@ import Chip from "@mui/material/Chip";
 import Pagination from "@mui/material/Pagination";
 import AddIcon from "@mui/icons-material/Add";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import {
 	DataGrid,
 	type GridColDef,
@@ -24,6 +25,7 @@ import { LoadingView } from "../components/states/LoadingView";
 import { ErrorView } from "../components/states/ErrorView";
 import { EmptyState } from "../components/states/EmptyState";
 import { formatEmployeeName } from "../utils/formatters";
+import { exportEmployeesToExcel } from "../utils/excelExporter";
 import type { IEmployee } from "../types/models";
 
 export default function ProvinceEmployeesPage() {
@@ -242,6 +244,22 @@ export default function ProvinceEmployeesPage() {
 									variant="outlined"
 								/>
 							</>
+						)}
+						{isGlobalAdmin && (
+							<Button
+								onClick={() => {
+									const fileName = `employees_${
+										provinceName?.replace(/\s+/g, "_") || "province"
+									}_${new Date().toISOString().split("T")[0]}.xlsx`;
+									exportEmployeesToExcel(employees, fileName);
+								}}
+								variant="outlined"
+								color="primary"
+								startIcon={<FileDownloadIcon />}
+								disabled={employees.length === 0}
+							>
+								Export to Excel
+							</Button>
 						)}
 						<Button
 							component={Link}
