@@ -25,7 +25,8 @@
 		"express-rate-limit": "^8.2.1",
 		"express-session": "^1.18.2",
 		"jsonwebtoken": "^9.0.2",
-		"mongoose": "^8.3.3"
+		"mongoose": "^8.3.3",
+		"xlsx": "^0.18.5"
 	},
 	"devDependencies": {
 		"@types/bcrypt": "^6.0.0",

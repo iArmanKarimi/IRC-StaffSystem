@@ -5,6 +5,7 @@ import MongoStore from "connect-mongo";
 import authRoutes from "./routes/auth";
 import provinceRoutes from "./routes/provinces";
 import employeeRoutes from './routes/employees';
+import employeesGlobalRoutes from './routes/employees-global';
 import apiDocsRoutes from './routes/api-docs';
 import { errorHandler } from "./middleware/errorHandler";
 import { requestLogger } from "./middleware/logger";
@@ -60,6 +61,9 @@ app.use('/api-docs', apiDocsRoutes);
 
 // Auth routes
 app.use('/auth', authRoutes);
+
+// Global employees routes (export all employees)
+app.use('/employees', employeesGlobalRoutes);
 
 // Province routes (includes employee routes as nested)
 app.use('/provinces', provinceRoutes);
