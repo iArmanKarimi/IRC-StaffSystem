@@ -25,7 +25,7 @@ const formatDate = (date: Date | string | undefined): string => {
 
 // Helper function to prepare Excel export data
 const prepareEmployeesExcel = (employees: any[]) => {
-	// Create a single complete sheet with all employee data (no _id)
+	// Create a single complete sheet with all employee data (no _id, no meta fields)
 	const completeData = employees.map((emp) => ({
 		// Basic Info
 		"First Name": emp.basicInfo?.firstName || "-",
@@ -63,11 +63,6 @@ const prepareEmployeesExcel = (employees: any[]) => {
 		"Travel Assignment": emp.performance?.travelAssignment ?? "-",
 		Status: emp.performance?.status?.toUpperCase() ?? "-",
 		Notes: emp.performance?.notes || "-",
-
-		// Meta
-		Province: typeof emp.provinceId === "string" ? emp.provinceId : emp.provinceId?.name || "-",
-		"Created At": formatDate(emp.createdAt),
-		"Updated At": formatDate(emp.updatedAt),
 	}));
 
 	// Create workbook with single complete sheet
