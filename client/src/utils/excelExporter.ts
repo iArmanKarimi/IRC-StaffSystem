@@ -28,6 +28,7 @@ export const exportEmployeesToExcel = (
 	const workPlaceSheet = prepareWorkPlaceSheet(employees);
 	const additionalSpecSheet = prepareAdditionalSpecsSheet(employees);
 	const performanceSheet = preparePerformanceSheet(employees);
+	const fullRecordSheet = prepareFullRecordSheet(employees);
 
 	// Add sheets to workbook
 	XLSX.utils.book_append_sheet(workbook, allEmployeesSheet, "All Employees");
@@ -39,6 +40,7 @@ export const exportEmployeesToExcel = (
 		"Additional Specs"
 	);
 	XLSX.utils.book_append_sheet(workbook, performanceSheet, "Performance");
+	XLSX.utils.book_append_sheet(workbook, fullRecordSheet, "Full Record");
 
 	// Generate and download the file
 	XLSX.writeFile(workbook, fileName);
@@ -190,6 +192,28 @@ const prepareAllEmployeesSheet = (employees: IEmployee[]) => {
 	// reasonable column widths for many fields
 	const colWidths = new Array(Object.keys(data[0] || {}).length).fill(18);
 	worksheet["!cols"] = colWidths.map((wch) => ({ wch }));
+	return worksheet;
+};
+
+/**
+ * Prepares a sheet that contains the full employee object (as JSON) per row
+ * Excludes the internal `_id` field because employee id is considered redundant
+ */
+const prepareFullRecordSheet = (employees: IEmployee[]) => {
+	const data: ExportRowData[] = employees.map((emp) => {
+		// clone and remove _id
+		const copy: any = JSON.parse(JSON.stringify(emp));
+		if (copy && typeof copy === "object") delete copy._id;
+
+		return {
+			"Employee Name": `${emp.basicInfo?.firstName || ""} ${emp.basicInfo?.lastName || ""}`.trim() || "-",
+			"Full Record (JSON)": JSON.stringify(copy, null, 0),
+		};
+	});
+
+	const worksheet = XLSX.utils.json_to_sheet(data);
+	// reasonable column widths
+	worksheet["!cols"] = [{ wch: 25 }, { wch: 120 }];
 	return worksheet;
 };
 
