@@ -1,19 +1,179 @@
 {
 	"admins": {
 		"globalAdmin": {
-			"username": "adminuser",
-			"password": "change-me-in-production"
+			"username": "",
+			"password": ""
 		},
 		"provinceAdmins": [
 			{
-				"username": "provinceadmin1",
-				"password": "change-me-in-production",
-				"provinceName": "Province Name 1"
+				"username": "",
+				"password": "",
+				"provinceName": "تهران"
 			},
 			{
-				"username": "provinceadmin2",
-				"password": "change-me-in-production",
-				"provinceName": "Province Name 2"
+				"username": "",
+				"password": "",
+				"provinceName": "البرز"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "اصفهان"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "آذربایجان شرقی"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "آذربایجان غربی"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "اردبیل"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "ایلام"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "بوشهر"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "چهارمحال و بختیاری"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "خراسان جنوبی"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "خراسان رضوی"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "خراسان شمالی"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "خوزستان"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "زنجان"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "سمنان"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "سیستان و بلوچستان"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "فارس"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "قزوین"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "قم"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "کرمان"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "کرمانشاه"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "کهگیلویه و بویراحمد"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "گلستان"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "گیلان"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "لرستان"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "مازندران"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "مرکزی"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "هرمزگان"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "همدان"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "یزد"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "کردستان"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "کیش"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "سازمان امداد"
+			},
+			{
+				"username": "",
+				"password": "",
+				"provinceName": "جمعیت مرکز"
 			}
 		]
 	}
