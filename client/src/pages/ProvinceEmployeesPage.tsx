@@ -74,13 +74,20 @@ export default function ProvinceEmployeesPage() {
 		return matchesSearch && matchesStatus && matchesPerformance;
 	});
 
-	// Extract province name from first employee if available
-	const provinceName =
-		employees.length > 0 &&
-		typeof employees[0].provinceId === "object" &&
-		employees[0].provinceId?.name
-			? employees[0].provinceId.name
-			: null;
+
+	   // Extract province name from first employee if available
+	   const provinceName =
+		   employees.length > 0 &&
+		   typeof employees[0].provinceId === "object" &&
+		   employees[0].provinceId?.name
+			   ? employees[0].provinceId.name
+			   : null;
+
+	   // Employee stats
+	   const activeCount = employees.filter(e => e.performance?.status === "active").length;
+	   const inactiveCount = employees.filter(e => e.performance?.status === "inactive").length;
+	   const onLeaveCount = employees.filter(e => e.performance?.status === "on_leave").length;
+	   const truckDriverCount = employees.filter(e => e.performance?.truckDriver).length;
 
 	// DataGrid columns definition
 	const columns: GridColDef[] = [
@@ -216,11 +223,17 @@ export default function ProvinceEmployeesPage() {
 							{loading ? "Loading province..." : provinceName}
 						</Typography>
 					</Stack>
-					<Stack direction="row" gap={2} alignItems="center">
-						{pagination && (
-							<Chip label={`${pagination.total} total`} color="primary" />
-						)}
-						<Button
+					   <Stack direction="row" gap={2} alignItems="center" flexWrap="wrap">
+						   {pagination && (
+							   <>
+								   <Chip label={`${pagination.total} total`} color="primary" />
+								   <Chip label={`Active: ${activeCount}`} color="success" variant="outlined" />
+								   <Chip label={`Inactive: ${inactiveCount}`} color="error" variant="outlined" />
+								   <Chip label={`On Leave: ${onLeaveCount}`} color="warning" variant="outlined" />
+								   <Chip label={`Truck Drivers: ${truckDriverCount}`} color="info" variant="outlined" />
+							   </>
+						   )}
+						   <Button
 							component={Link}
 							to={ROUTES.PROVINCE_EMPLOYEE_NEW.replace(
 								":provinceId",
