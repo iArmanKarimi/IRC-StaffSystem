@@ -51,19 +51,24 @@ export const mapEmployeeToExcelRow = (emp: any): ExcelEmployeeRow => ({
  * Prepares a workbook with a single Employees sheet from an array of employees.
  */
 export const prepareEmployeesExcel = (employees: any[]): XLSX.WorkBook => {
-	const completeData: ExcelEmployeeRow[] = employees.map(mapEmployeeToExcelRow);
-
-	// Derive a stable, explicit header list from the mapping itself so
-	// unexpected fields on the original employee documents (e.g. timestamps)
-	// don't end up as extra columns in the generated sheet.
+	// Derive explicit headers from the mapping function
 	const headers = Object.keys(mapEmployeeToExcelRow({}));
+	// Map and filter each row to only include allowed headers
+	const completeData: ExcelEmployeeRow[] = employees.map(emp => {
+		const row = mapEmployeeToExcelRow(emp);
+		// Only keep keys that are in headers
+		const filteredRow: ExcelEmployeeRow = {};
+		headers.forEach(key => {
+			filteredRow[key] = row[key];
+		});
+		return filteredRow;
+	});
 
 	const workbook = XLSX.utils.book_new();
-	// Pass explicit headers to json_to_sheet to control the exact columns
 	const completeSheet = XLSX.utils.json_to_sheet(completeData, { header: headers });
 
 	// Set reasonable column widths based on number of columns
-	const colCount = Object.keys(completeData[0] || {}).length;
+	const colCount = headers.length;
 	completeSheet["!cols"] = new Array(colCount).fill(0).map(() => ({ wch: 18 }));
 
 	XLSX.utils.book_append_sheet(workbook, completeSheet, "Employees");
