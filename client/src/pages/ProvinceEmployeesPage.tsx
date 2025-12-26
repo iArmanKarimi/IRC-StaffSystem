@@ -32,9 +32,13 @@ export default function ProvinceEmployeesPage() {
 	const limit = 20;
 	const [searchTerm, setSearchTerm] = useState("");
 	const [searchField, setSearchField] = useState("all");
-	const [statusFilter, setStatusFilter] = useState("");
 	const [performanceMetric, setPerformanceMetric] = useState("");
 	const [performanceValue, setPerformanceValue] = useState<number | null>(null);
+	const [toggleFilters, setToggleFilters] = useState({
+		maritalStatus: "",
+		gender: "",
+		status: "",
+	});
 	const { isGlobalAdmin } = useIsGlobalAdmin();
 	const theme = useTheme();
 	const { employees, pagination, loading, error, refetch } = useEmployees(
@@ -52,10 +56,6 @@ export default function ProvinceEmployeesPage() {
 		{ value: "rank", label: "Rank" },
 		{ value: "licensedWorkplace", label: "Licensed Workplace" },
 		{ value: "educationalDegree", label: "Educational Degree" },
-		{ value: "status", label: "Status" },
-		{ value: "maritalStatus", label: "Marital Status" },
-		{ value: "gender", label: "Gender" },
-		{ value: "childrenCount", label: "Children Count" },
 		{ value: "province", label: "Province" },
 	];
 
@@ -91,24 +91,6 @@ export default function ProvinceEmployeesPage() {
 				return fieldValue(
 					employee.additionalSpecifications?.educationalDegree
 				).includes(normalized);
-			case "status":
-				return fieldValue(
-					employee.performance?.status?.replace("_", " ")
-				).includes(normalized);
-			case "maritalStatus": {
-				const maritalStatus = employee.basicInfo?.married
-					? "married"
-					: "single";
-				return maritalStatus.includes(normalized);
-			}
-			case "gender": {
-				const gender = employee.basicInfo?.male ? "male" : "female";
-				return gender.includes(normalized);
-			}
-			case "childrenCount":
-				return fieldValue(
-					employee.basicInfo?.childrenCount?.toString()
-				).includes(normalized);
 			case "province": {
 				const provinceLabel =
 					typeof employee.provinceId === "object"
@@ -125,10 +107,6 @@ export default function ProvinceEmployeesPage() {
 					employee.workPlace?.rank,
 					employee.workPlace?.licensedWorkplace,
 					employee.additionalSpecifications?.educationalDegree,
-					employee.performance?.status?.replace("_", " "),
-					employee.basicInfo?.married ? "married" : "single",
-					employee.basicInfo?.male ? "male" : "female",
-					employee.basicInfo?.childrenCount?.toString(),
 					typeof employee.provinceId === "object"
 						? employee.provinceId?.name
 						: employee.provinceId,
@@ -148,25 +126,52 @@ export default function ProvinceEmployeesPage() {
 			searchField
 		);
 
-		const matchesStatus =
-			statusFilter === "" || employee.performance?.status === statusFilter;
+		// Toggle filters
+		const matchesMaritalStatus =
+			toggleFilters.maritalStatus === "" ||
+			(toggleFilters.maritalStatus === "married" &&
+				employee.basicInfo?.married) ||
+			(toggleFilters.maritalStatus === "single" &&
+				!employee.basicInfo?.married);
 
-		let matchesPerformance = true;
-		if (
-			performanceMetric &&
-			performanceValue !== null &&
-			employee.performance
-		) {
-			const perfData = employee.performance as Record<string, any>;
-			const metricValue = perfData[performanceMetric];
-			if (metricValue !== undefined && metricValue !== null) {
-				matchesPerformance = Number(metricValue) === performanceValue;
+		const matchesGender =
+			toggleFilters.gender === "" ||
+			(toggleFilters.gender === "male" && employee.basicInfo?.male) ||
+			(toggleFilters.gender === "female" && !employee.basicInfo?.male);
+
+		const matchesToggleStatus =
+			toggleFilters.status === "" ||
+			employee.performance?.status === toggleFilters.status;
+
+		let matchesMetric = true;
+		if (performanceMetric && performanceValue !== null) {
+			if (performanceMetric === "childrenCount") {
+				const childrenCount = employee.basicInfo?.childrenCount;
+				if (childrenCount !== undefined && childrenCount !== null) {
+					matchesMetric = Number(childrenCount) === performanceValue;
+				} else {
+					matchesMetric = false;
+				}
+			} else if (employee.performance) {
+				const perfData = employee.performance as Record<string, any>;
+				const metricValue = perfData[performanceMetric];
+				if (metricValue !== undefined && metricValue !== null) {
+					matchesMetric = Number(metricValue) === performanceValue;
+				} else {
+					matchesMetric = false;
+				}
 			} else {
-				matchesPerformance = false;
+				matchesMetric = false;
 			}
 		}
 
-		return matchesSearch && matchesStatus && matchesPerformance;
+		return (
+			matchesSearch &&
+			matchesMaritalStatus &&
+			matchesGender &&
+			matchesToggleStatus &&
+			matchesMetric
+		);
 	});
 
 	// Extract province name from first employee if available
@@ -356,17 +361,17 @@ export default function ProvinceEmployeesPage() {
 				<SearchFilterBar
 					onSearchChange={setSearchTerm}
 					onSearchFieldChange={setSearchField}
-					onFilterChange={setStatusFilter}
 					onPerformanceFilterChange={(metric, value) => {
 						setPerformanceMetric(metric);
 						setPerformanceValue(value);
 					}}
+					onToggleFiltersChange={setToggleFilters}
 					searchValue={searchTerm}
 					searchFieldValue={searchField}
 					searchFieldOptions={searchFieldOptions}
-					filterValue={statusFilter}
 					performanceMetric={performanceMetric}
 					performanceValue={performanceValue ?? undefined}
+					toggleFilters={toggleFilters}
 				/>
 
 				{!loading && employees.length === 0 ? (
