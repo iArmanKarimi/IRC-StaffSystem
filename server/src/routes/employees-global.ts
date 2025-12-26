@@ -122,16 +122,30 @@ router.get("/export-all", auth(USER_ROLE.GLOBAL_ADMIN), async (req: Request, res
 	}
 });
 
-// DELETE /employees/clear-performances - Clear all employee performance data (Global Admin only)
+// DELETE /employees/clear-performances - Reset all employee performance data to defaults (Global Admin only)
 router.delete("/clear-performances", auth(USER_ROLE.GLOBAL_ADMIN), async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		// Update all employees to remove performance field
+		// Reset all employees' performance fields to default values
 		const result = await Employee.updateMany(
 			{ performance: { $exists: true } },
-			{ $unset: { performance: "" } }
+			{
+				$set: {
+					"performance.dailyPerformance": 0,
+					"performance.shiftCountPerLocation": 0,
+					"performance.shiftDuration": 8,
+					"performance.overtime": 0,
+					"performance.dailyLeave": 0,
+					"performance.sickLeave": 0,
+					"performance.absence": 0,
+					"performance.truckDriver": false,
+					"performance.travelAssignment": 0,
+					"performance.status": "active",
+					"performance.notes": ""
+				}
+			}
 		);
 
-		logger.info("All employee performances cleared", {
+		logger.info("All employee performances reset to defaults", {
 			matchedCount: result.matchedCount,
 			modifiedCount: result.modifiedCount
 		});
@@ -142,7 +156,7 @@ router.delete("/clear-performances", auth(USER_ROLE.GLOBAL_ADMIN), async (req: R
 				matchedCount: result.matchedCount,
 				modifiedCount: result.modifiedCount
 			},
-			message: `Successfully cleared performance data from ${result.modifiedCount} employee(s)`
+			message: `Successfully reset performance data for ${result.modifiedCount} employee(s)`
 		});
 	} catch (err: unknown) {
 		next(err);

@@ -87,18 +87,18 @@ export default function GlobalAdminDashboardPage() {
 		try {
 			const response = await provinceApi.clearAllPerformances();
 			alert(
-				`Successfully cleared performance data from ${
+				`Successfully reset performance data for ${
 					response.data?.modifiedCount || 0
 				} employee(s)`
 			);
 		} catch (err: any) {
-			console.error("Clear performances failed:", err);
+			console.error("Reset performances failed:", err);
 			const errorMessage =
 				err?.response?.data?.error ||
 				err?.response?.data?.message ||
 				err?.message ||
 				"Unknown error";
-			alert(`Failed to clear employee performances: ${errorMessage}`);
+			alert(`Failed to reset employee performances: ${errorMessage}`);
 		} finally {
 			setClearing(false);
 		}
@@ -150,7 +150,7 @@ export default function GlobalAdminDashboardPage() {
 							startIcon={<DeleteSweepIcon />}
 							disabled={clearing}
 						>
-							{clearing ? "Clearing..." : "Clear All Performances"}
+							{clearing ? "Resetting..." : "Reset All Performances"}
 						</Button>
 						<Button
 							onClick={handleExportAllEmployees}
@@ -258,24 +258,24 @@ export default function GlobalAdminDashboardPage() {
 					<DialogTitle>
 						<Stack direction="row" alignItems="center" spacing={1}>
 							<WarningIcon color="error" />
-							<Typography>Clear All Employee Performances</Typography>
+							<Typography>Reset All Employee Performances</Typography>
 						</Stack>
 					</DialogTitle>
 					<DialogContent>
 						<DialogContentText>
-							<strong>Warning:</strong> You are about to clear all performance
-							data from all employees across all provinces. This action cannot
+							<strong>Warning:</strong> You are about to reset all performance
+							data for all employees across all provinces to their default values. This action cannot
 							be undone.
 						</DialogContentText>
 						<DialogContentText sx={{ mt: 2 }}>
-							This will remove all performance records including:
+							This will reset the following fields to zero/defaults:
 						</DialogContentText>
 						<Box component="ul" sx={{ mt: 1, color: "text.secondary" }}>
-							<li>Daily performance scores</li>
-							<li>Shift information</li>
-							<li>Overtime records</li>
-							<li>Leave and absence data</li>
-							<li>Status and notes</li>
+							<li>Daily performance scores (reset to 0)</li>
+							<li>Shift information (reset to 0 shifts, 8-hour duration)</li>
+							<li>Overtime records (reset to 0)</li>
+							<li>Leave and absence data (all reset to 0)</li>
+							<li>Status (reset to "active") and notes (cleared)</li>
 						</Box>
 						{countdown > 0 && (
 							<DialogContentText
@@ -297,7 +297,7 @@ export default function GlobalAdminDashboardPage() {
 							disabled={countdown > 0}
 							startIcon={<DeleteSweepIcon />}
 						>
-							Confirm Clear All
+							Confirm Reset All
 						</Button>
 					</DialogActions>
 				</Dialog>
