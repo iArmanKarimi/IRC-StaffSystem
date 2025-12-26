@@ -4,9 +4,11 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Pagination from "@mui/material/Pagination";
 import Tooltip from "@mui/material/Tooltip";
+import Divider from "@mui/material/Divider";
 import AddIcon from "@mui/icons-material/Add";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import {
@@ -274,45 +276,178 @@ export default function ProvinceEmployeesPage() {
 				).replace(":employeeId", params.row._id);
 				const perf = employee.performance;
 				const performanceSummary = perf ? (
-					<Stack spacing={0.5} sx={{ fontSize: "0.875rem" }}>
-						<div>
-							<strong>Performance Summary</strong>
-						</div>
-						<div>
-							Status:{" "}
-							<strong>{perf.status?.replace("_", " ").toUpperCase()}</strong>
-						</div>
-						<div>
-							Daily Performance: <strong>{perf.dailyPerformance}</strong>
-						</div>
-						<div>
-							Shift Duration: <strong>{perf.shiftDuration}h</strong>
-						</div>
-						<div>
-							Overtime: <strong>{perf.overtime}h</strong>
-						</div>
-						<div>
-							Daily Leave: <strong>{perf.dailyLeave}</strong>
-						</div>
-						<div>
-							Sick Leave: <strong>{perf.sickLeave}</strong>
-						</div>
-						<div>
-							Absence: <strong>{perf.absence}</strong>
-						</div>
-						<div>
-							Travel Assignment: <strong>{perf.travelAssignment} days</strong>
-						</div>
-						<div>
-							Shift Count/Location:{" "}
-							<strong>{perf.shiftCountPerLocation}</strong>
-						</div>
-					</Stack>
+					<Box sx={{ minWidth: 280 }}>
+						<Typography
+							variant="subtitle2"
+							sx={{
+								fontWeight: 600,
+								mb: 1.5,
+								color: "inherit",
+							}}
+						>
+							Performance Summary
+						</Typography>
+						<Divider sx={{ mb: 2, opacity: 0.5 }} />
+						<Stack spacing={1.5}>
+							<Box
+								sx={{
+									display: "flex",
+									justifyContent: "space-between",
+									gap: 2,
+								}}
+							>
+								<Typography variant="caption" sx={{ flex: 1 }}>
+									Status
+								</Typography>
+								<Typography variant="caption" sx={{ fontWeight: 600 }}>
+									{perf.status?.replace("_", " ").toUpperCase()}
+								</Typography>
+							</Box>
+							<Box
+								sx={{
+									display: "flex",
+									justifyContent: "space-between",
+									gap: 2,
+								}}
+							>
+								<Typography variant="caption" sx={{ flex: 1 }}>
+									Daily Performance
+								</Typography>
+								<Typography variant="caption" sx={{ fontWeight: 600 }}>
+									{perf.dailyPerformance}
+								</Typography>
+							</Box>
+							<Box
+								sx={{
+									display: "flex",
+									justifyContent: "space-between",
+									gap: 2,
+								}}
+							>
+								<Typography variant="caption" sx={{ flex: 1 }}>
+									Shift Duration
+								</Typography>
+								<Typography variant="caption" sx={{ fontWeight: 600 }}>
+									{perf.shiftDuration}h
+								</Typography>
+							</Box>
+							<Box
+								sx={{
+									display: "flex",
+									justifyContent: "space-between",
+									gap: 2,
+								}}
+							>
+								<Typography variant="caption" sx={{ flex: 1 }}>
+									Overtime
+								</Typography>
+								<Typography variant="caption" sx={{ fontWeight: 600 }}>
+									{perf.overtime}h
+								</Typography>
+							</Box>
+							<Box
+								sx={{
+									display: "flex",
+									justifyContent: "space-between",
+									gap: 2,
+								}}
+							>
+								<Typography variant="caption" sx={{ flex: 1 }}>
+									Daily Leave
+								</Typography>
+								<Typography variant="caption" sx={{ fontWeight: 600 }}>
+									{perf.dailyLeave}
+								</Typography>
+							</Box>
+							<Box
+								sx={{
+									display: "flex",
+									justifyContent: "space-between",
+									gap: 2,
+								}}
+							>
+								<Typography variant="caption" sx={{ flex: 1 }}>
+									Sick Leave
+								</Typography>
+								<Typography variant="caption" sx={{ fontWeight: 600 }}>
+									{perf.sickLeave}
+								</Typography>
+							</Box>
+							<Box
+								sx={{
+									display: "flex",
+									justifyContent: "space-between",
+									gap: 2,
+								}}
+							>
+								<Typography variant="caption" sx={{ flex: 1 }}>
+									Absence
+								</Typography>
+								<Typography variant="caption" sx={{ fontWeight: 600 }}>
+									{perf.absence}
+								</Typography>
+							</Box>
+							<Box
+								sx={{
+									display: "flex",
+									justifyContent: "space-between",
+									gap: 2,
+								}}
+							>
+								<Typography variant="caption" sx={{ flex: 1 }}>
+									Travel Assignment
+								</Typography>
+								<Typography variant="caption" sx={{ fontWeight: 600 }}>
+									{perf.travelAssignment}d
+								</Typography>
+							</Box>
+							<Box
+								sx={{
+									display: "flex",
+									justifyContent: "space-between",
+									gap: 2,
+								}}
+							>
+								<Typography variant="caption" sx={{ flex: 1 }}>
+									Shift Count/Location
+								</Typography>
+								<Typography variant="caption" sx={{ fontWeight: 600 }}>
+									{perf.shiftCountPerLocation}
+								</Typography>
+							</Box>
+						</Stack>
+					</Box>
 				) : (
-					<div>No performance data</div>
+					<Typography variant="caption">No performance data</Typography>
 				);
 				return (
-					<Tooltip title={performanceSummary} arrow placement="left">
+					<Tooltip
+						title={performanceSummary}
+						arrow
+						placement="left"
+						slotProps={{
+							tooltip: {
+								sx: {
+									backgroundColor: theme.palette.background.paper,
+									color: theme.palette.text.primary,
+									boxShadow: theme.shadows[8],
+									border: `1px solid ${theme.palette.divider}`,
+									borderRadius: `${theme.shape.borderRadius}px`,
+									padding: theme.spacing(2, 1),
+									fontSize: theme.typography.caption.fontSize,
+								},
+							},
+							arrow: {
+								sx: {
+									color: theme.palette.background.paper,
+									"&::before": {
+										border: `1px solid ${theme.palette.divider}`,
+										boxSizing: "border-box",
+									},
+								},
+							},
+						}}
+					>
 						<Button
 							variant="outlined"
 							size="small"
