@@ -17,36 +17,44 @@ import SearchIcon from "@mui/icons-material/Search";
 interface SearchFilterBarProps {
 	onSearchChange: (searchTerm: string) => void;
 	onSearchFieldChange?: (field: string) => void;
-	onFilterChange: (filter: string) => void;
 	onPerformanceFilterChange?: (metric: string, value: number | null) => void;
+	onToggleFiltersChange?: (filters: {
+		maritalStatus: string;
+		gender: string;
+		status: string;
+	}) => void;
 	searchValue?: string;
 	searchFieldValue?: string;
 	searchFieldOptions?: { value: string; label: string }[];
-	filterValue?: string;
 	performanceMetric?: string;
 	performanceValue?: number;
+	toggleFilters?: {
+		maritalStatus: string;
+		gender: string;
+		status: string;
+	};
 }
 
 export function SearchFilterBar({
 	onSearchChange,
 	onSearchFieldChange,
-	onFilterChange,
 	onPerformanceFilterChange,
+	onToggleFiltersChange,
 	searchValue = "",
 	searchFieldValue = "all",
 	searchFieldOptions,
-	filterValue = "",
 	performanceMetric = "",
 	performanceValue,
+	toggleFilters = { maritalStatus: "", gender: "", status: "" },
 }: SearchFilterBarProps) {
 	const [localSearch, setLocalSearch] = useState(searchValue);
 	const [localSearchField, setLocalSearchField] = useState(searchFieldValue);
-	const [localFilter, setLocalFilter] = useState(filterValue);
 	const [localPerformanceMetric, setLocalPerformanceMetric] =
 		useState(performanceMetric);
 	const [localPerformanceValue, setLocalPerformanceValue] = useState(
 		performanceValue || ""
 	);
+	const [localToggleFilters, setLocalToggleFilters] = useState(toggleFilters);
 
 	const fieldOptions = searchFieldOptions ?? [
 		{ value: "all", label: "All fields" },
@@ -75,12 +83,6 @@ export function SearchFilterBar({
 		onSearchChange("");
 	};
 
-	const handleFilterChange = (e: any) => {
-		const value = e.target.value;
-		setLocalFilter(value);
-		onFilterChange(value);
-	};
-
 	const handlePerformanceMetricChange = (e: any) => {
 		const metric = e.target.value;
 		setLocalPerformanceMetric(metric);
@@ -99,14 +101,24 @@ export function SearchFilterBar({
 		}
 	};
 
+	const handleToggleFilterChange = (
+		filterType: "maritalStatus" | "gender" | "status",
+		value: string
+	) => {
+		const updatedFilters = { ...localToggleFilters, [filterType]: value };
+		setLocalToggleFilters(updatedFilters);
+		onToggleFiltersChange?.(updatedFilters);
+	};
+
 	return (
 		<Box
 			sx={{
 				display: "flex",
-				gap: 2.5,
-				alignItems: "center",
-				flexWrap: "wrap",
-				p: 2,
+				gap: { xs: 1.5, sm: 2, md: 2.5 },
+				alignItems: { xs: "stretch", sm: "center" },
+				flexDirection: { xs: "column", md: "row" },
+				flexWrap: { md: "wrap" },
+				p: { xs: 1.5, sm: 2 },
 				backgroundColor: "background.paper",
 				borderRadius: 1,
 				border: "1px solid",
@@ -114,12 +126,19 @@ export function SearchFilterBar({
 			}}
 		>
 			<Stack
-				direction="row"
-				spacing={1.5}
-				alignItems="center"
-				sx={{ flex: 1, minWidth: 280 }}
+				direction={{ xs: "column", sm: "row" }}
+				spacing={{ xs: 1, sm: 1.5 }}
+				alignItems="stretch"
+				sx={{
+					flex: { xs: "1 1 auto", md: 1 },
+					minWidth: { xs: "100%", sm: 280, md: 320 },
+					width: { xs: "100%", md: "auto" },
+				}}
 			>
-				<FormControl size="small" sx={{ minWidth: 150 }}>
+				<FormControl
+					size="small"
+					sx={{ minWidth: { xs: "100%", sm: 130, md: 150 } }}
+				>
 					<InputLabel>Search by</InputLabel>
 					<Select
 						value={localSearchField}
@@ -141,7 +160,7 @@ export function SearchFilterBar({
 					size="small"
 					value={localSearch}
 					onChange={handleSearchChange}
-					sx={{ flex: 1, minWidth: 200 }}
+					sx={{ flex: 1, minWidth: { xs: "100%", sm: 180, md: 200 } }}
 					slotProps={{
 						input: {
 							startAdornment: (
@@ -167,29 +186,81 @@ export function SearchFilterBar({
 				/>
 			</Stack>
 
-			{/* Filter Dropdown */}
-			<FormControl size="small" sx={{ minWidth: 100 }}>
-				<InputLabel>Status</InputLabel>
-				<Select
-					value={localFilter}
-					onChange={handleFilterChange}
-					label="Status"
+			{/* Toggle Filters Dropdown */}
+			<Stack
+				direction={{ xs: "column", sm: "row" }}
+				spacing={{ xs: 1, sm: 1 }}
+				alignItems="stretch"
+				sx={{ width: { xs: "100%", md: "auto" } }}
+			>
+				<FormControl
+					size="small"
+					sx={{ minWidth: { xs: "100%", sm: 120, md: 140 } }}
 				>
-					<MenuItem value="">All</MenuItem>
-					<MenuItem value="active">Active</MenuItem>
-					<MenuItem value="inactive">Inactive</MenuItem>
-					<MenuItem value="on_leave">On Leave</MenuItem>
-				</Select>
-			</FormControl>
+					<InputLabel>Marital Status</InputLabel>
+					<Select
+						value={localToggleFilters.maritalStatus}
+						onChange={(e) =>
+							handleToggleFilterChange("maritalStatus", e.target.value)
+						}
+						label="Marital Status"
+					>
+						<MenuItem value="">All</MenuItem>
+						<MenuItem value="married">Married</MenuItem>
+						<MenuItem value="single">Single</MenuItem>
+					</Select>
+				</FormControl>
 
-			{/* Performance Metric Filter */}
-			<Stack direction="row" spacing={1} alignItems="center">
-				<FormControl size="small" sx={{ minWidth: 180 }}>
-					<InputLabel>Performance Metric</InputLabel>
+				<FormControl
+					size="small"
+					sx={{ minWidth: { xs: "100%", sm: 90, md: 100 } }}
+				>
+					<InputLabel>Gender</InputLabel>
+					<Select
+						value={localToggleFilters.gender}
+						onChange={(e) => handleToggleFilterChange("gender", e.target.value)}
+						label="Gender"
+					>
+						<MenuItem value="">All</MenuItem>
+						<MenuItem value="male">Male</MenuItem>
+						<MenuItem value="female">Female</MenuItem>
+					</Select>
+				</FormControl>
+
+				<FormControl
+					size="small"
+					sx={{ minWidth: { xs: "100%", sm: 90, md: 100 } }}
+				>
+					<InputLabel>Status</InputLabel>
+					<Select
+						value={localToggleFilters.status}
+						onChange={(e) => handleToggleFilterChange("status", e.target.value)}
+						label="Status"
+					>
+						<MenuItem value="">All</MenuItem>
+						<MenuItem value="active">Active</MenuItem>
+						<MenuItem value="inactive">Inactive</MenuItem>
+						<MenuItem value="on_leave">On Leave</MenuItem>
+					</Select>
+				</FormControl>
+			</Stack>
+
+			{/* Metric Filter */}
+			<Stack
+				direction={{ xs: "column", sm: "row" }}
+				spacing={{ xs: 1, sm: 1 }}
+				alignItems="stretch"
+				sx={{ width: { xs: "100%", md: "auto" } }}
+			>
+				<FormControl
+					size="small"
+					sx={{ minWidth: { xs: "100%", sm: 160, md: 180 } }}
+				>
+					<InputLabel>Metric</InputLabel>
 					<Select
 						value={localPerformanceMetric}
 						onChange={handlePerformanceMetricChange}
-						label="Performance Metric"
+						label="Metric"
 					>
 						<MenuItem value="">
 							<em>Select metric...</em>
@@ -206,10 +277,11 @@ export function SearchFilterBar({
 						<MenuItem value="travelAssignment">
 							Travel Assignment (days)
 						</MenuItem>
+						<MenuItem value="childrenCount">Children Count</MenuItem>
 					</Select>
 				</FormControl>
 
-				{/* Performance Value Filter */}
+				{/* Metric Value Filter */}
 				{localPerformanceMetric && (
 					<TextField
 						label="Value"
@@ -218,7 +290,7 @@ export function SearchFilterBar({
 						value={localPerformanceValue}
 						onChange={handlePerformanceValueChange}
 						inputProps={{ min: 0 }}
-						sx={{ width: 100 }}
+						sx={{ width: { xs: "100%", sm: 90, md: 100 } }}
 					/>
 				)}
 			</Stack>
