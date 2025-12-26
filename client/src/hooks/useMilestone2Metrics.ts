@@ -43,7 +43,7 @@ export function useMilestone2Metrics(employees: IEmployee[]): Milestone2Metrics 
 		employees.forEach((emp) => {
 			// Province Distribution
 			const provinceId = typeof emp.provinceId === "string" ? emp.provinceId : emp.provinceId?._id;
-			const provinceName = typeof emp.provinceId === "string" ? emp.provinceId : emp.provinceId?.name;
+			const provinceName = typeof emp.provinceId === "string" ? "Unknown Province" : emp.provinceId?.name || "Unknown Province";
 
 			if (provinceId && provinceName) {
 				if (!provinceMap.has(provinceId)) {
