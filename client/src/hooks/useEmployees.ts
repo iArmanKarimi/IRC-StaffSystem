@@ -48,7 +48,19 @@ export function useEmployees(
 			setPagination(response.pagination);
 		} catch (err) {
 			console.error("Error fetching employees:", err);
-			const errorMessage = err instanceof Error ? err.message : "Failed to load employees";
+			let errorMessage = "Failed to load employees";
+			if (err instanceof Error) {
+				const axiosError = err as any;
+				if (axiosError.response?.status === 401) {
+					errorMessage = "Not authenticated. Please log in.";
+				} else if (axiosError.response?.status === 403) {
+					errorMessage = "Unauthorized. Global Admin role required.";
+				} else if (axiosError.response?.status === 404) {
+					errorMessage = "No employees found.";
+				} else {
+					errorMessage = err.message || "Failed to load employees";
+				}
+			}
 			setError(errorMessage);
 			setEmployees([]);
 			setPagination(null);

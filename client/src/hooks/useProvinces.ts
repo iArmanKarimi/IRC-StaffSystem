@@ -25,7 +25,20 @@ export function useProvinces(): UseProvincesResult {
 			setProvinces(response.data ?? []);
 		} catch (err) {
 			console.error("Error fetching provinces:", err);
-			const errorMessage = err instanceof Error ? err.message : "Failed to load provinces";
+			let errorMessage = "Failed to load provinces";
+			if (err instanceof Error) {
+				// Check if it's an axios error with response status
+				const axiosError = err as any;
+				if (axiosError.response?.status === 401) {
+					errorMessage = "Not authenticated. Please log in.";
+				} else if (axiosError.response?.status === 403) {
+					errorMessage = "Unauthorized. Global Admin role required.";
+				} else if (axiosError.response?.status === 404) {
+					errorMessage = "No provinces found in the system.";
+				} else {
+					errorMessage = err.message || "Failed to load provinces";
+				}
+			}
 			setError(errorMessage);
 			setProvinces([]);
 		} finally {

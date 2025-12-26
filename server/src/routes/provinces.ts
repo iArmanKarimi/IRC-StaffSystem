@@ -57,6 +57,7 @@ router.get("/", auth(USER_ROLE.GLOBAL_ADMIN), async (req: Request, res: Response
 		logger.debug("Provinces listed", { count: provinces.length });
 		sendSuccess(res, provincesWithImages, 200, "Provinces retrieved successfully");
 	} catch (err: unknown) {
+		logger.error("Error fetching provinces", { error: err instanceof Error ? err.message : String(err) });
 		next(err);
 	}
 });
