@@ -247,37 +247,32 @@ export default function EmployeePage() {
 				<Box
 					sx={{
 						display: "flex",
-						justifyContent: "space-between",
+						justifyContent: "flex-end",
 						alignItems: "center",
 						mb: 3,
-						gap: 2,
+						gap: 1.5,
 					}}
 				>
-					<Typography variant="h4" component="h1" sx={{ m: 0 }}>
-						Employee Details
-					</Typography>
-					<Box sx={{ display: "flex", gap: 1.5 }}>
-						<Button
-							variant="contained"
-							color="primary"
-							startIcon={<EditIcon />}
-							onClick={handleEditOpen}
-							aria-label="Edit Employee"
-							size="medium"
-						>
-							Edit Employee
-						</Button>
-						<Button
-							variant="contained"
-							color="error"
-							startIcon={<DeleteIcon />}
-							onClick={() => setDeleteDialogOpen(true)}
-							aria-label="Delete Employee"
-							size="medium"
-						>
-							Delete Employee
-						</Button>
-					</Box>
+					<Button
+						variant="contained"
+						color="primary"
+						startIcon={<EditIcon />}
+						onClick={handleEditOpen}
+						aria-label="Edit Employee"
+						size="medium"
+					>
+						Edit Employee
+					</Button>
+					<Button
+						variant="contained"
+						color="error"
+						startIcon={<DeleteIcon />}
+						onClick={() => setDeleteDialogOpen(true)}
+						aria-label="Delete Employee"
+						size="medium"
+					>
+						Delete Employee
+					</Button>
 				</Box>
 
 				{saveError && (
