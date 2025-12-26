@@ -93,7 +93,11 @@ export default function GlobalAdminDashboardPage() {
 			);
 		} catch (err: any) {
 			console.error("Clear performances failed:", err);
-			const errorMessage = err?.response?.data?.error || err?.response?.data?.message || err?.message || "Unknown error";
+			const errorMessage =
+				err?.response?.data?.error ||
+				err?.response?.data?.message ||
+				err?.message ||
+				"Unknown error";
 			alert(`Failed to clear employee performances: ${errorMessage}`);
 		} finally {
 			setClearing(false);
