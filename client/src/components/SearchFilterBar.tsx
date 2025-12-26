@@ -16,9 +16,12 @@ import SearchIcon from "@mui/icons-material/Search";
 
 interface SearchFilterBarProps {
 	onSearchChange: (searchTerm: string) => void;
+	onSearchFieldChange?: (field: string) => void;
 	onFilterChange: (filter: string) => void;
 	onPerformanceFilterChange?: (metric: string, value: number | null) => void;
 	searchValue?: string;
+	searchFieldValue?: string;
+	searchFieldOptions?: { value: string; label: string }[];
 	filterValue?: string;
 	performanceMetric?: string;
 	performanceValue?: number;
@@ -26,25 +29,45 @@ interface SearchFilterBarProps {
 
 export function SearchFilterBar({
 	onSearchChange,
+	onSearchFieldChange,
 	onFilterChange,
 	onPerformanceFilterChange,
 	searchValue = "",
+	searchFieldValue = "all",
+	searchFieldOptions,
 	filterValue = "",
 	performanceMetric = "",
 	performanceValue,
 }: SearchFilterBarProps) {
 	const [localSearch, setLocalSearch] = useState(searchValue);
-	const [localFilter, setLocalFilter] = useState("");
+	const [localSearchField, setLocalSearchField] = useState(searchFieldValue);
+	const [localFilter, setLocalFilter] = useState(filterValue);
 	const [localPerformanceMetric, setLocalPerformanceMetric] =
 		useState(performanceMetric);
 	const [localPerformanceValue, setLocalPerformanceValue] = useState(
 		performanceValue || ""
 	);
 
+	const fieldOptions = searchFieldOptions ?? [
+		{ value: "all", label: "All fields" },
+		{ value: "name", label: "Name" },
+		{ value: "nationalId", label: "National ID" },
+		{ value: "contactNumber", label: "Contact number" },
+		{ value: "branch", label: "Branch" },
+		{ value: "rank", label: "Rank" },
+		{ value: "province", label: "Province" },
+	];
+
 	const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value;
 		setLocalSearch(value);
 		onSearchChange(value);
+	};
+
+	const handleSearchFieldChange = (e: any) => {
+		const value = e.target.value;
+		setLocalSearchField(value);
+		onSearchFieldChange?.(value);
 	};
 
 	const handleSearchClear = () => {
@@ -90,37 +113,59 @@ export function SearchFilterBar({
 				borderColor: "divider",
 			}}
 		>
-			{/* Search Input */}
-			<TextField
-				placeholder="Search..."
-				variant="outlined"
-				size="small"
-				value={localSearch}
-				onChange={handleSearchChange}
-				sx={{ flex: 1, minWidth: 250 }}
-				slotProps={{
-					input: {
-						startAdornment: (
-							<InputAdornment position="start">
-								<SearchIcon color="action" />
-							</InputAdornment>
-						),
-						endAdornment: localSearch && (
-							<InputAdornment position="end">
-								<Tooltip title="Clear search">
-									<IconButton
-										size="small"
-										onClick={handleSearchClear}
-										edge="end"
-									>
-										<ClearIcon fontSize="small" />
-									</IconButton>
-								</Tooltip>
-							</InputAdornment>
-						),
-					},
-				}}
-			/>
+			<Stack
+				direction="row"
+				spacing={1.5}
+				alignItems="center"
+				sx={{ flex: 1, minWidth: 280 }}
+			>
+				<FormControl size="small" sx={{ minWidth: 150 }}>
+					<InputLabel>Search by</InputLabel>
+					<Select
+						value={localSearchField}
+						onChange={handleSearchFieldChange}
+						label="Search by"
+					>
+						{fieldOptions.map((option) => (
+							<MenuItem key={option.value} value={option.value}>
+								{option.label}
+							</MenuItem>
+						))}
+					</Select>
+				</FormControl>
+
+				{/* Search Input */}
+				<TextField
+					placeholder="Enter search value..."
+					variant="outlined"
+					size="small"
+					value={localSearch}
+					onChange={handleSearchChange}
+					sx={{ flex: 1, minWidth: 200 }}
+					slotProps={{
+						input: {
+							startAdornment: (
+								<InputAdornment position="start">
+									<SearchIcon color="action" />
+								</InputAdornment>
+							),
+							endAdornment: localSearch && (
+								<InputAdornment position="end">
+									<Tooltip title="Clear search">
+										<IconButton
+											size="small"
+											onClick={handleSearchClear}
+											edge="end"
+										>
+											<ClearIcon fontSize="small" />
+										</IconButton>
+									</Tooltip>
+								</InputAdornment>
+							),
+						},
+					}}
+				/>
+			</Stack>
 
 			{/* Filter Dropdown */}
 			<FormControl size="small" sx={{ minWidth: 100 }}>

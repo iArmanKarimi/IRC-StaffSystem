@@ -31,6 +31,7 @@ export default function ProvinceEmployeesPage() {
 	const [page, setPage] = useState(0);
 	const limit = 20;
 	const [searchTerm, setSearchTerm] = useState("");
+	const [searchField, setSearchField] = useState("all");
 	const [statusFilter, setStatusFilter] = useState("");
 	const [performanceMetric, setPerformanceMetric] = useState("");
 	const [performanceValue, setPerformanceValue] = useState<number | null>(null);
@@ -42,16 +43,72 @@ export default function ProvinceEmployeesPage() {
 		limit
 	);
 
+	const searchFieldOptions = [
+		{ value: "all", label: "All fields" },
+		{ value: "name", label: "Name" },
+		{ value: "nationalId", label: "National ID" },
+		{ value: "contactNumber", label: "Contact number" },
+		{ value: "branch", label: "Branch" },
+		{ value: "rank", label: "Rank" },
+		{ value: "province", label: "Province" },
+	];
+
+	const matchesSearchField = (
+		employee: IEmployee,
+		term: string,
+		field: string
+	) => {
+		if (!term) return true;
+		const normalized = term.toLowerCase();
+
+		const fieldValue = (value?: string | null) =>
+			value ? value.toString().toLowerCase() : "";
+
+		switch (field) {
+			case "name":
+				return formatEmployeeName(employee).toLowerCase().includes(normalized);
+			case "nationalId":
+				return fieldValue(employee.basicInfo?.nationalID).includes(normalized);
+			case "contactNumber":
+				return fieldValue(
+					employee.additionalSpecifications?.contactNumber
+				).includes(normalized);
+			case "branch":
+				return fieldValue(employee.workPlace?.branch).includes(normalized);
+			case "rank":
+				return fieldValue(employee.workPlace?.rank).includes(normalized);
+			case "province": {
+				const provinceLabel =
+					typeof employee.provinceId === "object"
+						? employee.provinceId?.name
+						: employee.provinceId;
+				return fieldValue(provinceLabel).includes(normalized);
+			}
+			default: {
+				const searchable = [
+					formatEmployeeName(employee),
+					employee.basicInfo?.nationalID,
+					employee.additionalSpecifications?.contactNumber,
+					employee.workPlace?.branch,
+					employee.workPlace?.rank,
+					typeof employee.provinceId === "object"
+						? employee.provinceId?.name
+						: employee.provinceId,
+				]
+					.filter(Boolean)
+					.map((v) => v!.toString().toLowerCase());
+				return searchable.some((value) => value.includes(normalized));
+			}
+		}
+	};
+
 	// Filter employees based on search, status, and performance filters
 	const filteredEmployees = employees.filter((employee) => {
-		const matchesSearch =
-			searchTerm === "" ||
-			formatEmployeeName(employee)
-				.toLowerCase()
-				.includes(searchTerm.toLowerCase()) ||
-			employee.basicInfo?.nationalID
-				?.toLowerCase()
-				.includes(searchTerm.toLowerCase());
+		const matchesSearch = matchesSearchField(
+			employee,
+			searchTerm.trim(),
+			searchField
+		);
 
 		const matchesStatus =
 			statusFilter === "" || employee.performance?.status === statusFilter;
@@ -262,12 +319,15 @@ export default function ProvinceEmployeesPage() {
 
 				<SearchFilterBar
 					onSearchChange={setSearchTerm}
+					onSearchFieldChange={setSearchField}
 					onFilterChange={setStatusFilter}
 					onPerformanceFilterChange={(metric, value) => {
 						setPerformanceMetric(metric);
 						setPerformanceValue(value);
 					}}
 					searchValue={searchTerm}
+					searchFieldValue={searchField}
+					searchFieldOptions={searchFieldOptions}
 					filterValue={statusFilter}
 					performanceMetric={performanceMetric}
 					performanceValue={performanceValue ?? undefined}
