@@ -12,6 +12,9 @@ export const API_ENDPOINTS = {
 	LOGIN: "/auth/login",
 	LOGOUT: "/auth/logout",
 	PROVINCES: "/provinces",
+	EMPLOYEES_ALL: "/employees",
+	EMPLOYEES_EXPORT_ALL: "/employees/export-all",
+	EMPLOYEES_DASHBOARD_METRICS: "/employees/dashboard/metrics",
 	provinceById: (provinceId: string) => `/provinces/${provinceId}`,
 	provinceEmployees: (provinceId: string) => `/provinces/${provinceId}/employees`,
 	provinceEmployeeById: (provinceId: string, employeeId: string) => `/provinces/${provinceId}/employees/${employeeId}`

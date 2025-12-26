@@ -39,6 +39,17 @@ export const EMPLOYEE_ROUTES = {
 } as const;
 
 /**
+ * Global Employee Routes
+ * Base path: /employees
+ * Access: Global Admin only
+ */
+export const GLOBAL_EMPLOYEE_ROUTES = {
+	LIST: '/employees',                    // GET - List all employees (paginated)
+	EXPORT_ALL: '/employees/export-all',   // GET - Export all employees to Excel
+	METRICS: '/employees/dashboard/metrics' // GET - Get dashboard metrics
+} as const;
+
+/**
  * API Documentation Routes
  * Base path: /api-docs
  * All routes are public
@@ -63,6 +74,7 @@ export const ROUTES = {
 	AUTH: AUTH_ROUTES,
 	PROVINCES: PROVINCE_ROUTES,
 	EMPLOYEES: EMPLOYEE_ROUTES,
+	GLOBAL_EMPLOYEES: GLOBAL_EMPLOYEE_ROUTES,
 	API_DOCS: API_DOCS_ROUTES,
 	SYSTEM: SYSTEM_ROUTES
 } as const;
@@ -81,6 +93,9 @@ export const ROUTES = {
  * | GET    /provinces/:id/employees/:empId   | ✓            | ✓ (own)        | ✗      |
  * | PUT    /provinces/:id/employees/:empId   | ✓            | ✓ (own)        | ✗      |
  * | DELETE /provinces/:id/employees/:empId   | ✓            | ✓ (own)        | ✗      |
+ * | GET    /employees                        | ✓            | ✗              | ✗      |
+ * | GET    /employees/export-all             | ✓            | ✗              | ✗      |
+ * | GET    /employees/dashboard/metrics      | ✓            | ✗              | ✗      |
  * | GET    /api-docs                         | ✓            | ✓              | ✓      |
  * | GET    /health                           | ✓            | ✓              | ✓      |
  */

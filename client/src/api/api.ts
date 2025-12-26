@@ -76,5 +76,24 @@ export const provinceApi = {
 			.then(unwrap)
 };
 
+export const employeeApi = {
+	listAll: (page?: number, limit?: number) =>
+		api
+			.get<PaginatedResponse<Employee>>(API_ENDPOINTS.EMPLOYEES_ALL, {
+				params: { page, limit }
+			})
+			.then(unwrap),
+	getDashboardMetrics: () =>
+		api
+			.get<ApiResponse<any>>(API_ENDPOINTS.EMPLOYEES_DASHBOARD_METRICS)
+			.then(unwrap),
+	exportAll: () =>
+		api
+			.get(API_ENDPOINTS.EMPLOYEES_EXPORT_ALL, {
+				responseType: "blob"
+			})
+			.then((res) => res.data)
+};
+
 export default api;
 

@@ -8,6 +8,7 @@ import Button from "@mui/material/Button";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { useTheme } from "@mui/material/styles";
 import { ROUTES, API_BASE_URL } from "../const/endpoints";
+import { employeeApi } from "../api/api";
 import NavBar from "../components/NavBar";
 import { KPICard } from "../components/KPICard";
 import { StatusBreakdownPanel } from "../components/StatusBreakdownPanel";
@@ -114,16 +115,7 @@ export default function GlobalAdminDashboardPage() {
 
 	const handleExportAllEmployees = async () => {
 		try {
-			const response = await fetch(`${API_BASE_URL}/employees/export-all`, {
-				method: "GET",
-				credentials: "include",
-			});
-
-			if (!response.ok) {
-				throw new Error("Failed to export employees");
-			}
-
-			const blob = await response.blob();
+			const blob = await employeeApi.exportAll();
 			const url = window.URL.createObjectURL(blob);
 			const link = document.createElement("a");
 			link.href = url;
