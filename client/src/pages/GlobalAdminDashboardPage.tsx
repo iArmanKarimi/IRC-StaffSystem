@@ -264,8 +264,8 @@ export default function GlobalAdminDashboardPage() {
 					<DialogContent>
 						<DialogContentText>
 							<strong>Warning:</strong> You are about to reset all performance
-							data for all employees across all provinces to their default values. This action cannot
-							be undone.
+							data for all employees across all provinces to their default
+							values. This action cannot be undone.
 						</DialogContentText>
 						<DialogContentText sx={{ mt: 2 }}>
 							This will reset the following fields to zero/defaults:
