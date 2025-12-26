@@ -306,6 +306,12 @@ export default function EmployeePage() {
 									value={employee.additionalSpecifications.contactNumber}
 								/>
 								<InfoField
+									label="Truck Driver"
+									value={
+										employee.additionalSpecifications.truckDriver ? "Yes" : "No"
+									}
+								/>
+								<InfoField
 									label="Job Start Date"
 									value={new Date(
 										employee.additionalSpecifications.jobStartDate

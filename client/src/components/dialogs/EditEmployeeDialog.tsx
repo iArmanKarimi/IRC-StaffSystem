@@ -30,7 +30,10 @@ export function EditEmployeeDialog({
 			setFormData({
 				basicInfo: { ...employee.basicInfo },
 				workPlace: { ...employee.workPlace },
-				additionalSpecifications: { ...employee.additionalSpecifications },
+				additionalSpecifications: {
+					...employee.additionalSpecifications,
+					truckDriver: employee.additionalSpecifications?.truckDriver ?? false,
+				},
 			});
 		}
 	}, [employee, open]);
@@ -214,6 +217,20 @@ export function EditEmployeeDialog({
 						required
 						inputProps={{ pattern: "\\d{11}" }}
 						helperText="Must be 11 digits"
+					/>
+					<FormControlLabel
+						control={
+							<Checkbox
+								checked={formData.additionalSpecifications?.truckDriver || false}
+								onChange={(e) =>
+									handleFieldChange(
+										"additionalSpecifications.truckDriver",
+										e.target.checked
+									)
+								}
+							/>
+						}
+						label="Truck Driver"
 					/>
 					<TextField
 						label="Job Start Date"
