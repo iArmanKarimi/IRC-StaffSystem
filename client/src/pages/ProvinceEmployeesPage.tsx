@@ -6,6 +6,7 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Chip from "@mui/material/Chip";
 import Pagination from "@mui/material/Pagination";
+import Tooltip from "@mui/material/Tooltip";
 import AddIcon from "@mui/icons-material/Add";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import {
@@ -158,7 +159,10 @@ export default function ProvinceEmployeesPage() {
 					matchesMetric = false;
 				}
 			} else if (employee.performance) {
-				const perfData = employee.performance as Record<string, any>;
+				const perfData = employee.performance as unknown as Record<
+					string,
+					number
+				>;
 				const metricValue = perfData[performanceMetric];
 				if (metricValue !== undefined && metricValue !== null) {
 					matchesMetric = Number(metricValue) === performanceValue;
@@ -263,20 +267,62 @@ export default function ProvinceEmployeesPage() {
 			headerAlign: "center",
 			sortable: false,
 			renderCell: (params) => {
+				const employee = params.row as IEmployee;
 				const viewUrl = ROUTES.PROVINCE_EMPLOYEE_DETAIL.replace(
 					":provinceId",
 					provinceId || ""
 				).replace(":employeeId", params.row._id);
+				const perf = employee.performance;
+				const performanceSummary = perf ? (
+					<Stack spacing={0.5} sx={{ fontSize: "0.875rem" }}>
+						<div>
+							<strong>Performance Summary</strong>
+						</div>
+						<div>
+							Status:{" "}
+							<strong>{perf.status?.replace("_", " ").toUpperCase()}</strong>
+						</div>
+						<div>
+							Daily Performance: <strong>{perf.dailyPerformance}</strong>
+						</div>
+						<div>
+							Shift Duration: <strong>{perf.shiftDuration}h</strong>
+						</div>
+						<div>
+							Overtime: <strong>{perf.overtime}h</strong>
+						</div>
+						<div>
+							Daily Leave: <strong>{perf.dailyLeave}</strong>
+						</div>
+						<div>
+							Sick Leave: <strong>{perf.sickLeave}</strong>
+						</div>
+						<div>
+							Absence: <strong>{perf.absence}</strong>
+						</div>
+						<div>
+							Travel Assignment: <strong>{perf.travelAssignment} days</strong>
+						</div>
+						<div>
+							Shift Count/Location:{" "}
+							<strong>{perf.shiftCountPerLocation}</strong>
+						</div>
+					</Stack>
+				) : (
+					<div>No performance data</div>
+				);
 				return (
-					<Button
-						variant="outlined"
-						size="small"
-						startIcon={<VisibilityIcon fontSize="small" />}
-						onClick={() => (window.location.href = viewUrl)}
-						sx={{ textTransform: "none", borderRadius: 1, padding: 0.25 }}
-					>
-						View
-					</Button>
+					<Tooltip title={performanceSummary} arrow placement="left">
+						<Button
+							variant="outlined"
+							size="small"
+							startIcon={<VisibilityIcon fontSize="small" />}
+							onClick={() => (window.location.href = viewUrl)}
+							sx={{ textTransform: "none", borderRadius: 1, padding: 0.25 }}
+						>
+							View
+						</Button>
+					</Tooltip>
 				);
 			},
 		},
