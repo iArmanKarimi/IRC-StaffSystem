@@ -6,6 +6,8 @@ import {
 	MenuItem,
 	FormControl,
 	InputLabel,
+	FormControlLabel,
+	Checkbox,
 	Stack,
 	IconButton,
 	Tooltip,
@@ -22,6 +24,7 @@ interface SearchFilterBarProps {
 		maritalStatus: string;
 		gender: string;
 		status: string;
+		truckDriverOnly: boolean;
 	}) => void;
 	searchValue?: string;
 	searchFieldValue?: string;
@@ -32,6 +35,7 @@ interface SearchFilterBarProps {
 		maritalStatus: string;
 		gender: string;
 		status: string;
+		truckDriverOnly: boolean;
 	};
 }
 
@@ -45,7 +49,12 @@ export function SearchFilterBar({
 	searchFieldOptions,
 	performanceMetric = "",
 	performanceValue,
-	toggleFilters = { maritalStatus: "", gender: "", status: "" },
+	toggleFilters = {
+		maritalStatus: "",
+		gender: "",
+		status: "",
+		truckDriverOnly: false,
+	},
 }: SearchFilterBarProps) {
 	const [localSearch, setLocalSearch] = useState(searchValue);
 	const [localSearchField, setLocalSearchField] = useState(searchFieldValue);
@@ -102,8 +111,8 @@ export function SearchFilterBar({
 	};
 
 	const handleToggleFilterChange = (
-		filterType: "maritalStatus" | "gender" | "status",
-		value: string
+		filterType: "maritalStatus" | "gender" | "status" | "truckDriverOnly",
+		value: string | boolean
 	) => {
 		const updatedFilters = { ...localToggleFilters, [filterType]: value };
 		setLocalToggleFilters(updatedFilters);
@@ -243,6 +252,19 @@ export function SearchFilterBar({
 						<MenuItem value="on_leave">On Leave</MenuItem>
 					</Select>
 				</FormControl>
+
+				<FormControlLabel
+					control={
+						<Checkbox
+							size="small"
+							checked={localToggleFilters.truckDriverOnly}
+							onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+								handleToggleFilterChange("truckDriverOnly", e.target.checked)
+							}
+						/>
+					}
+					label="Truck Drivers"
+				/>
 			</Stack>
 
 			{/* Metric Filter */}

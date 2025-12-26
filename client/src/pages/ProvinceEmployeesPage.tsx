@@ -38,6 +38,7 @@ export default function ProvinceEmployeesPage() {
 		maritalStatus: "",
 		gender: "",
 		status: "",
+		truckDriverOnly: false,
 	});
 	const { isGlobalAdmin } = useIsGlobalAdmin();
 	const theme = useTheme();
@@ -143,6 +144,10 @@ export default function ProvinceEmployeesPage() {
 			toggleFilters.status === "" ||
 			employee.performance?.status === toggleFilters.status;
 
+		const matchesTruckDriver =
+			!toggleFilters.truckDriverOnly ||
+			!!employee.additionalSpecifications?.truckDriver;
+
 		let matchesMetric = true;
 		if (performanceMetric && performanceValue !== null) {
 			if (performanceMetric === "childrenCount") {
@@ -163,6 +168,10 @@ export default function ProvinceEmployeesPage() {
 			} else {
 				matchesMetric = false;
 			}
+		}
+
+		if (!matchesTruckDriver) {
+			return false;
 		}
 
 		return (
