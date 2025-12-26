@@ -186,7 +186,9 @@ export default function ProvinceEmployeesPage() {
 	return (
 		<>
 			<NavBar
-				title="Province Employees"
+				title={
+					provinceName ? `${provinceName} Employees` : "Province Employees"
+				}
 				backTo={isGlobalAdmin ? ROUTES.PROVINCES : undefined}
 				backLabel="Back to Provinces"
 			/>
