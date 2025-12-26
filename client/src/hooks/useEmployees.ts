@@ -5,6 +5,7 @@ import {
 	type Pagination,
 	type PaginatedResponse,
 } from "../api/api";
+import api from "../api/api";
 
 type UseEmployeesResult = {
 	employees: Employee[];
@@ -39,12 +40,9 @@ export function useEmployees(
 			// If not provided, use global endpoint for all employees
 			const response: PaginatedResponse<Employee> = provinceId
 				? await provinceApi.listEmployees(provinceId, page, limit)
-				: await fetch(`/api/employees?page=${page}&limit=${limit}`, {
-					credentials: "include",
-				}).then((res) => {
-					if (!res.ok) throw new Error("Failed to fetch employees");
-					return res.json();
-				});
+				: await api.get<PaginatedResponse<Employee>>("/employees", {
+					params: { page, limit }
+				}).then((res) => res.data);
 
 			setEmployees(response.data ?? []);
 			setPagination(response.pagination);
