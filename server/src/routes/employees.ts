@@ -133,7 +133,7 @@ router.get("/export-excel", requireAnyRole, async (req: Request<{ provinceId: st
 		}
 
 		// Generate and send Excel workbook
-		const workbook = prepareEmployeesExcel(employees);
+		const workbook = await prepareEmployeesExcel(employees);
 		logger.info("Employees exported to Excel", { provinceId, count: employees.length });
 		sendExcelFile(res, workbook, "employees");
 	} catch (err: unknown) {
