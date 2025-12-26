@@ -50,6 +50,12 @@ export default function ProvinceEmployeesPage() {
 		{ value: "contactNumber", label: "Contact number" },
 		{ value: "branch", label: "Branch" },
 		{ value: "rank", label: "Rank" },
+		{ value: "licensedWorkplace", label: "Licensed Workplace" },
+		{ value: "educationalDegree", label: "Educational Degree" },
+		{ value: "status", label: "Status" },
+		{ value: "maritalStatus", label: "Marital Status" },
+		{ value: "gender", label: "Gender" },
+		{ value: "childrenCount", label: "Children Count" },
 		{ value: "province", label: "Province" },
 	];
 
@@ -77,6 +83,32 @@ export default function ProvinceEmployeesPage() {
 				return fieldValue(employee.workPlace?.branch).includes(normalized);
 			case "rank":
 				return fieldValue(employee.workPlace?.rank).includes(normalized);
+			case "licensedWorkplace":
+				return fieldValue(employee.workPlace?.licensedWorkplace).includes(
+					normalized
+				);
+			case "educationalDegree":
+				return fieldValue(
+					employee.additionalSpecifications?.educationalDegree
+				).includes(normalized);
+			case "status":
+				return fieldValue(
+					employee.performance?.status?.replace("_", " ")
+				).includes(normalized);
+			case "maritalStatus": {
+				const maritalStatus = employee.basicInfo?.married
+					? "married"
+					: "single";
+				return maritalStatus.includes(normalized);
+			}
+			case "gender": {
+				const gender = employee.basicInfo?.male ? "male" : "female";
+				return gender.includes(normalized);
+			}
+			case "childrenCount":
+				return fieldValue(
+					employee.basicInfo?.childrenCount?.toString()
+				).includes(normalized);
 			case "province": {
 				const provinceLabel =
 					typeof employee.provinceId === "object"
@@ -91,6 +123,12 @@ export default function ProvinceEmployeesPage() {
 					employee.additionalSpecifications?.contactNumber,
 					employee.workPlace?.branch,
 					employee.workPlace?.rank,
+					employee.workPlace?.licensedWorkplace,
+					employee.additionalSpecifications?.educationalDegree,
+					employee.performance?.status?.replace("_", " "),
+					employee.basicInfo?.married ? "married" : "single",
+					employee.basicInfo?.male ? "male" : "female",
+					employee.basicInfo?.childrenCount?.toString(),
 					typeof employee.provinceId === "object"
 						? employee.provinceId?.name
 						: employee.provinceId,
