@@ -27,11 +27,12 @@ export default function GlobalAdminDashboardPage() {
 	const theme = useTheme();
 
 	// Get all employees for dashboard analytics
-	const { employees: allEmployees, loading, error, refetch } = useEmployees(
-		undefined,
-		1,
-		1000
-	);
+	const {
+		employees: allEmployees,
+		loading,
+		error,
+		refetch,
+	} = useEmployees(undefined, 1, 1000);
 	const { provinces } = useProvinces();
 
 	// Dashboard filters state
@@ -60,9 +61,7 @@ export default function GlobalAdminDashboardPage() {
 
 	const workplaces = Array.from(
 		new Set(
-			allEmployees
-				.map((e) => e.workPlace?.licensedWorkplace)
-				.filter(Boolean)
+			allEmployees.map((e) => e.workPlace?.licensedWorkplace).filter(Boolean)
 		)
 	)
 		.sort()
@@ -316,9 +315,7 @@ export default function GlobalAdminDashboardPage() {
 					<Grid item xs={12} md={6}>
 						<DriverSegmentationPanel
 							driverCount={metrics.driverCount}
-							nonDriverCount={
-								metrics.totalEmployees - metrics.driverCount
-							}
+							nonDriverCount={metrics.totalEmployees - metrics.driverCount}
 							loading={loading}
 						/>
 					</Grid>
@@ -339,93 +336,6 @@ export default function GlobalAdminDashboardPage() {
 						View Provinces
 					</Button>
 				</Stack>
-			</Container>
-		</>
-	);
-}
-					sx={{
-						display: "grid",
-						gridTemplateColumns: {
-							xs: "repeat(4, minmax(0, 1fr))",
-							sm: "repeat(5, minmax(0, 1fr))",
-							md: "repeat(6, minmax(0, 1fr))",
-							lg: "repeat(8, minmax(0, 1fr))",
-						},
-						gap: 1,
-					}}
-				>
-					{provinces.map((province) => (
-						<Card
-							key={province._id}
-							sx={{
-								height: "100%",
-								display: "flex",
-								flexDirection: "column",
-							}}
-						>
-							<CardActionArea
-								component={Link}
-								to={ROUTES.PROVINCE_EMPLOYEES.replace(
-									":provinceId",
-									province._id
-								)}
-								sx={{
-									height: "100%",
-									display: "flex",
-									flexDirection: "column",
-									alignItems: "stretch",
-									flexGrow: 1,
-								}}
-							>
-								<Box sx={{ position: "relative", width: "100%", pt: "80%" }}>
-									{province.imageUrl ? (
-										<CardMedia
-											component="img"
-											image={province.imageUrl}
-											alt={province.name ?? "Province image"}
-											sx={{
-												position: "absolute",
-												top: 0,
-												left: 0,
-												width: "100%",
-												height: "100%",
-												objectFit: "cover",
-											}}
-										/>
-									) : (
-										<Stack
-											sx={{
-												position: "absolute",
-												top: 0,
-												left: 0,
-												width: "100%",
-												height: "100%",
-												bgcolor: "grey.100",
-											}}
-											alignItems="center"
-											justifyContent="center"
-										>
-											<Avatar
-												sx={{
-													width: 40,
-													height: 40,
-													bgcolor: "primary.main",
-												}}
-											>
-												{province.name?.charAt(0) ?? "?"}
-											</Avatar>
-										</Stack>
-									)}
-								</Box>
-								<CardContent sx={{ flexGrow: 1, width: "100%", py: 1, px: 1 }}>
-									<Typography variant="body2" component="div" noWrap>
-										{province.name ?? "Unnamed"}
-									</Typography>
-								</CardContent>
-							</CardActionArea>
-						</Card>
-					))}
-				</Box>
 			</Container>
 		</>
 	);
