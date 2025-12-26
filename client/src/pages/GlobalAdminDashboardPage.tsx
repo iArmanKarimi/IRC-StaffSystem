@@ -1,32 +1,27 @@
 import { Link } from "react-router-dom";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import CardActionArea from "@mui/material/CardActionArea";
 import Stack from "@mui/material/Stack";
-import PeopleIcon from "@mui/icons-material/People";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import { ROUTES } from "../const/endpoints";
+import { ROUTES, API_BASE_URL } from "../const/endpoints";
 import NavBar from "../components/NavBar";
 import { useProvinces } from "../hooks/useProvinces";
 import { LoadingView } from "../components/states/LoadingView";
 import { ErrorView } from "../components/states/ErrorView";
 import { EmptyState } from "../components/states/EmptyState";
-import { API_BASE_URL } from "../const/endpoints";
 
 export default function GlobalAdminDashboardPage() {
 	const { provinces, loading, error, refetch } = useProvinces();
 
 	const handleExportAllEmployees = async () => {
 		try {
-			// Call export endpoint for each province and combine or use a global export endpoint
-			// For now, we'll create a download link for all provinces combined
 			const response = await fetch(`${API_BASE_URL}/employees/export-all`, {
 				method: "GET",
 				credentials: "include",
@@ -36,7 +31,6 @@ export default function GlobalAdminDashboardPage() {
 				throw new Error("Failed to export employees");
 			}
 
-			// Get the blob from response
 			const blob = await response.blob();
 			const url = window.URL.createObjectURL(blob);
 			const link = document.createElement("a");
@@ -103,51 +97,90 @@ export default function GlobalAdminDashboardPage() {
 					</Button>
 				</Stack>
 
-				<TableContainer component={Paper}>
-					<Table>
-						<TableHead>
-							<TableRow>
-								<TableCell>Name</TableCell>
-								<TableCell>Admin</TableCell>
-								<TableCell align="right">Actions</TableCell>
-							</TableRow>
-						</TableHead>
-						<TableBody>
-							{provinces.map((province) => (
-								<TableRow
-									key={province._id}
-									sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-								>
-									<TableCell component="th" scope="row">
-										{province.name ?? "Unnamed"}
-									</TableCell>
-									<TableCell>
-										{typeof province.admin === "object" &&
-										province.admin &&
-										"username" in province.admin
-											? (province.admin as { username?: string }).username ??
-											  "(unknown)"
-											: "(not set)"}
-									</TableCell>
-									<TableCell align="right">
-										<Button
-											component={Link}
-											to={ROUTES.PROVINCE_EMPLOYEES.replace(
-												":provinceId",
-												province._id
-											)}
-											variant="outlined"
-											size="small"
-											startIcon={<PeopleIcon />}
+				<Box
+					sx={{
+						display: "grid",
+						gridTemplateColumns: {
+							xs: "repeat(4, minmax(0, 1fr))",
+							sm: "repeat(5, minmax(0, 1fr))",
+							md: "repeat(6, minmax(0, 1fr))",
+							lg: "repeat(8, minmax(0, 1fr))",
+						},
+						gap: 1,
+					}}
+				>
+					{provinces.map((province) => (
+						<Card
+							key={province._id}
+							sx={{
+								height: "100%",
+								display: "flex",
+								flexDirection: "column",
+							}}
+						>
+							<CardActionArea
+								component={Link}
+								to={ROUTES.PROVINCE_EMPLOYEES.replace(
+									":provinceId",
+									province._id
+								)}
+								sx={{
+									height: "100%",
+									display: "flex",
+									flexDirection: "column",
+									alignItems: "stretch",
+									flexGrow: 1,
+								}}
+							>
+								<Box sx={{ position: "relative", width: "100%", pt: "80%" }}>
+									{province.imageUrl ? (
+										<CardMedia
+											component="img"
+											image={province.imageUrl}
+											alt={province.name ?? "Province image"}
+											sx={{
+												position: "absolute",
+												top: 0,
+												left: 0,
+												width: "100%",
+												height: "100%",
+												objectFit: "cover",
+											}}
+										/>
+									) : (
+										<Stack
+											sx={{
+												position: "absolute",
+												top: 0,
+												left: 0,
+												width: "100%",
+												height: "100%",
+												bgcolor: "grey.100",
+											}}
+											alignItems="center"
+											justifyContent="center"
 										>
-											View Employees
-										</Button>
-									</TableCell>
-								</TableRow>
-							))}
-						</TableBody>
-					</Table>
-				</TableContainer>
+											<Avatar
+												sx={{
+													width: 40,
+													height: 40,
+													bgcolor: "primary.main",
+												}}
+											>
+												{province.name?.charAt(0) ?? "?"}
+											</Avatar>
+										</Stack>
+									)}
+								</Box>
+								<CardContent sx={{ flexGrow: 1, width: "100%", py: 1, px: 1 }}>
+									<Typography variant="body2" component="div" noWrap>
+										{province.name ?? "Unnamed"}
+									</Typography>
+								</CardContent>
+							</CardActionArea>
+						</Card>
+					))}
+				</Box>
 			</Container>
 		</>
 	);
