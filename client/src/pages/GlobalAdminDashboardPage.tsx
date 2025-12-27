@@ -53,6 +53,16 @@ export default function GlobalAdminDashboardPage() {
 		}
 	}, [confirmDialogOpen, countdown]);
 
+	// Auto-close toast after 4 seconds
+	useEffect(() => {
+		if (toastOpen) {
+			const timer = setTimeout(() => {
+				setToastOpen(false);
+			}, 4000);
+			return () => clearTimeout(timer);
+		}
+	}, [toastOpen]);
+
 	const handleExportAllEmployees = async () => {
 		try {
 			const response = await fetch(`${API_BASE_URL}/employees/export-all`, {
