@@ -14,12 +14,16 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import Alert from "@mui/material/Alert";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
+import LockIcon from "@mui/icons-material/Lock";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
 import WarningIcon from "@mui/icons-material/Warning";
 import { ROUTES, API_BASE_URL } from "../const/endpoints";
 import NavBar from "../components/NavBar";
 import { useProvinces } from "../hooks/useProvinces";
+import { useGlobalSettings } from "../hooks/useGlobalSettings";
 import { provinceApi } from "../api/api";
 import { LoadingView } from "../components/states/LoadingView";
 import { ErrorView } from "../components/states/ErrorView";
@@ -28,19 +32,27 @@ import { useState, useEffect } from "react";
 
 export default function GlobalAdminDashboardPage() {
 	const { provinces, loading, error, refetch } = useProvinces();
+	const { settings, togglePerformanceLock } = useGlobalSettings();
 	const [clearing, setClearing] = useState(false);
+	const [toggling, setToggling] = useState(false);
 	const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+	const [lockDialogOpen, setLockDialogOpen] = useState(false);
 	const [countdown, setCountdown] = useState(5);
+	const [toastOpen, setToastOpen] = useState(false);
+	const [toastMessage, setToastMessage] = useState("");
+	const [toastSeverity, setToastSeverity] = useState<"success" | "error">(
+		"success"
+	);
 
 	// Countdown timer effect
 	useEffect(() => {
-		if (confirmDialogOpen && countdown > 0) {
+		if ((confirmDialogOpen || lockDialogOpen) && countdown > 0) {
 			const timer = setTimeout(() => {
 				setCountdown((prev) => prev - 1);
 			}, 1000);
 			return () => clearTimeout(timer);
 		}
-	}, [confirmDialogOpen, countdown]);
+	}, [confirmDialogOpen, lockDialogOpen, countdown]);
 
 	const handleExportAllEmployees = async () => {
 		try {
@@ -81,16 +93,56 @@ export default function GlobalAdminDashboardPage() {
 		setCountdown(5);
 	};
 
+	const handleOpenLockDialog = () => {
+		setCountdown(5);
+		setLockDialogOpen(true);
+	};
+
+	const handleCloseLockDialog = () => {
+		setLockDialogOpen(false);
+		setCountdown(5);
+	};
+
+	const handleToggleLock = async () => {
+		handleCloseLockDialog();
+		setToggling(true);
+		try {
+			await togglePerformanceLock();
+			const newStatus = !settings?.performanceLocked;
+			setToastMessage(
+				newStatus
+					? "Performance editing has been locked for all employees"
+					: "Performance editing has been unlocked for all employees"
+			);
+			setToastSeverity("success");
+			setToastOpen(true);
+		} catch (err: any) {
+			console.error("Toggle lock failed:", err);
+			const errorMessage =
+				err?.response?.data?.error ||
+				err?.response?.data?.message ||
+				err?.message ||
+				"Unknown error";
+			setToastMessage(`Failed to toggle performance lock: ${errorMessage}`);
+			setToastSeverity("error");
+			setToastOpen(true);
+		} finally {
+			setToggling(false);
+		}
+	};
+
 	const handleClearAllPerformances = async () => {
 		handleCloseClearDialog();
 		setClearing(true);
 		try {
 			const response = await provinceApi.clearAllPerformances();
-			alert(
+			setToastMessage(
 				`Successfully reset performance data for ${
 					response.data?.modifiedCount || 0
 				} employee(s)`
 			);
+			setToastSeverity("success");
+			setToastOpen(true);
 		} catch (err: any) {
 			console.error("Reset performances failed:", err);
 			const errorMessage =
@@ -98,7 +150,9 @@ export default function GlobalAdminDashboardPage() {
 				err?.response?.data?.message ||
 				err?.message ||
 				"Unknown error";
-			alert(`Failed to reset employee performances: ${errorMessage}`);
+			setToastMessage(`Failed to reset employee performances: ${errorMessage}`);
+			setToastSeverity("error");
+			setToastOpen(true);
 		} finally {
 			setClearing(false);
 		}
@@ -142,13 +196,44 @@ export default function GlobalAdminDashboardPage() {
 					<Typography variant="h4" component="h1" gutterBottom sx={{ m: 0 }}>
 						Provinces
 					</Typography>
-					<Stack direction="row" spacing={2}>
+					<Stack direction="row" spacing={2} alignItems="center">
+						{/* Lock Status Indicator */}
+						<Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+							{settings?.performanceLocked ? (
+								<>
+									<LockIcon sx={{ color: "error.main", fontSize: "1.25rem" }} />
+									<Typography variant="caption" sx={{ color: "error.main" }}>
+										Locked
+									</Typography>
+								</>
+							) : (
+								<>
+									<LockOpenIcon
+										sx={{ color: "success.main", fontSize: "1.25rem" }}
+									/>
+									<Typography variant="caption" sx={{ color: "success.main" }}>
+										Unlocked
+									</Typography>
+								</>
+							)}
+						</Box>
+						<Button
+							onClick={handleOpenLockDialog}
+							variant={settings?.performanceLocked ? "contained" : "outlined"}
+							color={settings?.performanceLocked ? "error" : "success"}
+							startIcon={
+								settings?.performanceLocked ? <LockIcon /> : <LockOpenIcon />
+							}
+							disabled={toggling}
+						>
+							{settings?.performanceLocked ? "Unlock" : "Lock"}
+						</Button>
 						<Button
 							onClick={handleOpenClearDialog}
 							variant="outlined"
 							color="error"
 							startIcon={<DeleteSweepIcon />}
-							disabled={clearing}
+							disabled={clearing || settings?.performanceLocked}
 						>
 							{clearing ? "Resetting..." : "Reset All Performances"}
 						</Button>
@@ -301,6 +386,116 @@ export default function GlobalAdminDashboardPage() {
 						</Button>
 					</DialogActions>
 				</Dialog>
+
+				{/* Lock Confirmation Dialog */}
+				<Dialog
+					open={lockDialogOpen}
+					onClose={handleCloseLockDialog}
+					aria-labelledby="lock-dialog-title"
+					aria-describedby="lock-dialog-description"
+				>
+					<DialogTitle
+						id="lock-dialog-title"
+						sx={{ display: "flex", alignItems: "center", gap: 1 }}
+					>
+						{settings?.performanceLocked ? (
+							<>
+								<LockOpenIcon color="success" />
+								Unlock Performance Editing?
+							</>
+						) : (
+							<>
+								<LockIcon color="error" />
+								Lock Performance Editing?
+							</>
+						)}
+					</DialogTitle>
+					<DialogContent>
+						{settings?.performanceLocked ? (
+							<DialogContentText id="lock-dialog-description">
+								<Alert severity="info" icon={<LockOpenIcon />} sx={{ mb: 2 }}>
+									This will <strong>allow</strong> all employees to edit their
+									performance records.
+								</Alert>
+								<Typography variant="body2" color="text.secondary">
+									Employees will be able to:
+								</Typography>
+								<Box component="ul" sx={{ mt: 1, color: "text.secondary" }}>
+									<li>Edit their performance metrics</li>
+									<li>Update shift information</li>
+									<li>Modify absence and leave records</li>
+								</Box>
+							</DialogContentText>
+						) : (
+							<DialogContentText id="lock-dialog-description">
+								<Alert severity="warning" icon={<LockIcon />} sx={{ mb: 2 }}>
+									This will <strong>prevent</strong> all employees from editing
+									their performance records.
+								</Alert>
+								<Typography variant="body2" color="text.secondary">
+									Employees will <strong>not</strong> be able to:
+								</Typography>
+								<Box component="ul" sx={{ mt: 1, color: "text.secondary" }}>
+									<li>Edit their performance metrics</li>
+									<li>Update shift information</li>
+									<li>Modify absence and leave records</li>
+								</Box>
+								<Typography
+									variant="body2"
+									color="text.secondary"
+									sx={{ mt: 2 }}
+								>
+									The "Reset All Performances" action will also be disabled
+									while the lock is active.
+								</Typography>
+							</DialogContentText>
+						)}
+						{countdown > 0 && (
+							<DialogContentText
+								sx={{ mt: 2, fontWeight: "bold", color: "warning.main" }}
+							>
+								Please wait {countdown} second{countdown !== 1 ? "s" : ""}{" "}
+								before confirming...
+							</DialogContentText>
+						)}
+					</DialogContent>
+					<DialogActions>
+						<Button onClick={handleCloseLockDialog} color="inherit">
+							Cancel
+						</Button>
+						<Button
+							onClick={handleToggleLock}
+							color={settings?.performanceLocked ? "success" : "error"}
+							variant="contained"
+							disabled={countdown > 0}
+							startIcon={
+								settings?.performanceLocked ? <LockOpenIcon /> : <LockIcon />
+							}
+						>
+							{settings?.performanceLocked ? "Confirm Unlock" : "Confirm Lock"}
+						</Button>
+					</DialogActions>
+				</Dialog>
+
+				{/* Toast Notification */}
+				{toastOpen && (
+					<Box
+						sx={{
+							position: "fixed",
+							bottom: 20,
+							right: 20,
+							zIndex: 1400,
+						}}
+					>
+						<Alert
+							severity={toastSeverity}
+							onClose={() => setToastOpen(false)}
+							sx={{ boxShadow: 2 }}
+						>
+							{toastMessage}
+						</Alert>
+					</Box>
+				)}
 			</Container>
 		</>
 	);
