@@ -15,8 +15,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Alert from "@mui/material/Alert";
-import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import LockIcon from "@mui/icons-material/Lock";
@@ -203,35 +201,17 @@ export default function GlobalAdminDashboardPage() {
 							>
 								Performance:
 							</Typography>
-							<ToggleButtonGroup
-								value={settings?.performanceLocked ? "locked" : "unlocked"}
-								exclusive
-								size="small"
+							<Box
 								sx={{
+									display: "flex",
 									border: "2px solid",
 									borderColor: "divider",
 									borderRadius: 1,
-									"& .MuiButtonBase-root": {
-										boxShadow: "none !important",
-										outline: "none !important",
-										"&:focus": {
-											outline: "none !important",
-											boxShadow: "none !important",
-										},
-										"&:focus-visible": {
-											outline: "none !important",
-											boxShadow: "none !important",
-										},
-									},
-									"& .Mui-selected": {
-										backgroundColor: "action.selected",
-										boxShadow: "none !important",
-									},
+									overflow: "hidden",
 								}}
 							>
-								<ToggleButton
-									value="unlocked"
-									onChange={() => {
+								<Button
+									onClick={() => {
 										if (settings?.performanceLocked) {
 											handleToggleLock(
 												{} as React.ChangeEvent<HTMLInputElement>
@@ -239,31 +219,29 @@ export default function GlobalAdminDashboardPage() {
 										}
 									}}
 									disabled={toggling}
-									aria-label="unlock"
-									disableRipple
-									focusRipple={false}
 									sx={{
-										boxShadow: "none !important",
-										outline: "none !important",
+										padding: "6px 16px",
+										minWidth: "auto",
+										color: !settings?.performanceLocked ? "primary.main" : "text.secondary",
+										backgroundColor: !settings?.performanceLocked ? "action.selected" : "transparent",
+										border: "none",
+										borderRadius: 0,
 										"&:hover": {
-											boxShadow: "none !important",
-											outline: "none !important",
+											backgroundColor: !settings?.performanceLocked ? "action.selected" : "action.hover",
 										},
 										"&:focus": {
-											boxShadow: "none !important",
-											outline: "none !important",
+											outline: "none",
 										},
 										"&:focus-visible": {
-											boxShadow: "none !important",
-											outline: "none !important",
+											outline: "none",
 										},
 									}}
 								>
 									<LockOpenIcon sx={{ fontSize: "1.25rem" }} />
-								</ToggleButton>
-								<ToggleButton
-									value="locked"
-									onChange={() => {
+								</Button>
+								<Box sx={{ width: "1px", backgroundColor: "divider" }} />
+								<Button
+									onClick={() => {
 										if (!settings?.performanceLocked) {
 											handleToggleLock(
 												{} as React.ChangeEvent<HTMLInputElement>
@@ -271,29 +249,27 @@ export default function GlobalAdminDashboardPage() {
 										}
 									}}
 									disabled={toggling}
-									aria-label="lock"
-									disableRipple
-									focusRipple={false}
 									sx={{
-										boxShadow: "none !important",
-										outline: "none !important",
+										padding: "6px 16px",
+										minWidth: "auto",
+										color: settings?.performanceLocked ? "error.main" : "text.secondary",
+										backgroundColor: settings?.performanceLocked ? "action.selected" : "transparent",
+										border: "none",
+										borderRadius: 0,
 										"&:hover": {
-											boxShadow: "none !important",
-											outline: "none !important",
+											backgroundColor: settings?.performanceLocked ? "action.selected" : "action.hover",
 										},
 										"&:focus": {
-											boxShadow: "none !important",
-											outline: "none !important",
+											outline: "none",
 										},
 										"&:focus-visible": {
-											boxShadow: "none !important",
-											outline: "none !important",
+											outline: "none",
 										},
 									}}
 								>
 									<LockIcon sx={{ fontSize: "1.25rem" }} />
-								</ToggleButton>
-							</ToggleButtonGroup>
+								</Button>
+							</Box>
 						</Stack>
 
 						{/* Action Buttons */}
