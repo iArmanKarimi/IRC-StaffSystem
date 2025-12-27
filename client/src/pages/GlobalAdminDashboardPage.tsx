@@ -222,12 +222,18 @@ export default function GlobalAdminDashboardPage() {
 									sx={{
 										padding: "6px 16px",
 										minWidth: "auto",
-										color: !settings?.performanceLocked ? "primary.main" : "text.secondary",
-										backgroundColor: !settings?.performanceLocked ? "action.selected" : "transparent",
+										color: !settings?.performanceLocked
+											? "primary.main"
+											: "text.secondary",
+										backgroundColor: !settings?.performanceLocked
+											? "action.selected"
+											: "transparent",
 										border: "none",
 										borderRadius: 0,
 										"&:hover": {
-											backgroundColor: !settings?.performanceLocked ? "action.selected" : "action.hover",
+											backgroundColor: !settings?.performanceLocked
+												? "action.selected"
+												: "action.hover",
 										},
 										"&:focus": {
 											outline: "none",
@@ -252,12 +258,18 @@ export default function GlobalAdminDashboardPage() {
 									sx={{
 										padding: "6px 16px",
 										minWidth: "auto",
-										color: settings?.performanceLocked ? "error.main" : "text.secondary",
-										backgroundColor: settings?.performanceLocked ? "action.selected" : "transparent",
+										color: settings?.performanceLocked
+											? "error.main"
+											: "text.secondary",
+										backgroundColor: settings?.performanceLocked
+											? "action.selected"
+											: "transparent",
 										border: "none",
 										borderRadius: 0,
 										"&:hover": {
-											backgroundColor: settings?.performanceLocked ? "action.selected" : "action.hover",
+											backgroundColor: settings?.performanceLocked
+												? "action.selected"
+												: "action.hover",
 										},
 										"&:focus": {
 											outline: "none",
