@@ -7,7 +7,6 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Alert from "@mui/material/Alert";
-import Container from "@mui/material/Container";
 import LoginIcon from "@mui/icons-material/Login";
 import { authApi, type LoginResponse } from "../api/api";
 import { ROUTES } from "../const/endpoints";
@@ -57,83 +56,79 @@ export default function LoginFormPage() {
 	};
 
 	return (
-		<Container
-			maxWidth="xl"
+		<Box
 			sx={{
 				backgroundImage: "url(/login-bg.jpg)",
 				backgroundSize: "cover",
 				backgroundPosition: "center",
+				minHeight: "100vh",
+				width: "100vw",
+				marginLeft: "calc(-50vw + 50%)",
+				display: "flex",
+				alignItems: "center",
+				justifyContent: "center",
+				py: 4,
 			}}
 		>
-			<Box
-				sx={{
-					minHeight: "100vh",
-					display: "flex",
-					alignItems: "center",
-					justifyContent: "center",
-					py: 4,
-				}}
-			>
-				<Card sx={{ width: "100%", maxWidth: 400 }}>
-					<CardContent sx={{ p: 3 }}>
-						<Typography
-							variant="h4"
-							component="h1"
-							gutterBottom
-							align="center"
-							sx={{ mb: 1 }}
-						>
-							Login
-						</Typography>
-						<Typography
-							variant="body2"
-							color="text.secondary"
-							align="center"
-							sx={{ mb: 3 }}
-						>
-							IRC Staff Management System
-						</Typography>
+			<Card sx={{ width: "100%", maxWidth: 400 }}>
+				<CardContent sx={{ p: 3 }}>
+					<Typography
+						variant="h4"
+						component="h1"
+						gutterBottom
+						align="center"
+						sx={{ mb: 1 }}
+					>
+						Login
+					</Typography>
+					<Typography
+						variant="body2"
+						color="text.secondary"
+						align="center"
+						sx={{ mb: 3 }}
+					>
+						IRC Staff Management System
+					</Typography>
 
-						<form onSubmit={handleSubmit}>
-							<Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
-								<TextField
-									label="Username"
-									type="text"
-									value={username}
-									onChange={(e) => setUsername(e.target.value)}
-									required
-									fullWidth
-									autoFocus
-								/>
-								<TextField
-									label="Password"
-									type="password"
-									value={password}
-									onChange={(e) => setPassword(e.target.value)}
-									required
-									fullWidth
-								/>
-								<Button
-									type="submit"
-									variant="contained"
-									size="large"
-									fullWidth
-									disabled={loading}
-									startIcon={<LoginIcon />}
-									sx={{ mt: 2 }}
-								>
-									{loading ? "Logging in..." : "Login"}
-								</Button>
-								{error && (
-									<Alert severity="error" sx={{ mt: 1 }}>
-										{error}
-									</Alert>
-								)}
-							</Box>
-						</form>
-					</CardContent>
-				</Card>
-			</Box>
-		</Container>
+					<form onSubmit={handleSubmit}>
+						<Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
+							<TextField
+								label="Username"
+								type="text"
+								value={username}
+								onChange={(e) => setUsername(e.target.value)}
+								required
+								fullWidth
+								autoFocus
+							/>
+							<TextField
+								label="Password"
+								type="password"
+								value={password}
+								onChange={(e) => setPassword(e.target.value)}
+								required
+								fullWidth
+							/>
+							<Button
+								type="submit"
+								variant="contained"
+								size="large"
+								fullWidth
+								disabled={loading}
+								startIcon={<LoginIcon />}
+								sx={{ mt: 2 }}
+							>
+								{loading ? "Logging in..." : "Login"}
+							</Button>
+							{error && (
+								<Alert severity="error" sx={{ mt: 1 }}>
+									{error}
+								</Alert>
+							)}
+						</Box>
+					</form>
+				</CardContent>
+			</Card>
+		</Box>
 	);
 }
