@@ -211,6 +211,12 @@ export default function GlobalAdminDashboardPage() {
 									border: "2px solid",
 									borderColor: "divider",
 									borderRadius: 1,
+									"& .MuiButtonBase-root": {
+										boxShadow: "none !important",
+									},
+									"& .Mui-selected": {
+										backgroundColor: "action.selected",
+									},
 								}}
 							>
 								<ToggleButton
@@ -224,10 +230,9 @@ export default function GlobalAdminDashboardPage() {
 									}}
 									disabled={toggling}
 									aria-label="unlock"
+									disableRipple
 									sx={{
-										"&:hover": { boxShadow: "none" },
-										"&:focus": { boxShadow: "none" },
-										"&.Mui-selected": { boxShadow: "none" },
+										boxShadow: "none !important",
 									}}
 								>
 									<LockOpenIcon sx={{ fontSize: "1.25rem" }} />
@@ -243,10 +248,9 @@ export default function GlobalAdminDashboardPage() {
 									}}
 									disabled={toggling}
 									aria-label="lock"
+									disableRipple
 									sx={{
-										"&:hover": { boxShadow: "none" },
-										"&:focus": { boxShadow: "none" },
-										"&.Mui-selected": { boxShadow: "none" },
+										boxShadow: "none !important",
 									}}
 								>
 									<LockIcon sx={{ fontSize: "1.25rem" }} />
