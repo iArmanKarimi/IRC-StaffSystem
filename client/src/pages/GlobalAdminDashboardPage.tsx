@@ -32,7 +32,11 @@ import { useState, useEffect } from "react";
 
 export default function GlobalAdminDashboardPage() {
 	const { provinces, loading, error, refetch } = useProvinces();
-	const { settings, togglePerformanceLock, refetch: refetchSettings } = useGlobalSettings();
+	const {
+		settings,
+		togglePerformanceLock,
+		refetch: refetchSettings,
+	} = useGlobalSettings();
 	const [clearing, setClearing] = useState(false);
 	const [toggling, setToggling] = useState(false);
 	const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
