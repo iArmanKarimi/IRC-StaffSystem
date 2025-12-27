@@ -24,8 +24,8 @@ export function useGlobalSettings() {
 	const togglePerformanceLock = async () => {
 		try {
 			const response = await api.post(API_ENDPOINTS.TOGGLE_PERFORMANCE_LOCK, {});
-			setSettings(response.data);
-			return response.data;
+			setSettings(response.data.data);
+			return response.data.data;
 		} catch (err) {
 			throw err;
 		}
