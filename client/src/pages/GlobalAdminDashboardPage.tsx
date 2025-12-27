@@ -213,9 +213,19 @@ export default function GlobalAdminDashboardPage() {
 									borderRadius: 1,
 									"& .MuiButtonBase-root": {
 										boxShadow: "none !important",
+										outline: "none !important",
+										"&:focus": {
+											outline: "none !important",
+											boxShadow: "none !important",
+										},
+										"&:focus-visible": {
+											outline: "none !important",
+											boxShadow: "none !important",
+										},
 									},
 									"& .Mui-selected": {
 										backgroundColor: "action.selected",
+										boxShadow: "none !important",
 									},
 								}}
 							>
@@ -231,8 +241,22 @@ export default function GlobalAdminDashboardPage() {
 									disabled={toggling}
 									aria-label="unlock"
 									disableRipple
+									focusRipple={false}
 									sx={{
 										boxShadow: "none !important",
+										outline: "none !important",
+										"&:hover": {
+											boxShadow: "none !important",
+											outline: "none !important",
+										},
+										"&:focus": {
+											boxShadow: "none !important",
+											outline: "none !important",
+										},
+										"&:focus-visible": {
+											boxShadow: "none !important",
+											outline: "none !important",
+										},
 									}}
 								>
 									<LockOpenIcon sx={{ fontSize: "1.25rem" }} />
@@ -249,8 +273,22 @@ export default function GlobalAdminDashboardPage() {
 									disabled={toggling}
 									aria-label="lock"
 									disableRipple
+									focusRipple={false}
 									sx={{
 										boxShadow: "none !important",
+										outline: "none !important",
+										"&:hover": {
+											boxShadow: "none !important",
+											outline: "none !important",
+										},
+										"&:focus": {
+											boxShadow: "none !important",
+											outline: "none !important",
+										},
+										"&:focus-visible": {
+											boxShadow: "none !important",
+											outline: "none !important",
+										},
 									}}
 								>
 									<LockIcon sx={{ fontSize: "1.25rem" }} />
