@@ -316,6 +316,11 @@ export default function GlobalAdminDashboardPage() {
 								height: "100%",
 								display: "flex",
 								flexDirection: "column",
+								transition: "all 0.3s ease-in-out",
+								"&:hover": {
+									transform: "translateY(-4px)",
+									boxShadow: 4,
+								},
 							}}
 						>
 							<CardActionArea
