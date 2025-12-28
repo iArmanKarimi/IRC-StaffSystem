@@ -546,11 +546,11 @@ export default function AdminDashboardPage() {
 					</Box>
 				</Card>
 
-				{/* Recent Employees Table */}
+				{/* Recently Edited Employee Performances Table */}
 				{stats.recentEmployees && stats.recentEmployees.length > 0 && (
 					<Card sx={{ boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)", p: 2 }}>
 						<Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-							📝 Recently Added Employees
+							📊 Recently Edited Employee Performances
 						</Typography>
 						<Box
 							sx={{
@@ -586,7 +586,7 @@ export default function AdminDashboardPage() {
 										<th>Branch</th>
 										<th>Status</th>
 										<th>Performance</th>
-										<th>Added Date</th>
+										<th>Last Updated</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -628,7 +628,7 @@ export default function AdminDashboardPage() {
 												</span>
 											</td>
 											<td>{emp.dailyPerformance.toFixed(2)}</td>
-											<td>{new Date(emp.createdAt).toLocaleDateString()}</td>
+											<td>{new Date(emp.performanceUpdatedAt).toLocaleDateString()}</td>
 										</tr>
 									))}
 								</tbody>

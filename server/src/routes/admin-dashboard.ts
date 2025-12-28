@@ -74,6 +74,7 @@ interface DashboardStats {
 		status: string;
 		dailyPerformance: number;
 		createdAt: Date;
+		performanceUpdatedAt: Date;
 	}>;
 }
 
@@ -237,9 +238,14 @@ router.get(
 				stats.performanceMetrics.averageDailyPerformance = Math.round((totalPerformance / performanceCount) * 100) / 100;
 			}
 
-			// Get recent employees
+			// Get employees with recently updated performances
 			const recentEmps = employees
-				.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+				.filter((emp) => emp.performance) // Only employees with performance data
+				.sort((a, b) => {
+					const dateA = new Date((a.performance as any)?.updatedAt || a.performance?.createdAt || 0).getTime();
+					const dateB = new Date((b.performance as any)?.updatedAt || b.performance?.createdAt || 0).getTime();
+					return dateB - dateA;
+				})
 				.slice(0, 20);
 
 			stats.recentEmployees = recentEmps.map((emp) => ({
@@ -254,6 +260,7 @@ router.get(
 				status: emp.performance?.status || "no_data",
 				dailyPerformance: emp.performance?.dailyPerformance || 0,
 				createdAt: emp.createdAt,
+				performanceUpdatedAt: (emp.performance as any)?.updatedAt || emp.performance?.createdAt || new Date(),
 			}));
 
 			// Build absence overview by branch
