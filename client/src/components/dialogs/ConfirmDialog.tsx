@@ -35,8 +35,8 @@ export function ConfirmDialog({
 	title,
 	message,
 	loading = false,
-	confirmLabel = "Confirm",
-	cancelLabel = "Cancel",
+	confirmLabel = "تأیید",
+	cancelLabel = "لغو",
 	confirmColor = "error",
 }: ConfirmDialogProps) {
 	return (
@@ -55,7 +55,7 @@ export function ConfirmDialog({
 					color={confirmColor}
 					disabled={loading}
 				>
-					{loading ? "Processing..." : confirmLabel}
+					{loading ? "در حال پردازش..." : confirmLabel}
 				</Button>
 			</DialogActions>
 		</Dialog>

@@ -28,7 +28,7 @@ export default function Breadcrumbs({
 	// Home/Provinces - Only show if explicitly allowed (for global admins)
 	if (showProvincesLink && location.pathname !== ROUTES.PROVINCES) {
 		breadcrumbItems.push({
-			label: "Provinces",
+			label: "استان‌ها",
 			icon: <HomeIcon sx={{ mr: 0.5, fontSize: 20 }} />,
 			path: ROUTES.PROVINCES,
 		});
@@ -44,7 +44,7 @@ export default function Breadcrumbs({
 		let label =
 			provinceName && provinceName.trim().length > 1
 				? provinceName
-				: "Employees";
+				: "کارمندان";
 		breadcrumbItems.push({
 			label,
 			path: isOnEmployeesPage
@@ -56,7 +56,7 @@ export default function Breadcrumbs({
 	// New Employee
 	if (location.pathname.includes("/new")) {
 		breadcrumbItems.push({
-			label: "New Employee",
+			label: "کارمند جدید",
 			path: null,
 		});
 	}

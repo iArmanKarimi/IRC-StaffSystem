@@ -90,37 +90,37 @@ export default function AdminDashboardPage() {
 
 	const statCards: StatCard[] = [
 		{
-			title: "Total Employees",
+			title: "تعداد کل کارمندان",
 			value: stats.totalEmployees || 0,
 			icon: <Group sx={{ fontSize: 40, color: "white" }} />,
 			color: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
 		},
 		{
-			title: "Active Employees",
+			title: "کارمندان فعال",
 			value: stats.activeEmployees || 0,
 			icon: <TrendingUp sx={{ fontSize: 40, color: "white" }} />,
 			color: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
 		},
 		{
-			title: "On Leave",
+			title: "در مرخصی",
 			value: stats.onLeaveEmployees || 0,
 			icon: <LocationOn sx={{ fontSize: 40, color: "white" }} />,
 			color: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
 		},
 		{
-			title: "Inactive",
+			title: "غیرفعال",
 			value: stats.inactiveEmployees || 0,
 			icon: <TrendingDown sx={{ fontSize: 40, color: "white" }} />,
 			color: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
 		},
 		{
-			title: "Truck Drivers",
+			title: "رانندگان کامیون",
 			value: stats.employeeDistribution?.truckDriverCount || 0,
 			icon: <LocalShipping sx={{ fontSize: 40, color: "white" }} />,
 			color: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
 		},
 		{
-			title: "Avg Performance",
+			title: "میانگین عملکرد",
 			value:
 				stats.globalPerformanceMetrics?.averageDailyPerformance?.toFixed(2) ||
 				"0.00",
@@ -138,17 +138,17 @@ export default function AdminDashboardPage() {
 
 		const statusData = stats.employeesByStatus
 			? [
-					{ name: "Active", value: stats.employeesByStatus.active || 0 },
+					{ name: "فعال", value: stats.employeesByStatus.active || 0 },
 					{
-						name: "Inactive",
+						name: "غیرفعال",
 						value: stats.employeesByStatus.inactive || 0,
 					},
 					{
-						name: "On Leave",
+						name: "در مرخصی",
 						value: stats.employeesByStatus.on_leave || 0,
 					},
 					{
-						name: "No Data",
+						name: "بدون داده",
 						value: stats.employeesByStatus.no_performance || 0,
 					},
 			  ].filter((item) => item.value > 0)
@@ -157,11 +157,11 @@ export default function AdminDashboardPage() {
 		const genderData = stats.employeeDistribution
 			? [
 					{
-						name: "Male",
+						name: "مرد",
 						value: stats.employeeDistribution?.maleCount || 0,
 					},
 					{
-						name: "Female",
+						name: "زن",
 						value: stats.employeeDistribution?.femaleCount || 0,
 					},
 			  ]
@@ -169,7 +169,7 @@ export default function AdminDashboardPage() {
 
 		return (
 			<Box sx={{ minHeight: "100vh", backgroundColor: "#f5f5f5" }}>
-				<NavBar backTo={ROUTES.PROVINCES} backLabel="Provinces" />
+				<NavBar backTo={ROUTES.PROVINCES} backLabel="استان‌ها" />
 				<Container maxWidth="lg" sx={{ py: 4 }}>
 					<Typography
 						variant="h4"
@@ -182,9 +182,7 @@ export default function AdminDashboardPage() {
 							WebkitTextFillColor: "transparent",
 						}}
 					>
-						📊 Admin Dashboard
-					</Typography>
-
+						📊 دشبورد مدیریت
 					{/* Stat Cards Grid */}
 					<Box
 						sx={{
@@ -233,7 +231,7 @@ export default function AdminDashboardPage() {
 					{/* Province Selector Grid */}
 					<Box sx={{ mb: 4 }}>
 						<Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-							📍 Filter by Province
+							📍 فیلتر بر اساس استان
 						</Typography>
 						<Box
 							sx={{
@@ -276,7 +274,7 @@ export default function AdminDashboardPage() {
 								}}
 							>
 								<Typography sx={{ fontWeight: 600, textAlign: "center", p: 1 }}>
-									All
+									همه
 								</Typography>
 							</Card>
 

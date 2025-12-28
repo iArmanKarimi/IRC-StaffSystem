@@ -79,7 +79,7 @@ export default function GlobalAdminDashboardPage() {
 			window.URL.revokeObjectURL(url);
 		} catch (err) {
 			console.error("Export failed:", err);
-			setToastMessage("❌ Failed to export employees");
+			setToastMessage("❌ خروجی کارمندان ناموفق بود");
 			setToastSeverity("error");
 			setToastOpen(true);
 		}
@@ -104,9 +104,7 @@ export default function GlobalAdminDashboardPage() {
 
 			// Force update with new message and severity
 			setToastMessage(
-				newStatus
-					? "🔒 Performance editing is now LOCKED"
-					: "🔓 Performance editing is now UNLOCKED"
+				newStatus ? "🔒 ویرایش عملکرد قفل شد" : "🔓 ویرایش عملکرد باز شد"
 			);
 			setToastSeverity(newStatus ? "warning" : "success");
 			setToastOpen(true);
@@ -115,7 +113,7 @@ export default function GlobalAdminDashboardPage() {
 				err?.response?.data?.error ||
 				err?.response?.data?.message ||
 				err?.message ||
-				"Failed to toggle";
+				"تغییر وضعیت ناموفق بود";
 			setToastMessage(`❌ ${errorMessage}`);
 			setToastSeverity("error");
 			setToastOpen(true);
@@ -130,9 +128,9 @@ export default function GlobalAdminDashboardPage() {
 		try {
 			const response = await provinceApi.clearAllPerformances();
 			setToastMessage(
-				`Successfully reset performance data for ${
+				`داده‌های عملکرد ${
 					response.data?.modifiedCount || 0
-				} employee(s)`
+				} کارمند با موفقیت بازنشانی شد`
 			);
 			setToastSeverity("success");
 			setToastOpen(true);
@@ -142,8 +140,8 @@ export default function GlobalAdminDashboardPage() {
 				err?.response?.data?.error ||
 				err?.response?.data?.message ||
 				err?.message ||
-				"Unknown error";
-			setToastMessage(`Failed to reset employee performances: ${errorMessage}`);
+				"خطای نامشخص";
+			setToastMessage(`بازنشانی عملکرد کارمندان ناموفق بود: ${errorMessage}`);
 			setToastSeverity("error");
 			setToastOpen(true);
 		} finally {
@@ -152,25 +150,21 @@ export default function GlobalAdminDashboardPage() {
 	};
 
 	if (loading) {
-		return <LoadingView title="Provinces - Global Admin" />;
+		return <LoadingView title="استان‌ها - مدیر کل" />;
 	}
 
 	if (error) {
 		return (
-			<ErrorView
-				title="Provinces - Global Admin"
-				message={error}
-				onRetry={refetch}
-			/>
+			<ErrorView title="استان‌ها - مدیر کل" message={error} onRetry={refetch} />
 		);
 	}
 
 	if (!provinces.length) {
 		return (
 			<>
-				<NavBar title="Provinces - Global Admin" />
+				<NavBar title="استان‌ها - مدیر کل" />
 				<Container sx={{ mt: 4 }}>
-					<EmptyState message="No provinces found." />
+					<EmptyState message="هیچ استانی یافت نشد." />
 				</Container>
 			</>
 		);
@@ -178,7 +172,7 @@ export default function GlobalAdminDashboardPage() {
 
 	return (
 		<>
-			<NavBar title="Provinces - Global Admin" />
+			<NavBar title="استان‌ها - مدیر کل" />
 			<Container sx={{ py: 4 }}>
 				<Stack
 					direction="row"
@@ -187,7 +181,7 @@ export default function GlobalAdminDashboardPage() {
 					sx={{ mb: 3 }}
 				>
 					<Typography variant="h4" component="h1" gutterBottom sx={{ m: 0 }}>
-						Provinces
+						استان‌ها
 					</Typography>
 					<Stack
 						direction="row"
@@ -283,7 +277,7 @@ export default function GlobalAdminDashboardPage() {
 							disabled={clearing || settings?.performanceLocked}
 							size="small"
 						>
-							{clearing ? "Resetting..." : "Reset All"}
+							{clearing ? "در حال بازنشانی..." : "بازنشانی همه"}
 						</Button>
 						<Button
 							onClick={handleExportAllEmployees}
@@ -292,7 +286,7 @@ export default function GlobalAdminDashboardPage() {
 							startIcon={<FileDownloadIcon />}
 							size="small"
 						>
-							Export All
+							خروجی همه
 						</Button>
 					</Stack>
 				</Stack>
@@ -397,24 +391,24 @@ export default function GlobalAdminDashboardPage() {
 					<DialogTitle>
 						<Stack direction="row" alignItems="center" spacing={1}>
 							<WarningIcon color="error" />
-							<Typography>Reset All Employee Performances</Typography>
+							<Typography>بازنشانی عملکرد همه کارمندان</Typography>
 						</Stack>
 					</DialogTitle>
 					<DialogContent>
 						<DialogContentText>
-							<strong>Warning:</strong> You are about to reset all performance
-							data for all employees across all provinces to their default
-							values. This action cannot be undone.
+							<strong>هشدار:</strong> شما در شرف بازنشانی تمام داده‌های عملکرد
+							برای همه کارمندان در تمام استان‌ها به مقادیر پیش‌فرض هستید. این
+							عمل قابل بازگشت نیست.
 						</DialogContentText>
 						<DialogContentText sx={{ mt: 2 }}>
-							This will reset the following fields to zero/defaults:
+							این عمل فیلدهای زیر را به صفر/پیش‌فرض بازنشانی می‌کند:
 						</DialogContentText>
 						<Box component="ul" sx={{ mt: 1, color: "text.secondary" }}>
-							<li>Daily performance scores (reset to 0)</li>
-							<li>Shift information (reset to 0 shifts, 8-hour duration)</li>
-							<li>Overtime records (reset to 0)</li>
-							<li>Leave and absence data (all reset to 0)</li>
-							<li>Status (reset to "active") and notes (cleared)</li>
+							<li>امتیازات عملکرد روزانه (بازنشانی به ۰)</li>
+							<li>اطلاعات شیفت (بازنشانی به ۰ شیفت، مدت ۸ ساعت)</li>
+							<li>سوابق اضافه‌کاری (بازنشانی به ۰)</li>
+							<li>داده‌های مرخصی و غیبت (همه به ۰ بازنشانی می‌شوند)</li>
+							<li>وضعیت (بازنشانی به "فعال") و یادداشت‌ها (پاک شده)</li>
 						</Box>
 						{countdown > 0 && (
 							<DialogContentText

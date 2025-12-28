@@ -9,7 +9,9 @@ type LoadingViewProps = {
 /**
  * Standardized loading view with navbar and centered spinner
  */
-export function LoadingView({ title = "Loading..." }: LoadingViewProps) {
+export function LoadingView({
+	title = "در حال بارگذاری...",
+}: LoadingViewProps) {
 	return (
 		<>
 			<NavBar title={title} />

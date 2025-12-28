@@ -16,7 +16,7 @@ type ErrorViewProps = {
  * Standardized error view with navbar, error message, and optional retry button
  */
 export function ErrorView({
-	title = "Error",
+	title = "خطا",
 	message,
 	onRetry,
 	children,

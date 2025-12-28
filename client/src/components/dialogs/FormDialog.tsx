@@ -31,8 +31,8 @@ export function FormDialog({
 	title,
 	children,
 	loading = false,
-	saveLabel = "Save",
-	cancelLabel = "Cancel",
+	saveLabel = "ذخیره",
+	cancelLabel = "لغو",
 	maxWidth = "md",
 	fullWidth = true,
 	saveDisabled = false,
@@ -62,7 +62,7 @@ export function FormDialog({
 						disabled={loading || saveDisabled}
 						color="primary"
 					>
-						{loading ? "Saving..." : saveLabel}
+						{loading ? "در حال ذخیره..." : saveLabel}
 					</Button>
 				</DialogActions>
 			</form>
