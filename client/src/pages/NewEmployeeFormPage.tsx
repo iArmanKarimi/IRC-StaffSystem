@@ -329,7 +329,7 @@ export default function NewEmployeeFormPage() {
 										provinceId || ""
 									)}
 									variant="outlined"
-									startIcon={<ArrowBackIcon />}
+									startIcon={<ArrowBackIcon sx={{ transform: "scaleX(-1)" }} />}
 								>
 									لغو
 								</Button>

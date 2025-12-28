@@ -402,17 +402,7 @@ export default function EmployeePage() {
 								? ROUTES.PROVINCE_EMPLOYEES.replace(":provinceId", provinceId)
 								: "/"
 						}
-						startIcon={<ArrowBackIcon />}
-						disabled={!provinceId}
-						aria-disabled={!provinceId}
-						aria-label={provinceId ? "Back to Employees" : "Back unavailable"}
-					>
-						بازگشت به کارکنان
-					</Button>
-				</Box>
-
-				<EditEmployeeDialog
-					open={editDialogOpen}
+					startIcon={<ArrowBackIcon sx={{ transform: 'scaleX(-1)' }} />}
 					employee={employee}
 					saving={saving}
 					onClose={() => setEditDialogOpen(false)}

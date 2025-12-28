@@ -69,7 +69,7 @@ export default function NavBar({
 						sx={{ mr: 1 }}
 						aria-label={backLabel}
 					>
-						<ArrowBackIcon />
+						<ArrowBackIcon sx={{ transform: "scaleX(-1)" }} />
 					</IconButton>
 				)}
 				<Typography
