@@ -6,8 +6,11 @@ import Box from "@mui/material/Box";
 import PieChart from "@mui/icons-material/PieChart";
 import BarChart from "@mui/icons-material/BarChart";
 import TrendingUp from "@mui/icons-material/TrendingUp";
+import TrendingDown from "@mui/icons-material/TrendingDown";
 import Group from "@mui/icons-material/Group";
 import LocationOn from "@mui/icons-material/LocationOn";
+import PersonAdd from "@mui/icons-material/PersonAdd";
+import Work from "@mui/icons-material/Work";
 import {
 	PieChart as MuiPieChart,
 	Pie,
@@ -19,6 +22,7 @@ import {
 	CartesianGrid,
 	Tooltip,
 	ResponsiveContainer,
+	Legend,
 } from "recharts";
 import NavBar from "../components/NavBar";
 import { LoadingView } from "../components/states/LoadingView";
@@ -31,7 +35,6 @@ interface StatCard {
 	value: string | number;
 	icon: React.ReactNode;
 	color: string;
-	trend?: string;
 }
 
 const COLORS = [
@@ -86,24 +89,52 @@ export default function AdminDashboardPage() {
 			color: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
 		},
 		{
-			title: "Total Provinces",
-			value: stats.totalProvinces,
+			title: "Active Employees",
+			value: stats.activeEmployees,
+			icon: <TrendingUp sx={{ fontSize: 40, color: "white" }} />,
+			color: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+		},
+		{
+			title: "On Leave",
+			value: stats.onLeaveEmployees,
 			icon: <LocationOn sx={{ fontSize: 40, color: "white" }} />,
 			color: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
 		},
 		{
-			title: "Active Employees",
-			value: stats.employeesByStatus.active,
-			icon: <TrendingUp sx={{ fontSize: 40, color: "white" }} />,
-			color: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+			title: "Inactive",
+			value: stats.inactiveEmployees,
+			icon: <TrendingDown sx={{ fontSize: 40, color: "white" }} />,
+			color: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
+		},
+		{
+			title: "New Hires (This Month)",
+			value: stats.newHiresThisMonth,
+			icon: <PersonAdd sx={{ fontSize: 40, color: "white" }} />,
+			color: "linear-gradient(135deg, #30cfd0 0%, #330867 100%)",
+		},
+		{
+			title: "Truck Drivers",
+			value: stats.employeeDistribution.truckDriverCount,
+			icon: <Work sx={{ fontSize: 40, color: "white" }} />,
+			color: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
 		},
 		{
 			title: "Avg Performance",
 			value: stats.performanceMetrics.averageDailyPerformance.toFixed(2),
 			icon: <BarChart sx={{ fontSize: 40, color: "white" }} />,
-			color: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
+			color: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
+		},
+		{
+			title: "Total Provinces",
+			value: stats.totalProvinces,
+			icon: <LocationOn sx={{ fontSize: 40, color: "white" }} />,
+			color: "linear-gradient(135deg, #ff9a56 0%, #ff6a88 100%)",
 		},
 	];
+
+	const provinceData = stats.employeesByProvince.sort(
+		(a: any, b: any) => b.count - a.count
+	);
 
 	const statusData = [
 		{ name: "Active", value: stats.employeesByStatus.active },
@@ -111,10 +142,6 @@ export default function AdminDashboardPage() {
 		{ name: "On Leave", value: stats.employeesByStatus.on_leave },
 		{ name: "No Data", value: stats.employeesByStatus.no_performance },
 	].filter((item) => item.value > 0);
-
-	const provinceData = stats.employeesByProvince.sort(
-		(a: any, b: any) => b.count - a.count
-	);
 
 	const genderData = [
 		{ name: "Male", value: stats.employeeDistribution.maleCount },
@@ -139,7 +166,7 @@ export default function AdminDashboardPage() {
 					📊 Admin Dashboard
 				</Typography>
 
-				{/* Key Metrics Cards */}
+				{/* Stat Cards Grid */}
 				<Box
 					sx={{
 						display: "grid",
@@ -184,7 +211,7 @@ export default function AdminDashboardPage() {
 					))}
 				</Box>
 
-				{/* Charts Section */}
+				{/* Charts Section - 2 Column Grid */}
 				<Box
 					sx={{
 						display: "grid",
@@ -288,6 +315,152 @@ export default function AdminDashboardPage() {
 					</Card>
 				)}
 
+				{/* Absence Overview - Full Width */}
+				{stats.absenceOverview && stats.absenceOverview.length > 0 && (
+					<Card
+						sx={{ boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)", p: 2, mb: 4 }}
+					>
+						<Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+							<BarChart
+								sx={{ mr: 1, verticalAlign: "middle", color: "#8884d8" }}
+							/>
+							Absence Overview by Branch
+						</Typography>
+						<ResponsiveContainer width="100%" height={300}>
+							<MuiBarChart data={stats.absenceOverview}>
+								<CartesianGrid strokeDasharray="3 3" />
+								<XAxis
+									dataKey="name"
+									angle={-45}
+									textAnchor="end"
+									height={80}
+								/>
+								<YAxis />
+								<Tooltip />
+								<Legend />
+								<Bar
+									dataKey="totalAbsenceHours"
+									fill="#FF8042"
+									name="Absence Hours"
+								/>
+								<Bar
+									dataKey="totalLeaveHours"
+									fill="#FFBB28"
+									name="Leave Hours"
+								/>
+								<Bar
+									dataKey="totalOvertimeHours"
+									fill="#00C49F"
+									name="Overtime Hours"
+								/>
+							</MuiBarChart>
+						</ResponsiveContainer>
+					</Card>
+				)}
+
+				{/* Education Distribution */}
+				{stats.employeeDistribution.byEducation &&
+					stats.employeeDistribution.byEducation.length > 0 && (
+						<Card
+							sx={{ boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)", p: 2, mb: 4 }}
+						>
+							<Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+								<PieChart
+									sx={{ mr: 1, verticalAlign: "middle", color: "#8884d8" }}
+								/>
+								Education Distribution
+							</Typography>
+							<ResponsiveContainer width="100%" height={300}>
+								<MuiPieChart>
+									<Pie
+										data={stats.employeeDistribution.byEducation}
+										cx="50%"
+										cy="50%"
+										labelLine={false}
+										label={({ degree, count }: any) => `${degree}: ${count}`}
+										outerRadius={80}
+										fill="#8884d8"
+										dataKey="count"
+									>
+										{stats.employeeDistribution.byEducation.map(
+											(_entry: any, index: number) => (
+												<Cell
+													key={`cell-${index}`}
+													fill={COLORS[index % COLORS.length]}
+												/>
+											)
+										)}
+									</Pie>
+									<Tooltip />
+								</MuiPieChart>
+							</ResponsiveContainer>
+						</Card>
+					)}
+
+				{/* Rank & Branch Distribution Side by Side */}
+				<Box
+					sx={{
+						display: "grid",
+						gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+						gap: 3,
+						mb: 4,
+					}}
+				>
+					{/* Rank Distribution */}
+					{stats.employeeDistribution.byRank &&
+						stats.employeeDistribution.byRank.length > 0 && (
+							<Card sx={{ boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)", p: 2 }}>
+								<Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+									<BarChart
+										sx={{ mr: 1, verticalAlign: "middle", color: "#82CA9D" }}
+									/>
+									Distribution by Rank
+								</Typography>
+								<ResponsiveContainer width="100%" height={300}>
+									<MuiBarChart data={stats.employeeDistribution.byRank}>
+										<CartesianGrid strokeDasharray="3 3" />
+										<XAxis
+											dataKey="rank"
+											angle={-45}
+											textAnchor="end"
+											height={80}
+										/>
+										<YAxis />
+										<Tooltip />
+										<Bar dataKey="count" fill="#82CA9D" />
+									</MuiBarChart>
+								</ResponsiveContainer>
+							</Card>
+						)}
+
+					{/* Branch Distribution */}
+					{stats.employeeDistribution.byBranch &&
+						stats.employeeDistribution.byBranch.length > 0 && (
+							<Card sx={{ boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)", p: 2 }}>
+								<Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+									<BarChart
+										sx={{ mr: 1, verticalAlign: "middle", color: "#FFB3BA" }}
+									/>
+									Distribution by Branch
+								</Typography>
+								<ResponsiveContainer width="100%" height={300}>
+									<MuiBarChart data={stats.employeeDistribution.byBranch}>
+										<CartesianGrid strokeDasharray="3 3" />
+										<XAxis
+											dataKey="branch"
+											angle={-45}
+											textAnchor="end"
+											height={80}
+										/>
+										<YAxis />
+										<Tooltip />
+										<Bar dataKey="count" fill="#FFB3BA" />
+									</MuiBarChart>
+								</ResponsiveContainer>
+							</Card>
+						)}
+				</Box>
+
 				{/* Performance Metrics */}
 				<Card sx={{ boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)", p: 2, mb: 4 }}>
 					<Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
@@ -383,26 +556,6 @@ export default function AdminDashboardPage() {
 								{stats.performanceMetrics.totalAbsenceHours}
 							</Typography>
 						</Box>
-						<Box
-							sx={{
-								display: "flex",
-								justifyContent: "space-between",
-								alignItems: "center",
-								padding: 2,
-								backgroundColor: "#f5f5f5",
-								borderRadius: 1,
-							}}
-						>
-							<Typography variant="body2" sx={{ fontWeight: 500 }}>
-								Truck Drivers:
-							</Typography>
-							<Typography
-								variant="h6"
-								sx={{ fontWeight: 700, color: "#764ba2" }}
-							>
-								{stats.employeeDistribution.truckDriverCount}
-							</Typography>
-						</Box>
 					</Box>
 				</Card>
 
@@ -444,6 +597,8 @@ export default function AdminDashboardPage() {
 										<th>Province</th>
 										<th>Rank</th>
 										<th>Branch</th>
+										<th>Status</th>
+										<th>Performance</th>
 										<th>Added Date</th>
 									</tr>
 								</thead>
@@ -462,6 +617,30 @@ export default function AdminDashboardPage() {
 											<td>{emp.provinceName}</td>
 											<td>{emp.rank}</td>
 											<td>{emp.branch}</td>
+											<td>
+												<span
+													style={{
+														padding: "4px 8px",
+														borderRadius: "4px",
+														backgroundColor:
+															emp.status === "active"
+																? "#e8f5e9"
+																: emp.status === "on_leave"
+																? "#fff3e0"
+																: "#ffebee",
+														color:
+															emp.status === "active"
+																? "#2e7d32"
+																: emp.status === "on_leave"
+																? "#e65100"
+																: "#c62828",
+														fontWeight: 500,
+													}}
+												>
+													{emp.status}
+												</span>
+											</td>
+											<td>{emp.dailyPerformance.toFixed(2)}</td>
 											<td>{new Date(emp.createdAt).toLocaleDateString()}</td>
 										</tr>
 									))}

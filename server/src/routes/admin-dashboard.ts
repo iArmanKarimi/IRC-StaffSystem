@@ -15,6 +15,10 @@ const router = Router();
 interface DashboardStats {
 	totalEmployees: number;
 	totalProvinces: number;
+	activeEmployees: number;
+	inactiveEmployees: number;
+	onLeaveEmployees: number;
+	newHiresThisMonth: number;
 	employeesByStatus: {
 		active: number;
 		inactive: number;
@@ -25,6 +29,12 @@ interface DashboardStats {
 		_id: string;
 		name: string;
 		count: number;
+	}>;
+	absenceOverview: Array<{
+		name: string;
+		totalAbsenceHours: number;
+		totalLeaveHours: number;
+		totalOvertimeHours: number;
 	}>;
 	performanceMetrics: {
 		averageDailyPerformance: number;
@@ -58,6 +68,8 @@ interface DashboardStats {
 		provinceName: string;
 		rank: string;
 		branch: string;
+		status: string;
+		dailyPerformance: number;
 		createdAt: Date;
 	}>;
 }
@@ -80,6 +92,10 @@ router.get(
 			const stats: DashboardStats = {
 				totalEmployees: employees.length,
 				totalProvinces: provinces.length,
+				activeEmployees: 0,
+				inactiveEmployees: 0,
+				onLeaveEmployees: 0,
+				newHiresThisMonth: 0,
 				employeesByStatus: {
 					active: 0,
 					inactive: 0,
@@ -87,6 +103,7 @@ router.get(
 					no_performance: 0,
 				},
 				employeesByProvince: [],
+				absenceOverview: [],
 				performanceMetrics: {
 					averageDailyPerformance: 0,
 					totalOvertimeHours: 0,
@@ -111,16 +128,31 @@ router.get(
 			const branchMap = new Map<string, number>();
 			let totalPerformance = 0;
 			let performanceCount = 0;
+			const currentMonth = new Date().getMonth();
+			const currentYear = new Date().getFullYear();
 
 			employees.forEach((emp) => {
 				// Employee status
 				if (emp.performance) {
 					const status = emp.performance.status || "active";
-					if (status === "active") stats.employeesByStatus.active++;
-					else if (status === "inactive") stats.employeesByStatus.inactive++;
-					else if (status === "on_leave") stats.employeesByStatus.on_leave++;
+					if (status === "active") {
+						stats.employeesByStatus.active++;
+						stats.activeEmployees++;
+					} else if (status === "inactive") {
+						stats.employeesByStatus.inactive++;
+						stats.inactiveEmployees++;
+					} else if (status === "on_leave") {
+						stats.employeesByStatus.on_leave++;
+						stats.onLeaveEmployees++;
+					}
 				} else {
 					stats.employeesByStatus.no_performance++;
+				}
+
+				// New hires this month
+				const empDate = new Date(emp.createdAt);
+				if (empDate.getMonth() === currentMonth && empDate.getFullYear() === currentYear) {
+					stats.newHiresThisMonth++;
 				}
 
 				// Province distribution
@@ -191,7 +223,7 @@ router.get(
 			// Get recent employees
 			const recentEmps = employees
 				.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-				.slice(0, 10);
+				.slice(0, 20);
 
 			stats.recentEmployees = recentEmps.map((emp) => ({
 				_id: emp._id.toString(),
@@ -202,8 +234,33 @@ router.get(
 				provinceName: (emp.provinceId as any)?.name || "Unknown",
 				rank: emp.workPlace?.rank || "Unknown",
 				branch: emp.workPlace?.branch || "Unknown",
+				status: emp.performance?.status || "no_data",
+				dailyPerformance: emp.performance?.dailyPerformance || 0,
 				createdAt: emp.createdAt,
 			}));
+
+			// Build absence overview by branch
+			const branchAbsenceMap = new Map<
+				string,
+				{ absence: number; leave: number; overtime: number }
+			>();
+			employees.forEach((emp) => {
+				const branch = emp.workPlace?.branch || "Unknown";
+				const current = branchAbsenceMap.get(branch) || { absence: 0, leave: 0, overtime: 0 };
+				current.absence += emp.performance?.absence || 0;
+				current.leave += emp.performance?.dailyLeave || 0;
+				current.overtime += emp.performance?.overtime || 0;
+				branchAbsenceMap.set(branch, current);
+			});
+
+			stats.absenceOverview = Array.from(branchAbsenceMap.entries())
+				.map(([branch, data]) => ({
+					name: branch,
+					totalAbsenceHours: data.absence,
+					totalLeaveHours: data.leave,
+					totalOvertimeHours: data.overtime,
+				}))
+				.sort((a, b) => b.totalAbsenceHours - a.totalAbsenceHours);
 
 			sendSuccess(res, stats);
 		} catch (err) {
