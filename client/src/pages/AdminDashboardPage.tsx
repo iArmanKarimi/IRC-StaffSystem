@@ -125,7 +125,7 @@ export default function AdminDashboardPage() {
 
 	try {
 		const provinceData = stats.employeesByProvince
-			? stats.employeesByProvince.sort((a: any, b: any) => b.count - a.count)
+			? [...stats.employeesByProvince].sort((a: any, b: any) => b.count - a.count)
 			: [];
 
 		const statusData = stats.employeesByStatus
