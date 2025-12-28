@@ -628,7 +628,11 @@ export default function AdminDashboardPage() {
 												</span>
 											</td>
 											<td>{emp.dailyPerformance.toFixed(2)}</td>
-											<td>{new Date(emp.performanceUpdatedAt).toLocaleDateString()}</td>
+											<td>
+												{new Date(
+													emp.performanceUpdatedAt
+												).toLocaleDateString()}
+											</td>
 										</tr>
 									))}
 								</tbody>
