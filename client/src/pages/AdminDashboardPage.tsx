@@ -9,7 +9,7 @@ import TrendingUp from "@mui/icons-material/TrendingUp";
 import TrendingDown from "@mui/icons-material/TrendingDown";
 import Group from "@mui/icons-material/Group";
 import LocationOn from "@mui/icons-material/LocationOn";
-import Work from "@mui/icons-material/Work";
+import LocalShipping from "@mui/icons-material/LocalShipping";
 import {
 	PieChart as MuiPieChart,
 	Pie,
@@ -108,7 +108,7 @@ export default function AdminDashboardPage() {
 		{
 			title: "Truck Drivers",
 			value: stats.employeeDistribution.truckDriverCount,
-			icon: <Work sx={{ fontSize: 40, color: "white" }} />,
+			icon: <LocalShipping sx={{ fontSize: 40, color: "white" }} />,
 			color: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
 		},
 		{
