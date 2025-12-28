@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import LoginForm from "./pages/LoginFormPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import GlobalAdminDashboard from "./pages/GlobalAdminDashboardPage";
+import AdminDashboard from "./pages/AdminDashboardPage";
 import ProvinceEmployeesPage from "./pages/ProvinceEmployeesPage";
 import EmployeePage from "./pages/EmployeePage";
 import NewEmployeeFormPage from "./pages/NewEmployeeFormPage";
@@ -16,6 +17,14 @@ function App() {
 				element={
 					<ProtectedRoute>
 						<GlobalAdminDashboard />
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path={ROUTES.ADMIN_DASHBOARD}
+				element={
+					<ProtectedRoute>
+						<AdminDashboard />
 					</ProtectedRoute>
 				}
 			/>

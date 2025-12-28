@@ -92,7 +92,11 @@ export const globalApi = {
 			responseType: 'blob'
 		});
 		return response.data;
-	}
+	},
+	getDashboardStats: () =>
+		api
+			.get<ApiResponse<any>>(API_ENDPOINTS.ADMIN_DASHBOARD_STATS)
+			.then(unwrap)
 };
 
 export default api;

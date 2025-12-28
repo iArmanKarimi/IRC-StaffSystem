@@ -10,8 +10,10 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 import { authApi } from "../api/api";
 import { ROUTES } from "../const/endpoints";
+import { useIsGlobalAdmin } from "../hooks/useAuth";
 
 type NavBarProps = {
 	title?: string;
@@ -30,6 +32,7 @@ export default function NavBar({
 	const theme = useTheme();
 	const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 	const [loading, setLoading] = useState(false);
+	const { isGlobalAdmin } = useIsGlobalAdmin();
 
 	const handleLogout = async () => {
 		setLoading(true);
@@ -80,6 +83,39 @@ export default function NavBar({
 				>
 					{title}
 				</Typography>
+				{isGlobalAdmin && (
+					<Box sx={{ ml: 1.5 }}>
+						{isMobile ? (
+							<IconButton
+								color="inherit"
+								onClick={() => navigate(ROUTES.ADMIN_DASHBOARD)}
+								size="small"
+								aria-label="Admin Dashboard"
+								title="Admin Dashboard"
+							>
+								<DashboardIcon />
+							</IconButton>
+						) : (
+							<Button
+								color="inherit"
+								variant="outlined"
+								onClick={() => navigate(ROUTES.ADMIN_DASHBOARD)}
+								startIcon={<DashboardIcon />}
+								size="small"
+								sx={{
+									borderColor: "rgba(255, 255, 255, 0.3)",
+									"&:hover": {
+										borderColor: "rgba(255, 255, 255, 0.5)",
+										backgroundColor: "rgba(255, 255, 255, 0.1)",
+									},
+								}}
+								aria-label="Admin Dashboard"
+							>
+								Dashboard
+							</Button>
+						)}
+					</Box>
+				)}
 				{showLogout && (
 					<Box sx={{ ml: 1.5 }}>
 						{isMobile ? (

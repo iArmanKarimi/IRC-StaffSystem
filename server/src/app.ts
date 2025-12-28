@@ -7,6 +7,7 @@ import provinceRoutes from "./routes/provinces";
 import employeeRoutes from './routes/employees';
 import employeesGlobalRoutes from './routes/employees-global';
 import globalSettingsRoutes from './routes/global-settings';
+import adminDashboardRoutes from './routes/admin-dashboard';
 import apiDocsRoutes from './routes/api-docs';
 import { errorHandler } from "./middleware/errorHandler";
 import { requestLogger } from "./middleware/logger";
@@ -65,6 +66,9 @@ app.use('/api-docs', apiDocsRoutes);
 
 // Global settings routes (includes performance lock status)
 app.use('/global-settings', globalSettingsRoutes);
+
+// Admin Dashboard routes (global admin only)
+app.use('/admin-dashboard', adminDashboardRoutes);
 
 // Auth routes
 app.use('/auth', authRoutes);
