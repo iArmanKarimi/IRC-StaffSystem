@@ -328,13 +328,14 @@ export default function AdminDashboardPage() {
 												display: "-webkit-box",
 												WebkitLineClamp: 2,
 												WebkitBoxOrient: "vertical",
-											}}
-										>
-											{province.name}
-										</Typography>
-										<Typography
-											variant="caption"
-											sx={{ fontSize: "0.65rem", mt: 0.5 }}
+											color: "inherit",
+										}}
+									>
+										{province.name}
+									</Typography>
+									<Typography
+										variant="caption"
+										sx={{ fontSize: "0.65rem", mt: 0.5, color: "inherit" }}
 										>
 											({province.count})
 										</Typography>
