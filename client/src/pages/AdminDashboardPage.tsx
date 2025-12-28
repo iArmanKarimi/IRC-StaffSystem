@@ -9,7 +9,6 @@ import TrendingUp from "@mui/icons-material/TrendingUp";
 import TrendingDown from "@mui/icons-material/TrendingDown";
 import Group from "@mui/icons-material/Group";
 import LocationOn from "@mui/icons-material/LocationOn";
-import PersonAdd from "@mui/icons-material/PersonAdd";
 import Work from "@mui/icons-material/Work";
 import {
 	PieChart as MuiPieChart,
@@ -107,12 +106,6 @@ export default function AdminDashboardPage() {
 			color: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
 		},
 		{
-			title: "New Hires (This Month)",
-			value: stats.newHiresThisMonth,
-			icon: <PersonAdd sx={{ fontSize: 40, color: "white" }} />,
-			color: "linear-gradient(135deg, #30cfd0 0%, #330867 100%)",
-		},
-		{
 			title: "Truck Drivers",
 			value: stats.employeeDistribution.truckDriverCount,
 			icon: <Work sx={{ fontSize: 40, color: "white" }} />,
@@ -120,15 +113,9 @@ export default function AdminDashboardPage() {
 		},
 		{
 			title: "Avg Performance",
-			value: stats.performanceMetrics.averageDailyPerformance.toFixed(2),
+			value: stats.globalPerformanceMetrics.averageDailyPerformance.toFixed(2),
 			icon: <BarChart sx={{ fontSize: 40, color: "white" }} />,
 			color: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
-		},
-		{
-			title: "Total Provinces",
-			value: stats.totalProvinces,
-			icon: <LocationOn sx={{ fontSize: 40, color: "white" }} />,
-			color: "linear-gradient(135deg, #ff9a56 0%, #ff6a88 100%)",
 		},
 	];
 
