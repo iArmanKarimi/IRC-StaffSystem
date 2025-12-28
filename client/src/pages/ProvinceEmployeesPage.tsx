@@ -694,7 +694,7 @@ export default function ProvinceEmployeesPage() {
 							sx={{ pt: 1 }}
 						>
 							<Pagination
-								count={Math.ceil(filteredEmployees.length / limit)}
+								count={pagination?.pages || 1}
 								page={page + 1}
 								onChange={(_, value) => setPage(value - 1)}
 								color="primary"
