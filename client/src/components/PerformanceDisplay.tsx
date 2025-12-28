@@ -126,15 +126,7 @@ const PerformanceDisplay: React.FC<PerformanceDisplayProps> = ({
 				>
 					<MenuItem value="active">فعال</MenuItem>
 					<MenuItem value="inactive">غیرفعال</MenuItem>
-				</Select>
-			</FormControl>
-
-			<TextField
-				label="یادداشت‌ها"
-				multiline
-				rows={3}
-				fullWidth
-				value={performance.notes}
+				<MenuItem value="on_leave">در مرخصی</MenuItem>
 				onChange={(e) => onChange("notes", e.target.value)}
 				placeholder="یادداشت‌های اضافی را اضافه کنید..."
 			/>
