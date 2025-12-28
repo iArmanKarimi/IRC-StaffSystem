@@ -315,78 +315,57 @@ export default function AdminDashboardPage() {
 					</Card>
 				)}
 
-{/* Absence Overview by Province - Full Width */}
-			{stats.absenceOverviewByProvince && stats.absenceOverviewByProvince.length > 0 && (
-				<Box sx={{ mb: 4 }}>
-					{stats.absenceOverviewByProvince.map((provinceData: any, idx: number) => (
-						<Card key={idx} sx={{ boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)", p: 2, mb: 3 }}>
-							<Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-								<BarChart
-									sx={{ mr: 1, verticalAlign: "middle", color: "#8884d8" }}
-								/>
-								Absence Overview - {provinceData.province}
-							</Typography>
-							<ResponsiveContainer width="100%" height={300}>
-								<MuiBarChart data={provinceData.data}>
-									<CartesianGrid strokeDasharray="3 3" />
-									<XAxis
-										dataKey="name"
-										angle={-45}
-										textAnchor="end"
-										height={80}
-									/>
-									<YAxis />
-									<Tooltip />
-									<Legend />
-									<Bar
-										dataKey="totalAbsenceHours"
-										fill="#FF8042"
-										name="Absence Hours"
-									/>
-									<Bar
-										dataKey="totalLeaveHours"
-										fill="#FFBB28"
-										name="Leave Hours"
-									/>
-									<Bar
-										dataKey="totalOvertimeHours"
-										fill="#00C49F"
-										name="Overtime Hours"
-									/>
-								</MuiBarChart>
-							</ResponsiveContainer>
-						</Card>
-					))}
-				</Box>
-				)}
-
-{/* Rank & Branch Distribution by Province */}
-			<Box sx={{ mb: 4 }}>
-				{/* Rank Distribution by Province */}
-				{stats.employeeDistribution.byRankByProvince &&
-					stats.employeeDistribution.byRankByProvince.length > 0 && (
+				{/* Absence Overview by Province - Full Width */}
+				{stats.absenceOverviewByProvince &&
+					stats.absenceOverviewByProvince.length > 0 && (
 						<Box sx={{ mb: 4 }}>
-							{stats.employeeDistribution.byRankByProvince.map(
+							{stats.absenceOverviewByProvince.map(
 								(provinceData: any, idx: number) => (
-									<Card key={idx} sx={{ boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)", p: 2, mb: 3 }}>
+									<Card
+										key={idx}
+										sx={{
+											boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
+											p: 2,
+											mb: 3,
+										}}
+									>
 										<Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
 											<BarChart
-												sx={{ mr: 1, verticalAlign: "middle", color: "#82CA9D" }}
+												sx={{
+													mr: 1,
+													verticalAlign: "middle",
+													color: "#8884d8",
+												}}
 											/>
-											Distribution by Rank - {provinceData.province} (Total: {provinceData.total})
+											Absence Overview - {provinceData.province}
 										</Typography>
 										<ResponsiveContainer width="100%" height={300}>
 											<MuiBarChart data={provinceData.data}>
 												<CartesianGrid strokeDasharray="3 3" />
 												<XAxis
-													dataKey="rank"
+													dataKey="name"
 													angle={-45}
 													textAnchor="end"
 													height={80}
 												/>
 												<YAxis />
 												<Tooltip />
-												<Bar dataKey="count" fill="#82CA9D" />
+												<Legend />
+												<Bar
+													dataKey="totalAbsenceHours"
+													fill="#FF8042"
+													name="Absence Hours"
+												/>
+												<Bar
+													dataKey="totalLeaveHours"
+													fill="#FFBB28"
+													name="Leave Hours"
+												/>
+												<Bar
+													dataKey="totalOvertimeHours"
+													fill="#00C49F"
+													name="Overtime Hours"
+												/>
 											</MuiBarChart>
 										</ResponsiveContainer>
 									</Card>
@@ -395,9 +374,56 @@ export default function AdminDashboardPage() {
 						</Box>
 					)}
 
-				{/* Branch Distribution */}
-				{stats.employeeDistribution.byBranchByProvince &&
-					stats.employeeDistribution.byBranchByProvince.length > 0 && (
+				{/* Rank & Branch Distribution by Province */}
+				<Box sx={{ mb: 4 }}>
+					{/* Rank Distribution by Province */}
+					{stats.employeeDistribution.byRankByProvince &&
+						stats.employeeDistribution.byRankByProvince.length > 0 && (
+							<Box sx={{ mb: 4 }}>
+								{stats.employeeDistribution.byRankByProvince.map(
+									(provinceData: any, idx: number) => (
+										<Card
+											key={idx}
+											sx={{
+												boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
+												p: 2,
+												mb: 3,
+											}}
+										>
+											<Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+												<BarChart
+													sx={{
+														mr: 1,
+														verticalAlign: "middle",
+														color: "#82CA9D",
+													}}
+												/>
+												Distribution by Rank - {provinceData.province} (Total:{" "}
+												{provinceData.total})
+											</Typography>
+											<ResponsiveContainer width="100%" height={300}>
+												<MuiBarChart data={provinceData.data}>
+													<CartesianGrid strokeDasharray="3 3" />
+													<XAxis
+														dataKey="rank"
+														angle={-45}
+														textAnchor="end"
+														height={80}
+													/>
+													<YAxis />
+													<Tooltip />
+													<Bar dataKey="count" fill="#82CA9D" />
+												</MuiBarChart>
+											</ResponsiveContainer>
+										</Card>
+									)
+								)}
+							</Box>
+						)}
+
+					{/* Branch Distribution */}
+					{stats.employeeDistribution.byBranchByProvince &&
+						stats.employeeDistribution.byBranchByProvince.length > 0 && (
 							<Card sx={{ boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)", p: 2 }}>
 								<Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
 									<BarChart
@@ -449,212 +475,235 @@ export default function AdminDashboardPage() {
 						)}
 				</Box>
 
-{/* Performance Metrics - Global and by Province */}
-			<Box sx={{ mb: 4 }}>
-				{/* Global Performance Metrics */}
-				<Card sx={{ boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)", p: 2, mb: 3 }}>
-					<Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-						<TrendingUp
-							sx={{ mr: 1, verticalAlign: "middle", color: "#8884d8" }}
-						/>
-						Global Performance Metrics
-					</Typography>
-					<Box
-						sx={{
-							display: "grid",
-							gridTemplateColumns: { xs: "1fr", md: "repeat(2, 1fr)" },
-							gap: 2,
-						}}
+				{/* Performance Metrics - Global and by Province */}
+				<Box sx={{ mb: 4 }}>
+					{/* Global Performance Metrics */}
+					<Card
+						sx={{ boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)", p: 2, mb: 3 }}
 					>
+						<Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+							<TrendingUp
+								sx={{ mr: 1, verticalAlign: "middle", color: "#8884d8" }}
+							/>
+							Global Performance Metrics
+						</Typography>
 						<Box
 							sx={{
-								display: "flex",
-								justifyContent: "space-between",
-								alignItems: "center",
-								padding: 2,
-								backgroundColor: "#f5f5f5",
-								borderRadius: 1,
+								display: "grid",
+								gridTemplateColumns: { xs: "1fr", md: "repeat(2, 1fr)" },
+								gap: 2,
 							}}
 						>
-							<Typography variant="body2" sx={{ fontWeight: 500 }}>
-								Avg Daily Performance:
-							</Typography>
-							<Typography
-								variant="h6"
-								sx={{ fontWeight: 700, color: "#0088FE" }}
+							<Box
+								sx={{
+									display: "flex",
+									justifyContent: "space-between",
+									alignItems: "center",
+									padding: 2,
+									backgroundColor: "#f5f5f5",
+									borderRadius: 1,
+								}}
 							>
-								{stats.globalPerformanceMetrics.averageDailyPerformance.toFixed(2)}
-							</Typography>
-						</Box>
-						<Box
-							sx={{
-								display: "flex",
-								justifyContent: "space-between",
-								alignItems: "center",
-								padding: 2,
-								backgroundColor: "#f5f5f5",
-								borderRadius: 1,
-							}}
-						>
-							<Typography variant="body2" sx={{ fontWeight: 500 }}>
-								Total Overtime Hours:
-							</Typography>
-							<Typography
-								variant="h6"
-								sx={{ fontWeight: 700, color: "#00C49F" }}
-							>
-								{stats.globalPerformanceMetrics.totalOvertimeHours}
-							</Typography>
-						</Box>
-						<Box
-							sx={{
-								display: "flex",
-								justifyContent: "space-between",
-								alignItems: "center",
-								padding: 2,
-								backgroundColor: "#f5f5f5",
-								borderRadius: 1,
-							}}
-						>
-							<Typography variant="body2" sx={{ fontWeight: 500 }}>
-								Total Leave Hours:
-							</Typography>
-							<Typography
-								variant="h6"
-								sx={{ fontWeight: 700, color: "#FFBB28" }}
-							>
-								{stats.globalPerformanceMetrics.totalLeaveHours}
-							</Typography>
-						</Box>
-						<Box
-							sx={{
-								display: "flex",
-								justifyContent: "space-between",
-								alignItems: "center",
-								padding: 2,
-								backgroundColor: "#f5f5f5",
-								borderRadius: 1,
-							}}
-						>
-							<Typography variant="body2" sx={{ fontWeight: 500 }}>
-								Total Absence Hours:
-							</Typography>
-							<Typography
-								variant="h6"
-								sx={{ fontWeight: 700, color: "#FF8042" }}
-							>
-								{stats.globalPerformanceMetrics.totalAbsenceHours}
-							</Typography>
-						</Box>
-					</Box>
-				</Card>
-
-				{/* Performance Metrics by Province */}
-				{stats.performanceMetricsByProvince && stats.performanceMetricsByProvince.length > 0 && (
-					<Box>
-						{stats.performanceMetricsByProvince.map((provinceData: any, idx: number) => (
-							<Card key={idx} sx={{ boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)", p: 2, mb: 3 }}>
-								<Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-									<TrendingUp
-										sx={{ mr: 1, verticalAlign: "middle", color: "#8884d8" }}
-									/>
-									Performance Metrics - {provinceData.province} ({provinceData.data.employeeCount} employees)
+								<Typography variant="body2" sx={{ fontWeight: 500 }}>
+									Avg Daily Performance:
 								</Typography>
-								<Box
-									sx={{
-										display: "grid",
-										gridTemplateColumns: { xs: "1fr", md: "repeat(2, 1fr)" },
-										gap: 2,
-									}}
+								<Typography
+									variant="h6"
+									sx={{ fontWeight: 700, color: "#0088FE" }}
 								>
-									<Box
-										sx={{
-											display: "flex",
-											justifyContent: "space-between",
-											alignItems: "center",
-											padding: 2,
-											backgroundColor: "#f5f5f5",
-											borderRadius: 1,
-										}}
-									>
-										<Typography variant="body2" sx={{ fontWeight: 500 }}>
-											Avg Daily Performance:
-										</Typography>
-										<Typography
-											variant="h6"
-											sx={{ fontWeight: 700, color: "#0088FE" }}
-										>
-											{provinceData.data.averageDailyPerformance.toFixed(2)}
-										</Typography>
-									</Box>
-									<Box
-										sx={{
-											display: "flex",
-											justifyContent: "space-between",
-											alignItems: "center",
-											padding: 2,
-											backgroundColor: "#f5f5f5",
-											borderRadius: 1,
-										}}
-									>
-										<Typography variant="body2" sx={{ fontWeight: 500 }}>
-											Total Overtime Hours:
-										</Typography>
-										<Typography
-											variant="h6"
-											sx={{ fontWeight: 700, color: "#00C49F" }}
-										>
-											{provinceData.data.totalOvertimeHours}
-										</Typography>
-									</Box>
-									<Box
-										sx={{
-											display: "flex",
-											justifyContent: "space-between",
-											alignItems: "center",
-											padding: 2,
-											backgroundColor: "#f5f5f5",
-											borderRadius: 1,
-										}}
-									>
-										<Typography variant="body2" sx={{ fontWeight: 500 }}>
-											Total Leave Hours:
-										</Typography>
-										<Typography
-											variant="h6"
-											sx={{ fontWeight: 700, color: "#FFBB28" }}
-										>
-											{provinceData.data.totalLeaveHours}
-										</Typography>
-									</Box>
-									<Box
-										sx={{
-											display: "flex",
-											justifyContent: "space-between",
-											alignItems: "center",
-											padding: 2,
-											backgroundColor: "#f5f5f5",
-											borderRadius: 1,
-										}}
-									>
-										<Typography variant="body2" sx={{ fontWeight: 500 }}>
-											Total Absence Hours:
-										</Typography>
-										<Typography
-											variant="h6"
-											sx={{ fontWeight: 700, color: "#FF8042" }}
-										>
-											{provinceData.data.totalAbsenceHours}
-										</Typography>
-									</Box>
-								</Box>
-							</Card>
-						))}
-					</Box>
-				)}
-			</Box>
+									{stats.globalPerformanceMetrics.averageDailyPerformance.toFixed(
+										2
+									)}
+								</Typography>
+							</Box>
+							<Box
+								sx={{
+									display: "flex",
+									justifyContent: "space-between",
+									alignItems: "center",
+									padding: 2,
+									backgroundColor: "#f5f5f5",
+									borderRadius: 1,
+								}}
+							>
+								<Typography variant="body2" sx={{ fontWeight: 500 }}>
+									Total Overtime Hours:
+								</Typography>
+								<Typography
+									variant="h6"
+									sx={{ fontWeight: 700, color: "#00C49F" }}
+								>
+									{stats.globalPerformanceMetrics.totalOvertimeHours}
+								</Typography>
+							</Box>
+							<Box
+								sx={{
+									display: "flex",
+									justifyContent: "space-between",
+									alignItems: "center",
+									padding: 2,
+									backgroundColor: "#f5f5f5",
+									borderRadius: 1,
+								}}
+							>
+								<Typography variant="body2" sx={{ fontWeight: 500 }}>
+									Total Leave Hours:
+								</Typography>
+								<Typography
+									variant="h6"
+									sx={{ fontWeight: 700, color: "#FFBB28" }}
+								>
+									{stats.globalPerformanceMetrics.totalLeaveHours}
+								</Typography>
+							</Box>
+							<Box
+								sx={{
+									display: "flex",
+									justifyContent: "space-between",
+									alignItems: "center",
+									padding: 2,
+									backgroundColor: "#f5f5f5",
+									borderRadius: 1,
+								}}
+							>
+								<Typography variant="body2" sx={{ fontWeight: 500 }}>
+									Total Absence Hours:
+								</Typography>
+								<Typography
+									variant="h6"
+									sx={{ fontWeight: 700, color: "#FF8042" }}
+								>
+									{stats.globalPerformanceMetrics.totalAbsenceHours}
+								</Typography>
+							</Box>
+						</Box>
+					</Card>
 
-		</Container>
-	</Box>
+					{/* Performance Metrics by Province */}
+					{stats.performanceMetricsByProvince &&
+						stats.performanceMetricsByProvince.length > 0 && (
+							<Box>
+								{stats.performanceMetricsByProvince.map(
+									(provinceData: any, idx: number) => (
+										<Card
+											key={idx}
+											sx={{
+												boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
+												p: 2,
+												mb: 3,
+											}}
+										>
+											<Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+												<TrendingUp
+													sx={{
+														mr: 1,
+														verticalAlign: "middle",
+														color: "#8884d8",
+													}}
+												/>
+												Performance Metrics - {provinceData.province} (
+												{provinceData.data.employeeCount} employees)
+											</Typography>
+											<Box
+												sx={{
+													display: "grid",
+													gridTemplateColumns: {
+														xs: "1fr",
+														md: "repeat(2, 1fr)",
+													},
+													gap: 2,
+												}}
+											>
+												<Box
+													sx={{
+														display: "flex",
+														justifyContent: "space-between",
+														alignItems: "center",
+														padding: 2,
+														backgroundColor: "#f5f5f5",
+														borderRadius: 1,
+													}}
+												>
+													<Typography variant="body2" sx={{ fontWeight: 500 }}>
+														Avg Daily Performance:
+													</Typography>
+													<Typography
+														variant="h6"
+														sx={{ fontWeight: 700, color: "#0088FE" }}
+													>
+														{provinceData.data.averageDailyPerformance.toFixed(
+															2
+														)}
+													</Typography>
+												</Box>
+												<Box
+													sx={{
+														display: "flex",
+														justifyContent: "space-between",
+														alignItems: "center",
+														padding: 2,
+														backgroundColor: "#f5f5f5",
+														borderRadius: 1,
+													}}
+												>
+													<Typography variant="body2" sx={{ fontWeight: 500 }}>
+														Total Overtime Hours:
+													</Typography>
+													<Typography
+														variant="h6"
+														sx={{ fontWeight: 700, color: "#00C49F" }}
+													>
+														{provinceData.data.totalOvertimeHours}
+													</Typography>
+												</Box>
+												<Box
+													sx={{
+														display: "flex",
+														justifyContent: "space-between",
+														alignItems: "center",
+														padding: 2,
+														backgroundColor: "#f5f5f5",
+														borderRadius: 1,
+													}}
+												>
+													<Typography variant="body2" sx={{ fontWeight: 500 }}>
+														Total Leave Hours:
+													</Typography>
+													<Typography
+														variant="h6"
+														sx={{ fontWeight: 700, color: "#FFBB28" }}
+													>
+														{provinceData.data.totalLeaveHours}
+													</Typography>
+												</Box>
+												<Box
+													sx={{
+														display: "flex",
+														justifyContent: "space-between",
+														alignItems: "center",
+														padding: 2,
+														backgroundColor: "#f5f5f5",
+														borderRadius: 1,
+													}}
+												>
+													<Typography variant="body2" sx={{ fontWeight: 500 }}>
+														Total Absence Hours:
+													</Typography>
+													<Typography
+														variant="h6"
+														sx={{ fontWeight: 700, color: "#FF8042" }}
+													>
+														{provinceData.data.totalAbsenceHours}
+													</Typography>
+												</Box>
+											</Box>
+										</Card>
+									)
+								)}
+							</Box>
+						)}
+				</Box>
+			</Container>
+		</Box>
 	);
 }
