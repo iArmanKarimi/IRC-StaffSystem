@@ -96,8 +96,8 @@ export default function NavBar({
 									color="inherit"
 									onClick={() => navigate(ROUTES.PROVINCES)}
 									size="small"
-									aria-label="Provinces"
-									title="Provinces"
+									aria-label="استان‌ها"
+									title="استان‌ها"
 								>
 									<LocationOnIcon />
 								</IconButton>
@@ -117,7 +117,7 @@ export default function NavBar({
 									}}
 									aria-label="Provinces"
 								>
-									Provinces
+									استان‌ها
 								</Button>
 							)
 						) : isOnProvinces ? (
@@ -126,8 +126,8 @@ export default function NavBar({
 									color="inherit"
 									onClick={() => navigate(ROUTES.ADMIN_DASHBOARD)}
 									size="small"
-									aria-label="Admin Dashboard"
-									title="Admin Dashboard"
+									aria-label="دشبورد مدیریت"
+									title="دشبورد مدیریت"
 								>
 									<DashboardIcon />
 								</IconButton>
@@ -145,9 +145,9 @@ export default function NavBar({
 											backgroundColor: "rgba(255, 255, 255, 0.1)",
 										},
 									}}
-									aria-label="Admin Dashboard"
+									aria-label="دشبورد مدیریت"
 								>
-									Dashboard
+									دشبورد
 								</Button>
 							)
 						) : null}
@@ -161,7 +161,7 @@ export default function NavBar({
 								onClick={handleLogout}
 								disabled={loading}
 								size="small"
-								aria-label="Logout"
+								aria-label="خروج"
 							>
 								<LogoutIcon />
 							</IconButton>
@@ -180,9 +180,9 @@ export default function NavBar({
 										backgroundColor: "rgba(255, 255, 255, 0.1)",
 									},
 								}}
-								aria-label="Logout"
+								aria-label="خروج"
 							>
-								{loading ? "Logging out..." : "Logout"}
+								{loading ? "در حال خروج..." : "خروج"}
 							</Button>
 						)}
 					</Box>

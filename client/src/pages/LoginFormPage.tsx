@@ -25,12 +25,12 @@ export default function LoginFormPage() {
 		try {
 			const res = await authApi.login({ username, password });
 			if (!res.success || !res.data) {
-				setError(res.error || "Login failed");
+				setError(res.error || "ورود ناموفق بود");
 				return;
 			}
 			navigateAfterLogin(res.data);
 		} catch (err) {
-			setError("Invalid credentials");
+			setError("اطلاعات ورود نامعتبر است");
 		} finally {
 			setLoading(false);
 		}
@@ -79,7 +79,7 @@ export default function LoginFormPage() {
 						align="center"
 						sx={{ mb: 1 }}
 					>
-						Login
+						ورود
 					</Typography>
 					<Typography
 						variant="body2"
@@ -87,7 +87,7 @@ export default function LoginFormPage() {
 						align="center"
 						sx={{ mb: 3 }}
 					>
-						IRC Staff Management System
+						سیستم مدیریت کارکنان IRC
 					</Typography>
 
 					<form onSubmit={handleSubmit}>
@@ -102,7 +102,7 @@ export default function LoginFormPage() {
 								autoFocus
 							/>
 							<TextField
-								label="Password"
+								label="رمز عبور"
 								type="password"
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
@@ -118,7 +118,7 @@ export default function LoginFormPage() {
 								startIcon={<LoginIcon />}
 								sx={{ mt: 2 }}
 							>
-								{loading ? "Logging in..." : "Login"}
+								{loading ? "در حال ورود..." : "ورود"}
 							</Button>
 							{error && (
 								<Alert severity="error" sx={{ mt: 1 }}>
