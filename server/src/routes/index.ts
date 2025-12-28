@@ -50,6 +50,15 @@ export const API_DOCS_ROUTES = {
 } as const;
 
 /**
+ * Admin Dashboard Routes
+ * Base path: /admin-dashboard
+ * Access: Global Admin only
+ */
+export const ADMIN_DASHBOARD_ROUTES = {
+	STATS: '/admin-dashboard/stats'  // GET - Fetch dashboard statistics
+} as const;
+
+/**
  * System Routes
  */
 export const SYSTEM_ROUTES = {
@@ -63,6 +72,7 @@ export const ROUTES = {
 	AUTH: AUTH_ROUTES,
 	PROVINCES: PROVINCE_ROUTES,
 	EMPLOYEES: EMPLOYEE_ROUTES,
+	ADMIN_DASHBOARD: ADMIN_DASHBOARD_ROUTES,
 	API_DOCS: API_DOCS_ROUTES,
 	SYSTEM: SYSTEM_ROUTES
 } as const;
@@ -81,6 +91,7 @@ export const ROUTES = {
  * | GET    /provinces/:id/employees/:empId   | ✓            | ✓ (own)        | ✗      |
  * | PUT    /provinces/:id/employees/:empId   | ✓            | ✓ (own)        | ✗      |
  * | DELETE /provinces/:id/employees/:empId   | ✓            | ✓ (own)        | ✗      |
+ * | GET    /admin-dashboard/stats            | ✓            | ✗              | ✗      |
  * | GET    /api-docs                         | ✓            | ✓              | ✓      |
  * | GET    /health                           | ✓            | ✓              | ✓      |
  */
