@@ -195,7 +195,7 @@ export default function GlobalAdminDashboardPage() {
 								variant="body2"
 								sx={{ fontWeight: 600, minWidth: "fit-content" }}
 							>
-								Performance:
+								عملکرد:
 							</Typography>
 							<Box
 								sx={{

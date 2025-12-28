@@ -74,15 +74,15 @@ export default function ProvinceEmployeesPage() {
 	}, [toastOpen]);
 
 	const searchFieldOptions = [
-		{ value: "all", label: "All fields" },
-		{ value: "name", label: "Name" },
-		{ value: "nationalId", label: "National ID" },
-		{ value: "contactNumber", label: "Contact number" },
-		{ value: "branch", label: "Branch" },
-		{ value: "rank", label: "Rank" },
-		{ value: "licensedWorkplace", label: "Licensed Workplace" },
-		{ value: "educationalDegree", label: "Educational Degree" },
-		{ value: "province", label: "Province" },
+		{ value: "all", label: "همه فیلدها" },
+		{ value: "name", label: "نام" },
+		{ value: "nationalId", label: "کد ملی" },
+		{ value: "contactNumber", label: "شماره تماس" },
+		{ value: "branch", label: "شعبه" },
+		{ value: "rank", label: "رتبه" },
+		{ value: "licensedWorkplace", label: "محل کار مجاز" },
+		{ value: "educationalDegree", label: "مدرک تحصیلی" },
+		{ value: "province", label: "استان" },
 	];
 
 	const matchesSearchField = (
@@ -261,7 +261,7 @@ export default function ProvinceEmployeesPage() {
 			setToastOpen(true);
 		} catch (err) {
 			console.error("Export failed:", err);
-			setToastMessage("❌ Failed to export employees");
+			setToastMessage("❌ خروجی کارکنان با خطا مواجه شد");
 			setToastSeverity("error");
 			setToastOpen(true);
 		} finally {
@@ -273,7 +273,7 @@ export default function ProvinceEmployeesPage() {
 	const columns: GridColDef[] = [
 		{
 			field: "fullName",
-			headerName: "Full Name",
+			headerName: "نام کامل",
 			flex: 1,
 			minWidth: 150,
 			align: "center",
@@ -284,7 +284,7 @@ export default function ProvinceEmployeesPage() {
 		},
 		{
 			field: "nationalID",
-			headerName: "National ID",
+			headerName: "کد ملی",
 			flex: 0.8,
 			minWidth: 120,
 			align: "center",
@@ -293,7 +293,7 @@ export default function ProvinceEmployeesPage() {
 		},
 		{
 			field: "status",
-			headerName: "Status",
+			headerName: "وضعیت",
 			flex: 0.8,
 			minWidth: 120,
 			align: "center",
@@ -320,7 +320,7 @@ export default function ProvinceEmployeesPage() {
 		},
 		{
 			field: "actions",
-			headerName: "Actions",
+			headerName: "عملیات",
 			flex: 0.6,
 			minWidth: 100,
 			align: "center",
@@ -513,7 +513,7 @@ export default function ProvinceEmployeesPage() {
 							onClick={() => (window.location.href = viewUrl)}
 							sx={{ textTransform: "none", borderRadius: 1, padding: 0.25 }}
 						>
-							View
+							مشاهده
 						</Button>
 					</Tooltip>
 				);
@@ -522,12 +522,12 @@ export default function ProvinceEmployeesPage() {
 	];
 
 	if (loading) {
-		return <LoadingView title="Province Employees" />;
+		return <LoadingView title="کارکنان استان" />;
 	}
 
 	if (error) {
 		return (
-			<ErrorView title="Province Employees" message={error} onRetry={refetch} />
+			<ErrorView title="کارکنان استان" message={error} onRetry={refetch} />
 		);
 	}
 
@@ -562,37 +562,37 @@ export default function ProvinceEmployeesPage() {
 				>
 					<Stack>
 						<Typography variant="h5" component="h1" gutterBottom sx={{ m: 0 }}>
-							Employees
+							کارکنان
 						</Typography>
 						<Typography
 							variant="caption"
 							color="text.secondary"
 							sx={{ display: "block" }}
 						>
-							{loading ? "Loading province..." : provinceName}
+							{loading ? "در حال بارگذاری استان..." : provinceName}
 						</Typography>
 					</Stack>
 					<Stack direction="row" gap={1} alignItems="center" flexWrap="wrap">
 						{pagination && (
 							<>
-								<Chip label={`${pagination.total} total`} color="primary" />
+								<Chip label={`${pagination.total} کل`} color="primary" />
 								<Chip
-									label={`Active: ${activeCount}`}
+									label={`فعال: ${activeCount}`}
 									color="success"
 									variant="outlined"
 								/>
 								<Chip
-									label={`Inactive: ${inactiveCount}`}
+									label={`غیرفعال: ${inactiveCount}`}
 									color="error"
 									variant="outlined"
 								/>
 								<Chip
-									label={`On Leave: ${onLeaveCount}`}
+									label={`در مرخصی: ${onLeaveCount}`}
 									color="warning"
 									variant="outlined"
 								/>
 								<Chip
-									label={`Truck Drivers: ${truckDriverCount}`}
+									label={`رانندگان کامیون: ${truckDriverCount}`}
 									color="info"
 									variant="outlined"
 								/>
@@ -604,7 +604,7 @@ export default function ProvinceEmployeesPage() {
 							variant="outlined"
 							startIcon={<FileDownloadIcon />}
 						>
-							Export to Excel
+							خروجی به اکسل
 						</Button>
 						<Button
 							component={Link}
@@ -616,7 +616,7 @@ export default function ProvinceEmployeesPage() {
 							color="secondary"
 							startIcon={<AddIcon />}
 						>
-							New Employee
+							کارمند جدید
 						</Button>
 					</Stack>
 				</Stack>
@@ -638,9 +638,9 @@ export default function ProvinceEmployeesPage() {
 				/>
 
 				{!loading && employees.length === 0 ? (
-					<EmptyState message="No employees found." />
+					<EmptyState message="هیچ کارمندی یافت نشد." />
 				) : filteredEmployees.length === 0 && !loading ? (
-					<EmptyState message="No employees match your search or filter criteria." />
+					<EmptyState message="هیچ کارمندی با معیارهای جستجو یا فیلتر شما مطابقت ندارد." />
 				) : (
 					<Stack spacing={1.5}>
 						<DataGrid

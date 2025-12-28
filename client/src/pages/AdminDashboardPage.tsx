@@ -360,7 +360,7 @@ export default function AdminDashboardPage() {
 									<PieChart
 										sx={{ mr: 1, verticalAlign: "middle", color: "#667eea" }}
 									/>
-									Employee Status
+									وضعیت کارکنان
 								</Typography>
 								<ResponsiveContainer width="100%" height={CHART_HEIGHT}>
 									<MuiPieChart>
@@ -394,7 +394,7 @@ export default function AdminDashboardPage() {
 									<Group
 										sx={{ mr: 1, verticalAlign: "middle", color: "#764ba2" }}
 									/>
-									Gender Distribution
+									توزیع جنسیتی
 								</Typography>
 								<ResponsiveContainer width="100%" height={CHART_HEIGHT}>
 									<MuiPieChart>
@@ -434,7 +434,7 @@ export default function AdminDashboardPage() {
 								<LocationOn
 									sx={{ mr: 1, verticalAlign: "middle", color: "#f5576c" }}
 								/>
-								Employees by Province
+								کارکنان بر اساس استان
 							</Typography>
 							<ResponsiveContainer width="100%" height={CHART_HEIGHT}>
 								<MuiBarChart data={provinceData}>
@@ -482,7 +482,7 @@ export default function AdminDashboardPage() {
 														color: "#8884d8",
 													}}
 												/>
-												Absence Overview - {provinceData.province}
+												نمای کلی غیبت - {provinceData.province}
 											</Typography>
 											<ResponsiveContainer width="100%" height={CHART_HEIGHT}>
 												{provinceData?.data && provinceData.data.length > 0 ? (
@@ -500,22 +500,22 @@ export default function AdminDashboardPage() {
 														<Bar
 															dataKey="totalAbsenceHours"
 															fill="#FF8042"
-															name="Absence Hours"
+															name="ساعات غیبت"
 														/>
 														<Bar
 															dataKey="totalLeaveHours"
 															fill="#FFBB28"
-															name="Leave Hours"
+															name="ساعات مرخصی"
 														/>
 														<Bar
 															dataKey="totalOvertimeHours"
 															fill="#00C49F"
-															name="Overtime Hours"
+															name="ساعات اضافه‌کاری"
 														/>
 													</MuiBarChart>
 												) : (
 													<Typography sx={{ p: 2 }}>
-														No data available
+														داده‌ای در دسترس نیست
 													</Typography>
 												)}
 											</ResponsiveContainer>

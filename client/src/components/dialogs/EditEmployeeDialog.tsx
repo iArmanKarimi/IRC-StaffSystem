@@ -75,7 +75,7 @@ export function EditEmployeeDialog({
 				{/* Basic Information */}
 				<Stack spacing={2}>
 					<TextField
-						label="First Name"
+						label="نام"
 						value={formData.basicInfo?.firstName || ""}
 						onChange={(e) =>
 							handleFieldChange("basicInfo.firstName", e.target.value)
@@ -84,7 +84,7 @@ export function EditEmployeeDialog({
 						required
 					/>
 					<TextField
-						label="Last Name"
+						label="نام خانوادگی"
 						value={formData.basicInfo?.lastName || ""}
 						onChange={(e) =>
 							handleFieldChange("basicInfo.lastName", e.target.value)
@@ -93,7 +93,7 @@ export function EditEmployeeDialog({
 						required
 					/>
 					<TextField
-						label="National ID"
+						label="کد ملی"
 						value={formData.basicInfo?.nationalID || ""}
 						onChange={(e) =>
 							handleFieldChange("basicInfo.nationalID", e.target.value)
@@ -102,7 +102,7 @@ export function EditEmployeeDialog({
 						required
 					/>
 					<TextField
-						label="Gender"
+						label="جنسیت"
 						select
 						value={formData.basicInfo?.male ? "male" : "female"}
 						onChange={(e) =>
@@ -111,8 +111,8 @@ export function EditEmployeeDialog({
 						fullWidth
 						required
 					>
-						<MenuItem value="male">Male</MenuItem>
-						<MenuItem value="female">Female</MenuItem>
+						<MenuItem value="male">مذکر</MenuItem>
+						<MenuItem value="female">مونث</MenuItem>
 					</TextField>
 					<FormControlLabel
 						control={
@@ -123,10 +123,10 @@ export function EditEmployeeDialog({
 								}
 							/>
 						}
-						label="Married"
+						label="متاهل"
 					/>
 					<TextField
-						label="Children Count"
+						label="تعداد فرزندان"
 						type="number"
 						value={formData.basicInfo?.childrenCount || 0}
 						onChange={(e) =>
@@ -142,7 +142,7 @@ export function EditEmployeeDialog({
 				{/* Work Place Information */}
 				<Stack spacing={2}>
 					<TextField
-						label="Branch"
+						label="شعبه"
 						value={formData.workPlace?.branch || ""}
 						onChange={(e) =>
 							handleFieldChange("workPlace.branch", e.target.value)
@@ -151,7 +151,7 @@ export function EditEmployeeDialog({
 						required
 					/>
 					<TextField
-						label="Rank"
+						label="رتبه"
 						value={formData.workPlace?.rank || ""}
 						onChange={(e) =>
 							handleFieldChange("workPlace.rank", e.target.value)
@@ -160,7 +160,7 @@ export function EditEmployeeDialog({
 						required
 					/>
 					<TextField
-						label="Licensed Workplace"
+						label="محل کار مجاز"
 						value={formData.workPlace?.licensedWorkplace || ""}
 						onChange={(e) =>
 							handleFieldChange("workPlace.licensedWorkplace", e.target.value)
@@ -173,7 +173,7 @@ export function EditEmployeeDialog({
 				{/* Additional Specifications */}
 				<Stack spacing={2}>
 					<TextField
-						label="Educational Degree"
+						label="مدرک تحصیلی"
 						value={formData.additionalSpecifications?.educationalDegree || ""}
 						onChange={(e) =>
 							handleFieldChange(
@@ -185,7 +185,7 @@ export function EditEmployeeDialog({
 						required
 					/>
 					<TextField
-						label="Date of Birth"
+						label="تاریخ تولد"
 						type="date"
 						value={
 							formData.additionalSpecifications?.dateOfBirth
@@ -205,7 +205,7 @@ export function EditEmployeeDialog({
 						required
 					/>
 					<TextField
-						label="Contact Number"
+						label="شماره تماس"
 						value={formData.additionalSpecifications?.contactNumber || ""}
 						onChange={(e) =>
 							handleFieldChange(
@@ -216,7 +216,7 @@ export function EditEmployeeDialog({
 						fullWidth
 						required
 						inputProps={{ pattern: "\\d{11}" }}
-						helperText="Must be 11 digits"
+						helperText="باید 11 رقم باشد"
 					/>
 					<FormControlLabel
 						control={
@@ -232,10 +232,10 @@ export function EditEmployeeDialog({
 								}
 							/>
 						}
-						label="Truck Driver"
+						label="راننده کامیون"
 					/>
 					<TextField
-						label="Job Start Date"
+						label="تاریخ شروع کار"
 						type="date"
 						value={
 							formData.additionalSpecifications?.jobStartDate
@@ -255,7 +255,7 @@ export function EditEmployeeDialog({
 						required
 					/>
 					<TextField
-						label="Job End Date"
+						label="تاریخ پایان کار"
 						type="date"
 						value={
 							formData.additionalSpecifications?.jobEndDate
@@ -274,7 +274,7 @@ export function EditEmployeeDialog({
 						InputLabelProps={{ shrink: true }}
 					/>
 					<TextField
-						label="Status"
+						label="وضعیت"
 						select
 						value={formData.performance?.status || "active"}
 						onChange={(e) =>
@@ -282,9 +282,9 @@ export function EditEmployeeDialog({
 						}
 						fullWidth
 					>
-						<MenuItem value="active">Active</MenuItem>
-						<MenuItem value="inactive">Inactive</MenuItem>
-						<MenuItem value="on_leave">On Leave</MenuItem>
+						<MenuItem value="active">فعال</MenuItem>
+						<MenuItem value="inactive">غیرفعال</MenuItem>
+						<MenuItem value="on_leave">در مرخصی</MenuItem>
 					</TextField>
 				</Stack>
 			</Stack>

@@ -93,7 +93,7 @@ export default function EmployeePage() {
 			if (!res.success || !res.data) {
 				setSaveError(
 					res.error ||
-						"Failed to update employee. Please check your input and try again."
+						"به‌روزرسانی کارمند با خطا مواجه شد. لطفا ورودی خود را بررسی کنید و دوباره تلاش کنید."
 				);
 				return;
 			}
@@ -101,7 +101,7 @@ export default function EmployeePage() {
 			setEditDialogOpen(false);
 		} catch (err) {
 			setSaveError(
-				"Failed to update employee. Please check your input and try again."
+				"به‌روزرسانی کارمند با خطا مواجه شد. لطفا ورودی خود را بررسی کنید و دوباره تلاش کنید."
 			);
 		} finally {
 			setSaving(false);
@@ -152,35 +152,35 @@ export default function EmployeePage() {
 		if (!localPerformance) return;
 		await updatePerformance(
 			localPerformance,
-			"Failed to update performance record"
+			"به‌روزرسانی سابقه عملکرد با خطا مواجه شد"
 		);
 		setHasUnsavedChanges(false);
 	};
 
 	if (loading) {
-		return <LoadingView title="Employee Details" />;
+		return <LoadingView title="جزئیات کارمند" />;
 	}
 
 	if (error && !employee) {
 		return (
-			<ErrorView title="Employee Details" message={error} onRetry={refetch} />
+			<ErrorView title="جزئیات کارمند" message={error} onRetry={refetch} />
 		);
 	}
 
 	if (!employee) {
-		return <ErrorView title="Employee Details" message="Employee not found" />;
+		return <ErrorView title="جزئیات کارمند" message="کارمند یافت نشد" />;
 	}
 
 	return (
 		<>
 			<NavBar
-				title="Employee Details"
+				title="جزئیات کارمند"
 				backTo={
 					provinceId
 						? ROUTES.PROVINCE_EMPLOYEES.replace(":provinceId", provinceId)
 						: ROUTES.PROVINCES
 				}
-				backLabel="Back to Employees"
+				backLabel="بازگشت به کارکنان"
 			/>
 			<Container maxWidth="lg" sx={{ py: 4 }}>
 				<Breadcrumbs
@@ -209,7 +209,7 @@ export default function EmployeePage() {
 						aria-label="Edit Employee"
 						size="medium"
 					>
-						Edit Employee
+						ویرایش کارمند
 					</Button>
 					<Button
 						variant="contained"
@@ -219,7 +219,7 @@ export default function EmployeePage() {
 						aria-label="Delete Employee"
 						size="medium"
 					>
-						Delete Employee
+						حذف کارمند
 					</Button>
 				</Box>
 
@@ -235,32 +235,29 @@ export default function EmployeePage() {
 						<Card sx={{ flex: "1 1 400px" }}>
 							<CardContent sx={{ pb: "24px !important" }}>
 								<Typography variant="h6" gutterBottom sx={{ mb: 1.5 }}>
-									Basic Information
+									اطلاعات اولیه
 								</Typography>
 								<Divider sx={{ mb: 2.5 }} />
 								<Stack spacing={2}>
+									<InfoField label="نام" value={employee.basicInfo.firstName} />
 									<InfoField
-										label="First Name"
-										value={employee.basicInfo.firstName}
-									/>
-									<InfoField
-										label="Last Name"
+										label="نام خانوادگی"
 										value={employee.basicInfo.lastName}
 									/>
 									<InfoField
-										label="National ID"
+										label="کد ملی"
 										value={employee.basicInfo.nationalID}
 									/>
 									<InfoField
-										label="Gender"
-										value={employee.basicInfo.male ? "Male" : "Female"}
+										label="جنسیت"
+										value={employee.basicInfo.male ? "مذکر" : "مونث"}
 									/>
 									<InfoField
-										label="Married"
-										value={employee.basicInfo.married ? "Yes" : "No"}
+										label="متاهل"
+										value={employee.basicInfo.married ? "بله" : "خیر"}
 									/>
 									<InfoField
-										label="Children Count"
+										label="تعداد فرزندان"
 										value={employee.basicInfo.childrenCount}
 									/>
 								</Stack>
@@ -270,14 +267,14 @@ export default function EmployeePage() {
 						<Card sx={{ flex: "1 1 400px" }}>
 							<CardContent sx={{ pb: "24px !important" }}>
 								<Typography variant="h6" gutterBottom sx={{ mb: 1.5 }}>
-									WorkPlace Information
+									اطلاعات محل کار
 								</Typography>
 								<Divider sx={{ mb: 2.5 }} />
 								<Stack spacing={2}>
-									<InfoField label="Branch" value={employee.workPlace.branch} />
-									<InfoField label="Rank" value={employee.workPlace.rank} />
+									<InfoField label="شعبه" value={employee.workPlace.branch} />
+									<InfoField label="رتبه" value={employee.workPlace.rank} />
 									<InfoField
-										label="Licensed Workplace"
+										label="محل کار مجاز"
 										value={employee.workPlace.licensedWorkplace}
 									/>
 								</Stack>
@@ -289,39 +286,41 @@ export default function EmployeePage() {
 					<Card>
 						<CardContent sx={{ pb: "24px !important" }}>
 							<Typography variant="h6" gutterBottom sx={{ mb: 1.5 }}>
-								Additional Specifications
+								مشخصات اضافی
 							</Typography>
 							<Divider sx={{ mb: 2.5 }} />
 							<Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
 								<InfoField
-									label="Educational Degree"
+									label="مدرک تحصیلی"
 									value={employee.additionalSpecifications.educationalDegree}
 								/>
 								<InfoField
-									label="Date of Birth"
+									label="تاریخ تولد"
 									value={new Date(
 										employee.additionalSpecifications.dateOfBirth
 									).toLocaleDateString()}
 								/>
 								<InfoField
-									label="Contact Number"
+									label="شماره تماس"
 									value={employee.additionalSpecifications.contactNumber}
 								/>
 								<InfoField
-									label="Truck Driver"
+									label="راننده کامیون"
 									value={
-										employee.additionalSpecifications.truckDriver ? "Yes" : "No"
+										employee.additionalSpecifications.truckDriver
+											? "بله"
+											: "خیر"
 									}
 								/>
 								<InfoField
-									label="Job Start Date"
+									label="تاریخ شروع کار"
 									value={new Date(
 										employee.additionalSpecifications.jobStartDate
 									).toLocaleDateString()}
 								/>
 								{employee.additionalSpecifications.jobEndDate && (
 									<InfoField
-										label="Job End Date"
+										label="تاریخ پایان کار"
 										value={new Date(
 											employee.additionalSpecifications.jobEndDate
 										).toLocaleDateString()}
@@ -329,7 +328,7 @@ export default function EmployeePage() {
 								)}
 								<Box>
 									<Typography variant="caption" color="text.secondary">
-										Status
+										وضعیت
 									</Typography>
 									<Box sx={{ mt: 0.5 }}>
 										<Chip
@@ -367,7 +366,7 @@ export default function EmployeePage() {
 									mb: 2,
 								}}
 							>
-								<Typography variant="h6">Current Month Performance</Typography>
+								<Typography variant="h6">عملکرد ماه جاری</Typography>
 								<Button
 									variant="contained"
 									color="primary"
@@ -377,7 +376,7 @@ export default function EmployeePage() {
 									}
 									size="small"
 								>
-									{saving ? "Saving..." : "Save Changes"}
+									{saving ? "در حال ذخیره..." : "ذخیره تغییرات"}
 								</Button>
 							</Box>
 							{localPerformance ? (
@@ -388,7 +387,7 @@ export default function EmployeePage() {
 								/>
 							) : (
 								<Typography color="text.secondary">
-									No performance data available for this employee.
+									داده عملکردی برای این کارمند در دسترس نیست.
 								</Typography>
 							)}
 						</CardContent>
@@ -408,7 +407,7 @@ export default function EmployeePage() {
 						aria-disabled={!provinceId}
 						aria-label={provinceId ? "Back to Employees" : "Back unavailable"}
 					>
-						Back to Employees
+						بازگشت به کارکنان
 					</Button>
 				</Box>
 
@@ -422,8 +421,8 @@ export default function EmployeePage() {
 
 				<ConfirmDialog
 					open={deleteDialogOpen}
-					title="Confirm Delete"
-					message="Are you sure you want to delete this employee? This action cannot be undone."
+					title="تایید حذف"
+					message="آیا مطمئن هستید که می‌خواهید این کارمند را حذف کنید؟ این عمل قابل بازگشت نیست."
 					loading={deleting}
 					onClose={() => setDeleteDialogOpen(false)}
 					onConfirm={handleDelete}
@@ -444,16 +443,16 @@ type InfoFieldValue =
 function InfoField({ label, value }: { label: string; value: InfoFieldValue }) {
 	const displayValue = () => {
 		if (value === null || value === undefined || value === "") {
-			return "N/A";
+			return "موجود نیست";
 		}
 		if (typeof value === "boolean") {
-			return value ? "Yes" : "No";
+			return value ? "بله" : "خیر";
 		}
 		if (value instanceof Date) {
 			return value.toLocaleDateString();
 		}
 		if (Array.isArray(value)) {
-			return value.join(", ") || "N/A";
+			return value.join(", ") || "موجود نیست";
 		}
 		return String(value);
 	};

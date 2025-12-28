@@ -27,12 +27,13 @@ const PerformanceDisplay: React.FC<PerformanceDisplayProps> = ({
 		<Stack spacing={2.5}>
 			{locked && (
 				<Alert severity="warning" icon={<LockIcon />}>
-				سوابق عملکرد در حال حاضر قفل شده است. شما نمی‌توانید در این زمان تغییراتی ایجاد کنید.
+					سوابق عملکرد در حال حاضر قفل شده است. شما نمی‌توانید در این زمان
+					تغییراتی ایجاد کنید.
 				</Alert>
 			)}
 			<Box sx={{ display: "flex", gap: 2.5, flexWrap: "wrap" }}>
 				<TextField
-					label="Daily Performance"
+					label="عملکرد روزانه"
 					type="number"
 					required
 					inputProps={{ min: 0 }}
@@ -41,7 +42,7 @@ const PerformanceDisplay: React.FC<PerformanceDisplayProps> = ({
 					onChange={(e) => onChange("dailyPerformance", Number(e.target.value))}
 				/>
 				<TextField
-					label="Shift Count per Location"
+					label="تعداد شیفت در هر مکان"
 					type="number"
 					required
 					inputProps={{ min: 0 }}
@@ -58,19 +59,19 @@ const PerformanceDisplay: React.FC<PerformanceDisplayProps> = ({
 					sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
 					required
 				>
-				<InputLabel>مدت شیفت</InputLabel>
-				<Select
-					value={performance.shiftDuration}
-					label="مدت شیفت"
-					onChange={(e) => onChange("shiftDuration", Number(e.target.value))}
-				>
-					<MenuItem value={8}>8 ساعت</MenuItem>
-					<MenuItem value={16}>16 ساعت</MenuItem>
-					<MenuItem value={24}>24 ساعت</MenuItem>
+					<InputLabel>مدت شیفت</InputLabel>
+					<Select
+						value={performance.shiftDuration}
+						label="مدت شیفت"
+						onChange={(e) => onChange("shiftDuration", Number(e.target.value))}
+					>
+						<MenuItem value={8}>8 ساعت</MenuItem>
+						<MenuItem value={16}>16 ساعت</MenuItem>
+						<MenuItem value={24}>24 ساعت</MenuItem>
 					</Select>
 				</FormControl>
 				<TextField
-					label="Overtime"
+					label="اضافه کاری"
 					type="number"
 					inputProps={{ min: 0 }}
 					sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
@@ -81,7 +82,7 @@ const PerformanceDisplay: React.FC<PerformanceDisplayProps> = ({
 
 			<Box sx={{ display: "flex", gap: 2.5, flexWrap: "wrap" }}>
 				<TextField
-					label="Daily Leave"
+					label="مرخصی روزانه"
 					type="number"
 					inputProps={{ min: 0 }}
 					sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
@@ -89,7 +90,7 @@ const PerformanceDisplay: React.FC<PerformanceDisplayProps> = ({
 					onChange={(e) => onChange("dailyLeave", Number(e.target.value))}
 				/>
 				<TextField
-					label="Sick Leave"
+					label="مرخصی استعلاجی"
 					type="number"
 					inputProps={{ min: 0 }}
 					sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
@@ -100,7 +101,7 @@ const PerformanceDisplay: React.FC<PerformanceDisplayProps> = ({
 
 			<Box sx={{ display: "flex", gap: 2.5, flexWrap: "wrap" }}>
 				<TextField
-					label="Absence"
+					label="غیبت"
 					type="number"
 					inputProps={{ min: 0 }}
 					sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
@@ -108,7 +109,7 @@ const PerformanceDisplay: React.FC<PerformanceDisplayProps> = ({
 					onChange={(e) => onChange("absence", Number(e.target.value))}
 				/>
 				<TextField
-					label="Travel Assignment"
+					label="ماموریت سفر"
 					type="number"
 					inputProps={{ min: 0 }}
 					sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
@@ -117,25 +118,25 @@ const PerformanceDisplay: React.FC<PerformanceDisplayProps> = ({
 				/>
 			</Box>
 			<FormControl fullWidth>
-				<InputLabel>Status</InputLabel>
+				<InputLabel>وضعیت</InputLabel>
 				<Select
 					value={performance.status}
-					label="Status"
+					label="وضعیت"
 					onChange={(e) => onChange("status", e.target.value)}
 				>
-					<MenuItem value="active">Active</MenuItem>
-					<MenuItem value="inactive">Inactive</MenuItem>
+					<MenuItem value="active">فعال</MenuItem>
+					<MenuItem value="inactive">غیرفعال</MenuItem>
 				</Select>
 			</FormControl>
 
 			<TextField
-				label="Notes"
+				label="یادداشت‌ها"
 				multiline
 				rows={3}
 				fullWidth
 				value={performance.notes}
 				onChange={(e) => onChange("notes", e.target.value)}
-				placeholder="Add any additional notes..."
+				placeholder="یادداشت‌های اضافی را اضافه کنید..."
 			/>
 		</Stack>
 	);

@@ -111,7 +111,7 @@ export default function NewEmployeeFormPage() {
 				replace: true,
 			});
 		} catch (err) {
-			setError("Failed to create employee");
+			setError("ایجاد کارمند با خطا مواجه شد");
 		} finally {
 			setLoading(false);
 		}
@@ -120,22 +120,22 @@ export default function NewEmployeeFormPage() {
 	return (
 		<>
 			<NavBar
-				title="New Employee"
+				title="کارمند جدید"
 				backTo={
 					provinceId
 						? ROUTES.PROVINCE_EMPLOYEES.replace(":provinceId", provinceId)
 						: undefined
 				}
-				backLabel="Back to Employees"
+				backLabel="بازگشت به کارکنان"
 			/>
 			<Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
 				<Breadcrumbs showProvincesLink={isGlobalAdmin} />
 				<Paper elevation={2} sx={{ p: 4 }}>
 					<Typography variant="h4" component="h1" gutterBottom>
-						New Employee
+						کارمند جدید
 					</Typography>
 					<Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-						Create a new employee record
+						ایجاد سابقه کارمند جدید
 					</Typography>
 
 					<form onSubmit={handleSubmit}>
@@ -143,12 +143,12 @@ export default function NewEmployeeFormPage() {
 							{/* Basic Info Section */}
 							<Box>
 								<Typography variant="h6" gutterBottom>
-									Basic Information
+									اطلاعات اولیه
 								</Typography>
 								<Stack spacing={2}>
 									<Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
 										<TextField
-											label="First Name"
+											label="نام"
 											required
 											sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
 											value={form.basicInfo.firstName}
@@ -157,7 +157,7 @@ export default function NewEmployeeFormPage() {
 											}
 										/>
 										<TextField
-											label="Last Name"
+											label="نام خانوادگی"
 											required
 											sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
 											value={form.basicInfo.lastName}
@@ -168,7 +168,7 @@ export default function NewEmployeeFormPage() {
 									</Box>
 									<Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
 										<TextField
-											label="National ID"
+											label="کد ملی"
 											required
 											sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
 											value={form.basicInfo.nationalID}
@@ -177,7 +177,7 @@ export default function NewEmployeeFormPage() {
 											}
 										/>
 										<TextField
-											label="Children Count"
+											label="تعداد فرزندان"
 											type="number"
 											inputProps={{ min: 0 }}
 											sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
@@ -197,7 +197,7 @@ export default function NewEmployeeFormPage() {
 													}
 												/>
 											}
-											label="Male"
+											label="مذکر"
 										/>
 										<FormControlLabel
 											control={
@@ -208,7 +208,7 @@ export default function NewEmployeeFormPage() {
 													}
 												/>
 											}
-											label="Married"
+											label="متاهل"
 										/>
 									</Box>
 								</Stack>
@@ -217,12 +217,12 @@ export default function NewEmployeeFormPage() {
 							{/* WorkPlace Section */}
 							<Box>
 								<Typography variant="h6" gutterBottom>
-									WorkPlace Information
+									اطلاعات محل کار
 								</Typography>
 								<Stack spacing={2}>
 									<Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
 										<TextField
-											label="Branch"
+											label="شعبه"
 											required
 											sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
 											value={form.workPlace.branch}
@@ -233,14 +233,14 @@ export default function NewEmployeeFormPage() {
 									</Box>
 									<Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
 										<TextField
-											label="Rank"
+											label="رتبه"
 											required
 											sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
 											value={form.workPlace.rank}
 											onChange={(e) => updateWorkPlace("rank", e.target.value)}
 										/>
 										<TextField
-											label="Licensed Workplace"
+											label="محل کار مجاز"
 											required
 											sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
 											value={form.workPlace.licensedWorkplace}
@@ -255,12 +255,12 @@ export default function NewEmployeeFormPage() {
 							{/* Additional Specifications Section */}
 							<Box>
 								<Typography variant="h6" gutterBottom>
-									Additional Specifications
+									مشخصات اضافی
 								</Typography>
 								<Stack spacing={2}>
 									<Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
 										<TextField
-											label="Educational Degree"
+											label="مدرک تحصیلی"
 											required
 											sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
 											value={form.additionalSpecifications.educationalDegree}
@@ -272,7 +272,7 @@ export default function NewEmployeeFormPage() {
 											}
 										/>
 										<TextField
-											label="Date of Birth"
+											label="تاریخ تولد"
 											type="date"
 											required
 											InputLabelProps={{ shrink: true }}
@@ -285,7 +285,7 @@ export default function NewEmployeeFormPage() {
 									</Box>
 									<Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
 										<TextField
-											label="Contact Number"
+											label="شماره تماس"
 											required
 											inputProps={{ pattern: "\\d{11}" }}
 											sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
@@ -295,7 +295,7 @@ export default function NewEmployeeFormPage() {
 											}
 										/>
 										<TextField
-											label="Job Start Date"
+											label="تاریخ شروع کار"
 											type="date"
 											required
 											InputLabelProps={{ shrink: true }}
@@ -308,7 +308,7 @@ export default function NewEmployeeFormPage() {
 									</Box>
 									<Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
 										<TextField
-											label="Job End Date"
+											label="تاریخ پایان کار"
 											type="date"
 											InputLabelProps={{ shrink: true }}
 											sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
@@ -331,7 +331,7 @@ export default function NewEmployeeFormPage() {
 									variant="outlined"
 									startIcon={<ArrowBackIcon />}
 								>
-									Cancel
+									لغو
 								</Button>
 								<Button
 									type="submit"
@@ -339,7 +339,7 @@ export default function NewEmployeeFormPage() {
 									disabled={loading}
 									startIcon={<SaveIcon />}
 								>
-									{loading ? "Creating..." : "Create Employee"}
+									{loading ? "در حال ایجاد..." : "ایجاد کارمند"}
 								</Button>
 							</Box>
 
