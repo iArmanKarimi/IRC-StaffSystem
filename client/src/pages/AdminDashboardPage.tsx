@@ -414,8 +414,9 @@ export default function AdminDashboardPage() {
 					</Card>
 				)}
 
-				{/* Absence Overview by Province - Full Width */}
-				{stats.absenceOverviewByProvince &&
+				{/* Absence Overview by Province - Full Width - Only when specific province selected */}
+				{selectedProvince !== "all" &&
+					stats.absenceOverviewByProvince &&
 					stats.absenceOverviewByProvince.length > 0 && (
 						<Box sx={{ mb: 4 }}>
 							{stats.absenceOverviewByProvince
@@ -480,8 +481,9 @@ export default function AdminDashboardPage() {
 
 				{/* Rank & Branch Distribution by Province */}
 				<Box sx={{ mb: 4 }}>
-					{/* Rank Distribution by Province */}
-					{stats.employeeDistribution.byRankByProvince &&
+					{/* Rank Distribution by Province - Only when specific province selected */}
+					{selectedProvince !== "all" &&
+						stats.employeeDistribution.byRankByProvince &&
 						stats.employeeDistribution.byRankByProvince.length > 0 && (
 							<Box sx={{ mb: 4 }}>
 								{stats.employeeDistribution.byRankByProvince
@@ -530,8 +532,9 @@ export default function AdminDashboardPage() {
 							</Box>
 						)}
 
-					{/* Branch Distribution */}
-					{stats.employeeDistribution.byBranchByProvince &&
+					{/* Branch Distribution - Only when specific province selected */}
+					{selectedProvince !== "all" &&
+						stats.employeeDistribution.byBranchByProvince &&
 						stats.employeeDistribution.byBranchByProvince.length > 0 && (
 							<Card sx={{ boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)", p: 2 }}>
 								<Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
@@ -695,8 +698,9 @@ export default function AdminDashboardPage() {
 						</Box>
 					</Card>
 
-					{/* Performance Metrics by Province */}
-					{stats.performanceMetricsByProvince &&
+					{/* Performance Metrics by Province - Only when specific province selected */}
+					{selectedProvince !== "all" &&
+						stats.performanceMetricsByProvince &&
 						stats.performanceMetricsByProvince.length > 0 && (
 							<Box>
 								{stats.performanceMetricsByProvince
