@@ -253,9 +253,9 @@ export default function ProvinceEmployeesPage() {
 			link.href = url;
 			link.setAttribute(
 				"download",
-				`employees_${provinceName || "province"}_${new Date()
-					.toISOString()
-					.split("T")[0]}.xlsx`
+				`employees_${provinceName || "province"}_${
+					new Date().toISOString().split("T")[0]
+				}.xlsx`
 			);
 			document.body.appendChild(link);
 			link.click();
@@ -263,7 +263,9 @@ export default function ProvinceEmployeesPage() {
 			window.URL.revokeObjectURL(url);
 
 			setToastMessage(
-				`✅ Successfully exported ${pagination?.total || employees.length} employee(s)`
+				`✅ Successfully exported ${
+					pagination?.total || employees.length
+				} employee(s)`
 			);
 			setToastSeverity("success");
 			setToastOpen(true);
