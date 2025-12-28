@@ -84,57 +84,78 @@ export default function AdminDashboardPage() {
 	const statCards: StatCard[] = [
 		{
 			title: "Total Employees",
-			value: stats.totalEmployees,
+			value: stats.totalEmployees || 0,
 			icon: <Group sx={{ fontSize: 40, color: "white" }} />,
 			color: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
 		},
 		{
 			title: "Active Employees",
-			value: stats.activeEmployees,
+			value: stats.activeEmployees || 0,
 			icon: <TrendingUp sx={{ fontSize: 40, color: "white" }} />,
 			color: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
 		},
 		{
 			title: "On Leave",
-			value: stats.onLeaveEmployees,
+			value: stats.onLeaveEmployees || 0,
 			icon: <LocationOn sx={{ fontSize: 40, color: "white" }} />,
 			color: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
 		},
 		{
 			title: "Inactive",
-			value: stats.inactiveEmployees,
+			value: stats.inactiveEmployees || 0,
 			icon: <TrendingDown sx={{ fontSize: 40, color: "white" }} />,
 			color: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
 		},
 		{
 			title: "Truck Drivers",
-			value: stats.employeeDistribution.truckDriverCount,
+			value: stats.employeeDistribution?.truckDriverCount || 0,
 			icon: <LocalShipping sx={{ fontSize: 40, color: "white" }} />,
 			color: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
 		},
 		{
 			title: "Avg Performance",
-			value: stats.globalPerformanceMetrics.averageDailyPerformance.toFixed(2),
+			value:
+				stats.globalPerformanceMetrics?.averageDailyPerformance?.toFixed(2) ||
+				"0.00",
 			icon: <BarChart sx={{ fontSize: 40, color: "white" }} />,
 			color: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
 		},
 	];
 
-	const provinceData = stats.employeesByProvince.sort(
-		(a: any, b: any) => b.count - a.count
-	);
+	const provinceData = stats.employeesByProvince
+		? stats.employeesByProvince.sort((a: any, b: any) => b.count - a.count)
+		: [];
 
-	const statusData = [
-		{ name: "Active", value: stats.employeesByStatus.active },
-		{ name: "Inactive", value: stats.employeesByStatus.inactive },
-		{ name: "On Leave", value: stats.employeesByStatus.on_leave },
-		{ name: "No Data", value: stats.employeesByStatus.no_performance },
-	].filter((item) => item.value > 0);
+	const statusData = stats.employeesByStatus
+		? [
+				{ name: "Active", value: stats.employeesByStatus.active || 0 },
+				{
+					name: "Inactive",
+					value: stats.employeesByStatus.inactive || 0,
+				},
+				{
+					name: "On Leave",
+					value: stats.employeesByStatus.on_leave || 0,
+				},
+				{
+					name: "No Data",
+					value: stats.employeesByStatus.no_performance || 0,
+				},
+			].filter((item) => item.value > 0)
+		: [];
 
-	const genderData = [
-		{ name: "Male", value: stats.employeeDistribution.maleCount },
-		{ name: "Female", value: stats.employeeDistribution.femaleCount },
-	];
+	const genderData = stats.employeeDistribution
+		? [
+				{
+					name: "Male",
+					value: stats.employeeDistribution.maleCount || 0,
+				},
+				{
+					name: "Female",
+					value: stats.employeeDistribution.femaleCount || 0,
+				},
+			]
+		: [];
 
 	return (
 		<Box sx={{ minHeight: "100vh", backgroundColor: "#f5f5f5" }}>
@@ -630,9 +651,9 @@ export default function AdminDashboardPage() {
 									variant="h6"
 									sx={{ fontWeight: 700, color: "#0088FE" }}
 								>
-									{stats.globalPerformanceMetrics.averageDailyPerformance.toFixed(
+									{stats.globalPerformanceMetrics?.averageDailyPerformance?.toFixed(
 										2
-									)}
+									) || "0.00"}
 								</Typography>
 							</Box>
 							<Box
@@ -652,7 +673,7 @@ export default function AdminDashboardPage() {
 									variant="h6"
 									sx={{ fontWeight: 700, color: "#00C49F" }}
 								>
-									{stats.globalPerformanceMetrics.totalOvertimeHours}
+									{stats.globalPerformanceMetrics?.totalOvertimeHours || 0}
 								</Typography>
 							</Box>
 							<Box
@@ -672,7 +693,7 @@ export default function AdminDashboardPage() {
 									variant="h6"
 									sx={{ fontWeight: 700, color: "#FFBB28" }}
 								>
-									{stats.globalPerformanceMetrics.totalLeaveHours}
+									{stats.globalPerformanceMetrics?.totalLeaveHours || 0}
 								</Typography>
 							</Box>
 							<Box
@@ -692,7 +713,7 @@ export default function AdminDashboardPage() {
 									variant="h6"
 									sx={{ fontWeight: 700, color: "#FF8042" }}
 								>
-									{stats.globalPerformanceMetrics.totalAbsenceHours}
+									{stats.globalPerformanceMetrics?.totalAbsenceHours || 0}
 								</Typography>
 							</Box>
 						</Box>
