@@ -24,6 +24,7 @@ import NavBar from "../components/NavBar";
 import { LoadingView } from "../components/states/LoadingView";
 import { ErrorView } from "../components/states/ErrorView";
 import { globalApi } from "../api/api";
+import { ROUTES } from "../const/endpoints";
 
 interface StatCard {
 	title: string;
@@ -111,9 +112,9 @@ export default function AdminDashboardPage() {
 		{ name: "No Data", value: stats.employeesByStatus.no_performance },
 	].filter((item) => item.value > 0);
 
-	const provinceData = stats.employeesByProvince
-		.sort((a: any, b: any) => b.count - a.count)
-		.slice(0, 8);
+	const provinceData = stats.employeesByProvince.sort(
+		(a: any, b: any) => b.count - a.count
+	);
 
 	const genderData = [
 		{ name: "Male", value: stats.employeeDistribution.maleCount },
@@ -122,7 +123,7 @@ export default function AdminDashboardPage() {
 
 	return (
 		<Box sx={{ minHeight: "100vh", backgroundColor: "#f5f5f5" }}>
-			<NavBar />
+			<NavBar backTo={ROUTES.PROVINCES} backLabel="Provinces" />
 			<Container maxWidth="lg" sx={{ py: 4 }}>
 				<Typography
 					variant="h4"
