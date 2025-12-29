@@ -33,7 +33,7 @@ export function useEmployees(
 
 	const fetchEmployees = async () => {
 		if (!provinceId) {
-			setError("Province ID is missing");
+			setError("شناسه استان موجود نیست");
 			setLoading(false);
 			return;
 		}
@@ -47,7 +47,7 @@ export function useEmployees(
 			setPagination(response.pagination);
 		} catch (err) {
 			console.error("Error fetching employees:", err);
-			const errorMessage = err instanceof Error ? err.message : "Failed to load employees";
+			const errorMessage = err instanceof Error ? err.message : "خطا در بارگذاری کارکنان";
 			setError(errorMessage);
 			setEmployees([]);
 			setPagination(null);

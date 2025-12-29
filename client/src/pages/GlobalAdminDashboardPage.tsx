@@ -414,14 +414,13 @@ export default function GlobalAdminDashboardPage() {
 							<DialogContentText
 								sx={{ mt: 2, fontWeight: "bold", color: "error.main" }}
 							>
-								Please wait {countdown} second{countdown !== 1 ? "s" : ""}{" "}
-								before confirming...
+								لطفاً {countdown} ثانیه قبل از تأیید صبر کنید...
 							</DialogContentText>
 						)}
 					</DialogContent>
 					<DialogActions>
 						<Button onClick={handleCloseClearDialog} color="inherit">
-							Cancel
+							لغو
 						</Button>
 						<Button
 							onClick={handleClearAllPerformances}
@@ -430,7 +429,7 @@ export default function GlobalAdminDashboardPage() {
 							disabled={countdown > 0}
 							startIcon={<DeleteSweepIcon />}
 						>
-							Confirm Reset All
+							تأیید بازنشانی همه
 						</Button>
 					</DialogActions>
 				</Dialog>

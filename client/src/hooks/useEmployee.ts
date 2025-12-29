@@ -24,7 +24,7 @@ export function useEmployee(
 
 	const fetchEmployee = async () => {
 		if (!provinceId || !employeeId) {
-			setError("Missing identifiers");
+			setError("شناسه‌های مورد نیاز موجود نیست");
 			setLoading(false);
 			return;
 		}
@@ -34,14 +34,14 @@ export function useEmployee(
 		try {
 			const res = await provinceApi.getEmployee(provinceId, employeeId);
 			if (!res.success || !res.data) {
-				setError(res.error || "Employee not found");
+				setError(res.error || "کارمند یافت نشد");
 				setEmployee(null);
 				return;
 			}
 			setEmployee(res.data);
 		} catch (err) {
 			console.error("Error fetching employee:", err);
-			const errorMessage = err instanceof Error ? err.message : "Failed to load employee";
+			const errorMessage = err instanceof Error ? err.message : "خطا در بارگذاری کارمند";
 			setError(errorMessage);
 			setEmployee(null);
 		} finally {

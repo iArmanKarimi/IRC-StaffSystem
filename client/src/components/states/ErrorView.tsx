@@ -35,7 +35,7 @@ export function ErrorView({
 							startIcon={<RefreshIcon />}
 							onClick={onRetry}
 						>
-							Retry
+							تلاش مجدد
 						</Button>
 					</Box>
 				)}

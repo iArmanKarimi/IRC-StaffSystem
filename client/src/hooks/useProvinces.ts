@@ -25,7 +25,7 @@ export function useProvinces(): UseProvincesResult {
 			setProvinces(response.data ?? []);
 		} catch (err) {
 			console.error("Error fetching provinces:", err);
-			const errorMessage = err instanceof Error ? err.message : "Failed to load provinces";
+			const errorMessage = err instanceof Error ? err.message : "خطا در بارگذاری استان‌ها";
 			setError(errorMessage);
 			setProvinces([]);
 		} finally {

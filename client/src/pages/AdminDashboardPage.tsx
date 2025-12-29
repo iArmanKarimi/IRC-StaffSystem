@@ -67,7 +67,7 @@ export default function AdminDashboardPage() {
 				setError(null);
 			} catch (err: any) {
 				console.error("Failed to fetch dashboard stats:", err);
-				setError(err?.message || "Failed to load dashboard statistics");
+				setError(err?.message || "خطا در بارگذاری آمار داشبورد");
 			} finally {
 				setLoading(false);
 			}
@@ -558,7 +558,7 @@ export default function AdminDashboardPage() {
 															color: "#82CA9D",
 														}}
 													/>
-													Distribution by Rank - {provinceData.province} (Total:{" "}
+													توزیع بر اساس رتبه - {provinceData.province} (جمع:{" "}
 													{provinceData.total})
 												</Typography>
 												<ResponsiveContainer width="100%" height={CHART_HEIGHT}>
@@ -589,7 +589,7 @@ export default function AdminDashboardPage() {
 										<BarChart
 											sx={{ mr: 1, verticalAlign: "middle", color: "#FFB3BA" }}
 										/>
-										Distribution by Branch (by Province)
+										توزیع بر اساس شعبه (بر اساس استان)
 									</Typography>
 									{stats.employeeDistribution?.byBranchByProvince &&
 										stats.employeeDistribution?.byBranchByProvince.length >
@@ -655,7 +655,7 @@ export default function AdminDashboardPage() {
 								<TrendingUp
 									sx={{ mr: 1, verticalAlign: "middle", color: "#8884d8" }}
 								/>
-								Global Performance Metrics
+								معیارهای عملکرد کلی
 							</Typography>
 							<Box
 								sx={{
@@ -781,8 +781,8 @@ export default function AdminDashboardPage() {
 															color: "#8884d8",
 														}}
 													/>
-													Performance Metrics - {provinceData.province} (
-													{provinceData.data.employeeCount} employees)
+													معیارهای عملکرد - {provinceData.province} (
+													{provinceData.data.employeeCount} کارمند)
 												</Typography>
 												<Box
 													sx={{
@@ -899,6 +899,6 @@ export default function AdminDashboardPage() {
 		);
 	} catch (err: any) {
 		console.error("Error rendering dashboard:", err);
-		return <ErrorView message={"Error rendering dashboard: " + err?.message} />;
+		return <ErrorView message={"خطا در نمایش داشبورد: " + err?.message} />;
 	}
 }

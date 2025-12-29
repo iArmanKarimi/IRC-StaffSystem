@@ -15,7 +15,7 @@ export function useGlobalSettings() {
 			const response = await api.get(API_ENDPOINTS.GLOBAL_SETTINGS);
 			setSettings(response.data.data);
 		} catch (err) {
-			setError(err instanceof Error ? err.message : "Failed to fetch global settings");
+			setError(err instanceof Error ? err.message : "خطا در بارگذاری تنظیمات عمومی");
 		} finally {
 			setLoading(false);
 		}
