@@ -1,6 +1,7 @@
 import { connectDB } from '../data-source';
 import { Employee } from '../models/Employee';
 import { Province } from '../models/Province';
+import jalaali from 'jalaali-js';
 
 async function seedEmployees() {
 	await connectDB();
@@ -30,9 +31,19 @@ async function seedEmployees() {
 			const rank = ["مدیر", "تکنسین", "کارمند", "سرپرست", "منشی"][i % 5];
 			const licensedWorkplace = `محل کار ${(i % 3) + 1}`;
 			const educationalDegree = ["کارشناسی ارشد", "کارشناسی", "دکترا", "دیپلم", "فوق دیپلم"][i % 5];
-			const dateOfBirth = new Date(1980 + (i % 20), (i % 12), (i % 28) + 1);
+			// Generate Persian dates and convert to Gregorian
+			const persianBirthYear = 1350 + (i % 20); // 1350-1370 Shamsi (1971-1991 Gregorian)
+			const birthMonth = (i % 12) + 1;
+			const birthDay = (i % 28) + 1;
+			const gregorianBirth = jalaali.toGregorian(persianBirthYear, birthMonth, birthDay);
+			const dateOfBirth = new Date(gregorianBirth.gy, gregorianBirth.gm - 1, gregorianBirth.gd);
 			const contactNumber = `09${(100000000 + i).toString().padStart(8, '0')}`;
-			const jobStartDate = new Date(2010 + (i % 10), (i % 12), (i % 28) + 1);
+			// Generate Persian job start date
+			const persianJobYear = 1390 + (i % 10); // 1390-1400 Shamsi (2011-2021 Gregorian)
+			const jobMonth = (i % 12) + 1;
+			const jobDay = (i % 28) + 1;
+			const gregorianJob = jalaali.toGregorian(persianJobYear, jobMonth, jobDay);
+			const jobStartDate = new Date(gregorianJob.gy, gregorianJob.gm - 1, gregorianJob.gd);
 			const dailyPerformance = 5 + (i % 6);
 			const shiftCountPerLocation = 1 + (i % 3);
 			const shiftDuration = [8, 16, 24][i % 3];
