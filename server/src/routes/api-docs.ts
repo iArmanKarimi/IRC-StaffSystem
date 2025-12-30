@@ -8,7 +8,7 @@ const router = Router();
  * Returns the OpenAPI/Swagger specification as JSON
  */
 router.get("/json", (_req: Request, res: Response) => {
-	res.json(swaggerDefinition);
+  res.json(swaggerDefinition);
 });
 
 /**
@@ -16,11 +16,11 @@ router.get("/json", (_req: Request, res: Response) => {
  * Returns an HTML page with Swagger UI for interactive API documentation
  */
 router.get("/", (_req: Request, res: Response) => {
-	const html = `
+  const html = `
 <!DOCTYPE html>
 <html>
   <head>
-    <title>IRC Employee Management System - API Documentation</title>
+    <title>سامانه مدیریت کارکنان IRC - API Documentation</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700" rel="stylesheet">
@@ -38,8 +38,8 @@ router.get("/", (_req: Request, res: Response) => {
   </body>
 </html>
 	`;
-	res.setHeader("Content-Type", "text/html");
-	res.send(html);
+  res.setHeader("Content-Type", "text/html");
+  res.send(html);
 });
 
 /**
@@ -47,12 +47,12 @@ router.get("/", (_req: Request, res: Response) => {
  * Returns Swagger UI for interactive API documentation
  */
 router.get("/swagger", (_req: Request, res: Response) => {
-	const html = `
+  const html = `
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>IRC Employee Management System - Swagger UI</title>
+    <title>سامانه مدیریت کارکنان IRC - Swagger UI</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.min.css">
     <style>
@@ -94,8 +94,8 @@ router.get("/swagger", (_req: Request, res: Response) => {
   </body>
 </html>
 	`;
-	res.setHeader("Content-Type", "text/html");
-	res.send(html);
+  res.setHeader("Content-Type", "text/html");
+  res.send(html);
 });
 
 export default router;

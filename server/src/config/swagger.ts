@@ -5,7 +5,7 @@
 const swaggerDefinition = {
 	openapi: "3.0.0",
 	info: {
-		title: "IRC Employee Management System API",
+		title: "سامانه مدیریت کارکنان IRC API",
 		version: "1.0.0",
 		description: "API for managing employees across provinces with role-based access control"
 	},

@@ -198,7 +198,7 @@ This document contains all Persian translations for user-facing strings in the c
 
 ### System Messages
 
-- IRC Staff Management System → سیستم مدیریت کارکنان IRC
+- IRC Staff Management System → سامانه مدیریت کارکنان IRC
 - Provinces - Global Admin → استان‌ها - مدیر کل
 - Province Employees → کارمندان استان
 - Employee Details → جزئیات کارمند

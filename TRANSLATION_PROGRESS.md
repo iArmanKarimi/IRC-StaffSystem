@@ -7,7 +7,7 @@
    - Login form labels (نام کاربری, رمز عبور)
    - Button text (ورود, در حال ورود...)
    - Error messages (اطلاعات ورود نامعتبر است, ورود ناموفق بود)
-   - System title (سیستم مدیریت کارکنان IRC)
+   - System title (سامانه مدیریت کارکنان IRC)
 
 2. **client/src/pages/GlobalAdminDashboardPage.tsx**
 
