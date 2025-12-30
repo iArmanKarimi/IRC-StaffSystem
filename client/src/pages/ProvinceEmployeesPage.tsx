@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, Link, useSearchParams } from "react-router-dom";
+import { useParams, Link, useSearchParams, useNavigate } from "react-router-dom";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -38,6 +38,7 @@ import { provinceApi } from "../api/api";
 
 export default function ProvinceEmployeesPage() {
 	const { provinceId } = useParams<{ provinceId: string }>();
+	const navigate = useNavigate();
 	const [searchParams, setSearchParams] = useSearchParams();
 	const pageFromUrl = parseInt(searchParams.get("page") || "1", 10);
 	const [page, setPage] = useState(pageFromUrl - 1);
@@ -73,9 +74,10 @@ export default function ProvinceEmployeesPage() {
 			: currentSort?.field === "status"
 			? "status"
 			: undefined;
-	const sortOrderFromGrid = currentSort?.sort === "asc" || currentSort?.sort === "desc"
-		? currentSort.sort
-		: undefined;
+	const sortOrderFromGrid =
+		currentSort?.sort === "asc" || currentSort?.sort === "desc"
+			? currentSort.sort
+			: undefined;
 
 	const serverFilters = {
 		search: searchTerm || undefined,
@@ -546,7 +548,7 @@ export default function ProvinceEmployeesPage() {
 							variant="outlined"
 							size="small"
 							startIcon={<VisibilityIcon fontSize="small" />}
-							onClick={() => (window.location.href = viewUrl)}
+							onClick={() => navigate(viewUrl)}
 							sx={{ textTransform: "none", borderRadius: 1, padding: 0.25 }}
 						>
 							مشاهده
