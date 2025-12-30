@@ -67,6 +67,21 @@ export default function EmployeePage() {
 		if (employee?.performance) {
 			setLocalPerformance(employee.performance);
 			setHasUnsavedChanges(false);
+		} else if (employee) {
+			// Initialize default performance if employee exists but has no performance data
+			setLocalPerformance({
+				status: "active",
+				dailyPerformance: 0,
+				shiftDuration: 0,
+				overtime: 0,
+				dailyLeave: 0,
+				sickLeave: 0,
+				absence: 0,
+				travelAssignment: 0,
+				shiftCountPerLocation: 0,
+				notes: "",
+			});
+			setHasUnsavedChanges(false);
 		}
 	}, [employee]);
 
