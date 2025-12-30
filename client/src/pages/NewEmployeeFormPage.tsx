@@ -164,7 +164,7 @@ export default function NewEmployeeFormPage() {
 						? ROUTES.PROVINCE_EMPLOYEES.replace(":provinceId", provinceId)
 						: undefined
 				}
-				backLabel="بازگشت به کارکنان"
+				backLabel="بازگشت به کارمندان"
 			/>
 			<Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
 				<Breadcrumbs showProvincesLink={isGlobalAdmin} />

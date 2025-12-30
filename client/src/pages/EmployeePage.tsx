@@ -183,7 +183,7 @@ export default function EmployeePage() {
 						? ROUTES.PROVINCE_EMPLOYEES.replace(":provinceId", provinceId)
 						: ROUTES.PROVINCES
 				}
-				backLabel="بازگشت به کارکنان"
+				backLabel="بازگشت به کارمندان"
 			/>
 			<Container maxWidth="lg" sx={{ py: 4 }}>
 				<Breadcrumbs
@@ -411,10 +411,10 @@ export default function EmployeePage() {
 						disabled={!provinceId}
 						aria-disabled={!provinceId}
 						aria-label={
-							provinceId ? "بازگشت به کارکنان" : "بازگشت در دسترس نیست"
+							provinceId ? "بازگشت به کارمندان" : "بازگشت در دسترس نیست"
 						}
 					>
-						بازگشت به کارکنان
+						بازگشت به کارمندان
 					</Button>
 				</Box>
 

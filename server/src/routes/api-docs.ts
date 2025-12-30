@@ -20,7 +20,7 @@ router.get("/", (_req: Request, res: Response) => {
 <!DOCTYPE html>
 <html>
   <head>
-    <title>سامانه مدیریت کارکنان IRC - API Documentation</title>
+    <title>سامانه مدیریت کارمندان IRC - API Documentation</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700" rel="stylesheet">
@@ -52,7 +52,7 @@ router.get("/swagger", (_req: Request, res: Response) => {
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>سامانه مدیریت کارکنان IRC - Swagger UI</title>
+    <title>سامانه مدیریت کارمندان IRC - Swagger UI</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.min.css">
     <style>

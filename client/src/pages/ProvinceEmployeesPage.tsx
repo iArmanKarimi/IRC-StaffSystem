@@ -294,7 +294,7 @@ export default function ProvinceEmployeesPage() {
 			setToastOpen(true);
 		} catch (err) {
 			console.error("Export failed:", err);
-			setToastMessage("❌ خروجی کارکنان با خطا مواجه شد");
+			setToastMessage("❌ خروجی کارمندان با خطا مواجه شد");
 			setToastSeverity("error");
 			setToastOpen(true);
 		} finally {
@@ -569,19 +569,19 @@ export default function ProvinceEmployeesPage() {
 	];
 
 	if (loading) {
-		return <LoadingView title="کارکنان استان" />;
+		return <LoadingView title="کارمندان استان" />;
 	}
 
 	if (error) {
 		return (
-			<ErrorView title="کارکنان استان" message={error} onRetry={refetch} />
+			<ErrorView title="کارمندان استان" message={error} onRetry={refetch} />
 		);
 	}
 
 	return (
 		<>
 			<NavBar
-				title={`کارکنان ${provinceName}`}
+				title={`کارمندان ${provinceName}`}
 				backTo={isGlobalAdmin ? ROUTES.PROVINCES : undefined}
 				backLabel="بازگشت به استان‌ها"
 			/>
@@ -609,7 +609,7 @@ export default function ProvinceEmployeesPage() {
 				>
 					<Stack>
 						<Typography variant="h5" component="h1" gutterBottom sx={{ m: 0 }}>
-							کارکنان
+							کارمندان
 						</Typography>
 						<Typography
 							variant="caption"
@@ -695,7 +695,7 @@ export default function ProvinceEmployeesPage() {
 							columns={columns}
 							getRowId={(row) => row._id}
 							paginationModel={{ pageSize: limit, page }}
-						onPaginationModelChange={(newModel) => updatePage(newModel.page)}
+							onPaginationModelChange={(newModel) => updatePage(newModel.page)}
 							rowCount={filteredEmployees.length}
 							pageSizeOptions={[20]}
 							loading={loading}
@@ -743,7 +743,7 @@ export default function ProvinceEmployeesPage() {
 							<Pagination
 								count={pagination?.pages || 1}
 								page={page + 1}
-							onChange={(_, value) => updatePage(value - 1)}
+								onChange={(_, value) => updatePage(value - 1)}
 								color="primary"
 								size="medium"
 								showFirstButton

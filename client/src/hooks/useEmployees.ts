@@ -47,7 +47,7 @@ export function useEmployees(
 			setPagination(response.pagination);
 		} catch (err) {
 			console.error("Error fetching employees:", err);
-			const errorMessage = err instanceof Error ? err.message : "خطا در بارگذاری کارکنان";
+			const errorMessage = err instanceof Error ? err.message : "خطا در بارگذاری کارمندان";
 			setError(errorMessage);
 			setEmployees([]);
 			setPagination(null);

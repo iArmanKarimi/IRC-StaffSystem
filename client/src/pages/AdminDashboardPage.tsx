@@ -360,7 +360,7 @@ export default function AdminDashboardPage() {
 									<PieChart
 										sx={{ mr: 1, verticalAlign: "middle", color: "#667eea" }}
 									/>
-									وضعیت کارکنان
+									وضعیت کارمندان
 								</Typography>
 								<ResponsiveContainer width="100%" height={CHART_HEIGHT}>
 									<MuiPieChart>
@@ -434,7 +434,7 @@ export default function AdminDashboardPage() {
 								<LocationOn
 									sx={{ mr: 1, verticalAlign: "middle", color: "#f5576c" }}
 								/>
-								کارکنان بر اساس استان
+								کارمندان بر اساس استان
 							</Typography>
 							<ResponsiveContainer width="100%" height={CHART_HEIGHT}>
 								<MuiBarChart data={provinceData}>
