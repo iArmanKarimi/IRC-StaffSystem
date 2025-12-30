@@ -64,6 +64,20 @@ export default function ProvinceEmployeesPage() {
 		limit
 	);
 
+	// Reset to page 0 when filters or search changes
+	useEffect(() => {
+		setPage(0);
+	}, [
+		searchTerm,
+		searchField,
+		performanceMetric,
+		performanceValue,
+		toggleFilters.maritalStatus,
+		toggleFilters.gender,
+		toggleFilters.status,
+		toggleFilters.truckDriverOnly,
+	]);
+
 	// Auto-close toast after 4 seconds
 	useEffect(() => {
 		if (toastOpen) {
