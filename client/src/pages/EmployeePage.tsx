@@ -72,7 +72,7 @@ export default function EmployeePage() {
 			setLocalPerformance({
 				status: "active",
 				dailyPerformance: 0,
-				shiftDuration: 0,
+				shiftDuration: 8,
 				overtime: 0,
 				dailyLeave: 0,
 				sickLeave: 0,
