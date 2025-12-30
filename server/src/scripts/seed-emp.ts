@@ -19,14 +19,17 @@ async function seedEmployees() {
 			const male = i % 2 === 0;
 			const married = i % 3 === 0;
 			const childrenCount = married ? (i % 4) : 0;
-			const firstName = male ? `John${i}` : `Jane${i}`;
-			const lastName = male ? `Doe${i}` : `Smith${i}`;
+			const maleFirstNames = ["علی", "محمد", "حسین", "رضا", "احمد", "مهدی", "حسن", "عباس", "محسن", "امیر"];
+			const femaleFirstNames = ["فاطمه", "زهرا", "مریم", "زینب", "سمیرا", "نرگس", "لیلا", "سارا", "پریسا", "نازنین"];
+			const lastNames = ["احمدی", "محمدی", "رضایی", "حسینی", "علوی", "موسوی", "کریمی", "جعفری", "رحیمی", "نوری"];
+			const firstName = male ? maleFirstNames[i % maleFirstNames.length] : femaleFirstNames[i % femaleFirstNames.length];
+			const lastName = lastNames[i % lastNames.length];
 			// Make nationalID unique per province and employee
 			const nationalID = `NID${provinceId.toString().slice(-3)}${100000000 + i}`;
-			const branch = ["Central", "West", "East", "North", "South"][i % 5];
-			const rank = ["Manager", "Technician", "Staff", "Supervisor", "Clerk"][i % 5];
-			const licensedWorkplace = `Workplace${i % 3}`;
-			const educationalDegree = ["MBA", "BSc", "PhD", "Diploma", "BA"][i % 5];
+			const branch = ["مرکزی", "غربی", "شرقی", "شمالی", "جنوبی"][i % 5];
+			const rank = ["مدیر", "تکنسین", "کارمند", "سرپرست", "منشی"][i % 5];
+			const licensedWorkplace = `محل کار ${(i % 3) + 1}`;
+			const educationalDegree = ["کارشناسی ارشد", "کارشناسی", "دکترا", "دیپلم", "فوق دیپلم"][i % 5];
 			const dateOfBirth = new Date(1980 + (i % 20), (i % 12), (i % 28) + 1);
 			const contactNumber = `09${(100000000 + i).toString().padStart(8, '0')}`;
 			const jobStartDate = new Date(2010 + (i % 10), (i % 12), (i % 28) + 1);
@@ -40,7 +43,7 @@ async function seedEmployees() {
 			const truckDriver = i % 5 === 0;
 			const travelAssignment = i % 10;
 			const status = ["active", "inactive", "on_leave"][i % 3];
-			const notes = `Sample employee ${i}`;
+			const notes = `کارمند نمونه ${i + 1}`;
 			return {
 				provinceId,
 				basicInfo: {
