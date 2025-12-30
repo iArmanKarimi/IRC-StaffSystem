@@ -1,5 +1,4 @@
 import { TextField } from "@mui/material";
-import { inputValueToPersian } from "../utils/dateUtils";
 import type { TextFieldProps } from "@mui/material/TextField";
 
 interface PersianDateInputProps extends Omit<TextFieldProps, "type"> {
@@ -11,7 +10,7 @@ interface PersianDateInputProps extends Omit<TextFieldProps, "type"> {
 
 /**
  * Persian Date Input Component
- * Uses HTML5 date input but displays Persian date in helper text
+ * Text input for entering dates in YYYY-MM-DD format (Gregorian)
  */
 export function PersianDateInput({
 	value,
@@ -20,22 +19,18 @@ export function PersianDateInput({
 	required,
 	...props
 }: PersianDateInputProps) {
-	const persianDateText = value
-		? inputValueToPersian(value, "text")
-		: "تاریخ را انتخاب کنید";
-
 	return (
 		<TextField
 			{...props}
 			label={label}
-			type="date"
+			type="text"
 			required={required}
-			InputLabelProps={{ shrink: true }}
 			value={value}
 			onChange={onChange}
-			helperText={persianDateText}
+			placeholder="مثال: 2025-12-30"
+			helperText="فرمت تاریخ: سال-ماه-روز (میلادی) مثال: 2025-12-30"
 			FormHelperTextProps={{
-				sx: { textAlign: "right", fontWeight: "bold", color: "primary.main" },
+				sx: { textAlign: "right", fontSize: "0.75rem" },
 			}}
 		/>
 	);
