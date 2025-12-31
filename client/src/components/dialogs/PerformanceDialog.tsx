@@ -10,6 +10,10 @@ import Alert from "@mui/material/Alert";
 import LockIcon from "@mui/icons-material/Lock";
 import { FormDialog } from "./FormDialog";
 import type { IPerformance } from "../../types/models";
+import {
+	performanceNumberFieldGroups,
+	shiftDurationOptions,
+} from "../common/performanceFields";
 
 type PerformanceDialogProps = {
 	open: boolean;
@@ -30,11 +34,14 @@ export function PerformanceDialog({
 }: PerformanceDialogProps) {
 	const [formData, setFormData] = useState<IPerformance>(performance);
 
-	const handleFieldChange = (field: keyof IPerformance, value: any) => {
-		setFormData({
-			...formData,
+	const handleFieldChange = (
+		field: keyof IPerformance,
+		value: IPerformance[keyof IPerformance]
+	) => {
+		setFormData((prev) => ({
+			...prev,
 			[field]: value,
-		});
+		}));
 	};
 
 	const handleSave = async () => {
@@ -57,107 +64,54 @@ export function PerformanceDialog({
 						در این زمان تغییراتی ایجاد کنید.
 					</Alert>
 				)}
-				<Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
-					<TextField
-						label="عملکرد روزانه"
-						type="number"
-						required
-						inputProps={{ min: 0, max: 31 }}
-						sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
-						value={formData.dailyPerformance}
-						onChange={(e) =>
-							handleFieldChange("dailyPerformance", Number(e.target.value))
-						}
-					/>
-					<TextField
-						label="تعداد شیفت در هر مکان"
-						type="number"
-						required
-						inputProps={{ min: 0, max: 31 }}
-						sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
-						value={formData.shiftCountPerLocation}
-						onChange={(e) =>
-							handleFieldChange("shiftCountPerLocation", Number(e.target.value))
-						}
-					/>
-				</Box>
-				<Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
-					<FormControl
-						sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
-						required
+
+				{performanceNumberFieldGroups.map((group, groupIndex) => (
+					<Box
+						key={groupIndex}
+						sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}
 					>
-						<InputLabel>مدت شیفت</InputLabel>
-						<Select
-							value={formData.shiftDuration}
-							label="مدت شیفت"
-							onChange={(e) =>
-								handleFieldChange("shiftDuration", Number(e.target.value))
-							}
-						>
-							<MenuItem value={8}>8 ساعت</MenuItem>
-							<MenuItem value={12}>12 ساعت</MenuItem>
-						</Select>
-					</FormControl>
-					<TextField
-						label="اضافه کاری (ساعت)"
-						type="number"
-						inputProps={{ min: 0 }}
-						sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
-						value={formData.overtime}
+						{group.map((field) => (
+							<TextField
+								key={field.key}
+								label={field.label}
+								type="number"
+								required={field.required}
+								inputProps={{ min: field.min, max: field.max }}
+								sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
+								value={formData[field.key] as number}
+								onChange={(e) =>
+									handleFieldChange(field.key, Number(e.target.value))
+								}
+							/>
+						))}
+					</Box>
+				))}
+
+				<FormControl
+					sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
+					required
+				>
+					<InputLabel>مدت شیفت</InputLabel>
+					<Select
+						value={formData.shiftDuration}
+						label="مدت شیفت"
 						onChange={(e) =>
-							handleFieldChange("overtime", Number(e.target.value))
+							handleFieldChange("shiftDuration", Number(e.target.value))
 						}
-					/>
-				</Box>
-				<Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
-					<TextField
-						label="مرخصی روزانه"
-						type="number"
-						inputProps={{ min: 0, max: 31 }}
-						sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
-						value={formData.dailyLeave}
-						onChange={(e) =>
-							handleFieldChange("dailyLeave", Number(e.target.value))
-						}
-					/>
-					<TextField
-						label="مرخصی استعلاجی"
-						type="number"
-						inputProps={{ min: 0, max: 31 }}
-						sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
-						value={formData.sickLeave}
-						onChange={(e) =>
-							handleFieldChange("sickLeave", Number(e.target.value))
-						}
-					/>
-				</Box>
-				<Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
-					<TextField
-						label="غیبت"
-						type="number"
-						inputProps={{ min: 0 }}
-						sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
-						value={formData.absence}
-						onChange={(e) =>
-							handleFieldChange("absence", Number(e.target.value))
-						}
-					/>
-					<TextField
-						label="ماموریت سفر (روز)"
-						type="number"
-						inputProps={{ min: 0, max: 31 }}
-						sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
-						value={formData.travelAssignment}
-						onChange={(e) =>
-							handleFieldChange("travelAssignment", Number(e.target.value))
-						}
-					/>
-				</Box>
+					>
+						{shiftDurationOptions.map((option) => (
+							<MenuItem key={option.value} value={option.value}>
+								{option.label}
+							</MenuItem>
+						))}
+					</Select>
+				</FormControl>
+
 				<TextField
 					label="یادداشت‌ها"
 					multiline
 					rows={3}
-					value={formData.notes}
+					value={formData.notes ?? ""}
 					onChange={(e) => handleFieldChange("notes", e.target.value)}
 					fullWidth
 				/>

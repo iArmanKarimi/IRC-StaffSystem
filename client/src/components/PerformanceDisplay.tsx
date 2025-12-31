@@ -11,6 +11,10 @@ import {
 } from "@mui/material";
 import LockIcon from "@mui/icons-material/Lock";
 import type { IPerformance } from "../types/models";
+import {
+	performanceNumberFieldGroups,
+	shiftDurationOptions,
+} from "./common/performanceFields";
 
 interface PerformanceDisplayProps {
 	performance: IPerformance;
@@ -31,107 +35,53 @@ const PerformanceDisplay: React.FC<PerformanceDisplayProps> = ({
 					تغییراتی ایجاد کنید.
 				</Alert>
 			)}
-			<Box sx={{ display: "flex", gap: 2.5, flexWrap: "wrap" }}>
-				<TextField
-					label="عملکرد روزانه"
-					type="number"
-					required
-					inputProps={{ min: 0, max: 31 }}
-					sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
-					value={performance.dailyPerformance}
-					onChange={(e) => onChange("dailyPerformance", Number(e.target.value))}
-					disabled={locked}
-				/>
-				<TextField
-					label="تعداد شیفت در هر مکان"
-					type="number"
-					required
-					inputProps={{ min: 0, max: 31 }}
-					sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
-					value={performance.shiftCountPerLocation}
-					onChange={(e) =>
-						onChange("shiftCountPerLocation", Number(e.target.value))
-					}
-					disabled={locked}
-				/>
-			</Box>
 
-			<Box sx={{ display: "flex", gap: 2.5, flexWrap: "wrap" }}>
-				<FormControl
-					sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
-					required
-					disabled={locked}
+			{performanceNumberFieldGroups.map((group, groupIndex) => (
+				<Box
+					key={groupIndex}
+					sx={{ display: "flex", gap: 2.5, flexWrap: "wrap" }}
 				>
-					<InputLabel>مدت شیفت</InputLabel>
-					<Select
-						value={performance.shiftDuration}
-						label="مدت شیفت"
-						onChange={(e) => onChange("shiftDuration", Number(e.target.value))}
-					>
-						<MenuItem value={8}>8 ساعت</MenuItem>
-						<MenuItem value={16}>16 ساعت</MenuItem>
-						<MenuItem value={24}>24 ساعت</MenuItem>
-					</Select>
-				</FormControl>
-				<TextField
-					label="اضافه کاری"
-					type="number"
-					inputProps={{ min: 0 }}
-					sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
-					value={performance.overtime}
-					onChange={(e) => onChange("overtime", Number(e.target.value))}
-					disabled={locked}
-				/>
-			</Box>
+					{group.map((field) => (
+						<TextField
+							key={field.key}
+							label={field.label}
+							type="number"
+							required={field.required}
+							inputProps={{ min: field.min, max: field.max }}
+							sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
+							value={performance[field.key] as number}
+							onChange={(e) => onChange(field.key, Number(e.target.value))}
+							disabled={locked}
+						/>
+					))}
+				</Box>
+			))}
 
-			<Box sx={{ display: "flex", gap: 2.5, flexWrap: "wrap" }}>
-				<TextField
-					label="مرخصی روزانه"
-					type="number"
-					inputProps={{ min: 0, max: 31 }}
-					sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
-					value={performance.dailyLeave}
-					onChange={(e) => onChange("dailyLeave", Number(e.target.value))}
-					disabled={locked}
-				/>
-				<TextField
-					label="مرخصی استعلاجی"
-					type="number"
-					inputProps={{ min: 0, max: 31 }}
-					sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
-					value={performance.sickLeave}
-					onChange={(e) => onChange("sickLeave", Number(e.target.value))}
-					disabled={locked}
-				/>
-			</Box>
-
-			<Box sx={{ display: "flex", gap: 2.5, flexWrap: "wrap" }}>
-				<TextField
-					label="غیبت"
-					type="number"
-					inputProps={{ min: 0 }}
-					sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
-					value={performance.absence}
-					onChange={(e) => onChange("absence", Number(e.target.value))}
-					disabled={locked}
-				/>
-				<TextField
-					label="ماموریت سفر"
-					type="number"
-					inputProps={{ min: 0 }}
-					sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
-					value={performance.travelAssignment}
-					onChange={(e) => onChange("travelAssignment", Number(e.target.value))}
-					disabled={locked}
-				/>
-			</Box>
+			<FormControl
+				sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
+				required
+				disabled={locked}
+			>
+				<InputLabel>مدت شیفت</InputLabel>
+				<Select
+					value={performance.shiftDuration}
+					label="مدت شیفت"
+					onChange={(e) => onChange("shiftDuration", Number(e.target.value))}
+				>
+					{shiftDurationOptions.map((option) => (
+						<MenuItem key={option.value} value={option.value}>
+							{option.label}
+						</MenuItem>
+					))}
+				</Select>
+			</FormControl>
 
 			<TextField
 				label="یادداشت‌ها"
 				multiline
 				rows={3}
 				fullWidth
-				value={performance.notes}
+				value={performance.notes ?? ""}
 				onChange={(e) => onChange("notes", e.target.value)}
 				placeholder="یادداشت‌های اضافی را اضافه کنید..."
 			/>
