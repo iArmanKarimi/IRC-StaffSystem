@@ -5,6 +5,41 @@ The system provides a clean separation of access, scoped data visibility, and a 
 
 ---
 
+## 📸 Screenshots
+
+Below are some screenshots of the IRC Employee Management System in action:
+
+<div align="center">
+
+<b>Login Page</b><br>
+<img src="screenshots/login.png" alt="Login Page" width="600" />
+
+<b>Global Admin Dashboard</b><br>
+<img src="screenshots/dashboard.jpeg" alt="Global Admin Dashboard" width="600" />
+
+<b>Province List</b><br>
+<img src="screenshots/provinces.jpeg" alt="Province List" width="600" />
+
+<b>Province Dashboard</b><br>
+<img src="screenshots/dashboard - province.jpeg" alt="Province Dashboard" width="600" />
+
+<b>Employee List</b><br>
+<img src="screenshots/employee list.jpeg" alt="Employee List" width="600" />
+
+<b>Employee Details</b><br>
+<img src="screenshots/employee.jpeg" alt="Employee Details" width="600" />
+
+<b>Edit Employee Dialog</b><br>
+<img src="screenshots/edit emp.jpeg" alt="Edit Employee Dialog" width="600" />
+
+<b>New Employee Form</b><br>
+<img src="screenshots/new emp.jpeg" alt="New Employee Form" width="600" />
+
+<b>Performance Lock Warning</b><br>
+<img src="screenshots/lock warning.jpeg" alt="Performance Lock Warning" width="600" />
+
+</div>
+
 ## �️ Tech Stack
 
 **Backend**
