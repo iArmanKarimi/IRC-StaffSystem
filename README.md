@@ -40,6 +40,26 @@ Below are some screenshots of the IRC Employee Management System in action:
 
 </div>
 
+## 📦 Repository layout
+
+The project is organized as a pnpm workspace with two sub‑projects:
+
+```
+.
+├── client/                 # React + Vite front‑end
+│   ├── public/
+│   ├── src/
+│   ├── package.json
+│   └── …
+├── server/                 # Express + TypeORM back‑end
+│   ├── src/
+│   ├── jest.config.js
+│   └── …
+├── PERFORMANCE_LOCK_*.md   # design notes for the performance‑lock feature
+├── routing.md              # api routing notes
+└── README.md               # you are here
+```
+
 ## �️ Tech Stack
 
 **Backend**
@@ -47,12 +67,80 @@ Below are some screenshots of the IRC Employee Management System in action:
 - Node.js + Express + TypeScript
 - MongoDB with TypeORM
 - Session-based authentication
+- Jest for unit/integration tests
 
 **Frontend**
 
 - React 18 + TypeScript + Vite
 - Material-UI (MUI) v5
 - React Router + Axios
+- ESLint/Prettier configured via `eslint.config.js`
+
+---
+
+## 🔧 Getting started
+
+### Prerequisites
+
+- Node.js 18+ (or LTS)
+- pnpm (see https://pnpm.io/)
+- MongoDB instance (local or remote)
+
+### Installation
+
+Clone the repository and install dependencies from the root:
+
+```sh
+git clone <repo-url>
+cd IRC-StaffSystem
+pnpm install
+```
+
+This will install packages for both `client` and `server`.
+
+### Environment
+
+Create a `.env` file in `server/` with at least:
+
+```env
+PORT=4000
+MONGO_URI=mongodb://localhost:27017/irc-staff
+SESSION_SECRET=super-secret
+```
+
+The client does not require environment variables for basic development; see `client/vite.config.ts` for the few that exist (`VITE_API_BASE`).
+
+### Running the server
+
+```sh
+cd server
+pnpm dev          # ts-node‑dev / nodemon – watches files
+# or to build & start
+pnpm build
+pnpm start
+```
+
+The server listens on `http://localhost:4000` by default.
+
+### Running the client
+
+```sh
+cd client
+pnpm dev
+```
+
+Open http://localhost:5173 (or the port printed by Vite).
+
+### Running both
+
+From the repo root you can run the two concurrently with tools such as `concurrently`, or use two terminals:
+
+```sh
+pnpm --filter server dev
+pnpm --filter client dev
+```
+
+The client is configured to proxy API requests to the server (`/api/*`), see `vite.config.ts`.
 
 ---
 
@@ -174,12 +262,10 @@ The Global Admin can lock/unlock performance editing across the entire system.
 ### **How It Works**
 
 1. **Locking**: Global Admin clicks the lock toggle on the dashboard
-
    - Sets `performanceLocked: true` in global settings
    - All employees receive HTTP 423 (Locked) when attempting to edit performance
 
 2. **UI Feedback**:
-
    - Lock toggle button shows current state (🔒 locked / 🔓 unlocked)
    - Toast notification displays with distinct messages and colors:
      - **Warning (orange)**: "Performance editing is now LOCKED"
@@ -191,6 +277,7 @@ The Global Admin can lock/unlock performance editing across the entire system.
 ### **Reset All Performances**
 
 Global Admin can reset all employee performance metrics to defaults:
+
 - **Preserved**: Employee status (remains unchanged)
 - **Reset to defaults**:
   - Daily performance: 0
@@ -299,3 +386,51 @@ This system provides:
 Perfect for organizational employee management with fixed province administration.
 
 ---
+
+## 🛠 Testing & linting
+
+- **Server tests** live in `server/src/__tests__`; run with:
+
+  ```sh
+  cd server
+  pnpm test
+  ```
+
+- **Client** currently has no automated tests – end‑to‑end tests may be added in the future.
+
+- **Linting/formatting** (frontend) is enforced by running:
+
+  ```sh
+  cd client
+  pnpm lint
+  pnpm format
+  ```
+
+The `server` project uses TypeScript's `strict` mode and `eslint` is enabled via `npm run lint` inside `server`.
+
+## 🧭 Development notes
+
+- **Routing** is defined in `server/src/routes`; see `routing.md` for the decision‑making process.
+- **Performance lock** logic lives in `server/src/controllers/globalSettingsController.ts` and is documented in `PERFORMANCE_LOCK_FEATURE.md`.
+- Front‑end pages and components reside under `client/src/pages` and `client/src/components`; look for `GlobalAdminDashboardPage`, `ProvinceEmployeesPage`, etc.
+
+## 📦 Build for production
+
+1. Build the server: `cd server && pnpm build`.
+2. Build the client: `cd client && pnpm build`.
+3. Serve the `client/dist` folder with a static server, or configure the Express app to serve it (not implemented out‑of‑the-box).
+
+## 📖 Additional documentation
+
+- [routing.md](routing.md) – rationale for API structure.
+- [PERFORMANCE_LOCK_FEATURE.md](PERFORMANCE_LOCK_FEATURE.md) – deep dive on the lock feature.
+- `client/IMPLEMENTATION.md` – frontend implementation notes.
+- `server/TEST_SETUP.md` – instructions for test database seeding.
+
+## 📜 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+_This README has been updated to reflect the current codebase structure and development workflow._
