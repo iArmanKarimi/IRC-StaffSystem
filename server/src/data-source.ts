@@ -28,3 +28,12 @@ export const connectDB = async () => {
 	}
 };
 
+export const closeDB = async () => {
+	try {
+		await mongoose.connection.close();
+		logger.info('MongoDB connection closed');
+	} catch (err) {
+		logger.error('Error closing MongoDB connection', err);
+		throw err;
+	}
+};
