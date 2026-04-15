@@ -51,8 +51,6 @@ Below are some screenshots of the IRC Employee Management System in action:
 │   ├── src/
 │   ├── jest.config.js
 │   └── package.json
-├── PERFORMANCE_LOCK_*.md   # notes for the lock feature
-├── routing.md              # API routing notes
 └── README.md
 ```
 
@@ -91,6 +89,14 @@ Below are some screenshots of the IRC Employee Management System in action:
 
 - `globalAdmin` - can access all provinces, employees, exports, and global settings
 - `provinceAdmin` - can manage employees only inside the assigned province
+
+## How It Fits Together
+
+- `client/` contains the React app, route pages, dialogs, hooks, and API client
+- `server/` contains the Express app, Mongoose models, middleware, routes, and tests
+- Authentication is session-based and enforced on the server
+- Employee operations are scoped under `/provinces/:provinceId/employees`
+- The performance lock is stored in `GlobalSettings` and blocks employee updates plus global performance resets
 
 ## Getting Started
 
@@ -152,6 +158,13 @@ pnpm dev
 ```
 
 Open the Vite URL shown in the terminal, typically `http://localhost:5173`.
+
+### Build
+
+```sh
+cd server && pnpm build
+cd ../client && pnpm build
+```
 
 ## API Overview
 
@@ -219,11 +232,9 @@ cd server
 pnpm test
 ```
 
-Backend tests live in `server/src/__tests__/`.
+Backend tests live in `server/src/__tests__/` and use `TEST_MONGODB_URI` if provided, otherwise they default to `mongodb://localhost:27017/irc-test`.
 
 ### Client
-
-The client currently has linting configured but no automated test suite:
 
 ```sh
 cd client
@@ -234,12 +245,4 @@ pnpm lint
 
 - Province images are served from `server/src/img` under `/img`.
 - The performance lock blocks employee update operations and global performance resets.
-- Some supplemental markdown files are design notes rather than guaranteed source-of-truth docs; prefer the route and config files when behavior differs.
-
-## Additional Documentation
-
-- `client/CLIENT_README.md`
-- `client/IMPLEMENTATION.md`
-- `routing.md`
-- `PERFORMANCE_LOCK_FEATURE.md`
-- `server/TEST_SETUP.md`
+- Route behavior is defined in `server/src/routes` and auth rules in `server/src/middleware/auth.ts`.
