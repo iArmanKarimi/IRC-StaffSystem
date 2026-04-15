@@ -1,138 +1,56 @@
-# IRC Employee System – API Structure
+# IRC Employee System - API Structure
 
-_Last updated: December 2025_
+This document summarizes the route layout currently implemented by the backend.
 
-This document describes the finalized backend API routes designed for the IRC Employee System.  
-It reflects the simplified hierarchical structure that supports both **Global Admin** and **Province Admin** flows.
+## Auth Routes
 
-**Status**: ✅ All API endpoints implemented and fully integrated with React + Material-UI frontend.
+- `POST /auth/login`
+- `POST /auth/logout`
 
-## 🔐 Auth Routes
+## Province Routes
 
-### POST `/auth/login`
+- `GET /provinces`
+- `GET /provinces/:provinceId`
 
-Authenticate user.
+Province image URLs are attached in province responses when a matching file exists in `server/src/img`.
 
-**Body**
+## Province-Scoped Employee Routes
 
-```json
-{
-	"username": "string",
-	"password": "string"
-}
-```
+- `GET /provinces/:provinceId/employees`
+- `GET /provinces/:provinceId/employees/export-excel`
+- `POST /provinces/:provinceId/employees`
+- `GET /provinces/:provinceId/employees/:employeeId`
+- `PUT /provinces/:provinceId/employees/:employeeId`
+- `DELETE /provinces/:provinceId/employees/:employeeId`
 
-**Returns**
+Both `globalAdmin` and `provinceAdmin` can access employee routes, but province admins are limited to their own province.
 
-```json
-{
-	"role": "GLOBAL_ADMIN | PROVINCE_ADMIN",
-	"provinceId": "string | null"
-}
-```
+## Global Routes
 
-### POST `/auth/logout`
+- `GET /employees/export-all`
+- `DELETE /employees/clear-performances`
+- `GET /global-settings`
+- `POST /global-settings/toggle-performance-lock`
+- `GET /admin-dashboard/stats`
+- `GET /health`
+- `GET /api-docs`
 
-Destroys the session and clears cookies.
+## Access Summary
 
----
+| Route area | globalAdmin | provinceAdmin | public |
+| --- | --- | --- | --- |
+| `/auth/*` | yes | yes | yes |
+| `/provinces` | yes | no | no |
+| `/provinces/:provinceId/employees/*` | yes | own province only | no |
+| `/employees/export-all` | yes | no | no |
+| `/employees/clear-performances` | yes | no | no |
+| `/global-settings` | yes | yes | yes |
+| `/global-settings/toggle-performance-lock` | yes | no | no |
+| `/admin-dashboard/stats` | yes | no | no |
+| `/health` | yes | yes | yes |
 
-## 🌍 Province Routes
+## Notes
 
-### GET `/provinces`
-
-Returns the list of all provinces.
-
-Access:
-
-- Global Admin: allowed
-- Province Admin: denied
-
-Used by: GlobalAdminDashboardPage
-
----
-
-## 👥 Employee Routes (Hierarchical Design)
-
-All employee operations are nested under a province:
-
-```
-/provinces/:provinceId/employees
-/provinces/:provinceId/employees/:employeeId
-```
-
-This ensures clean scoping and simpler access control.
-
-### 1. List Employees of a Province
-
-GET `/provinces/:provinceId/employees`
-
-### 2. Create Employee
-
-POST `/provinces/:provinceId/employees`
-
-### 3. Get Single Employee
-
-GET `/provinces/:provinceId/employees/:employeeId`
-
-### 4. Update Employee
-
-PUT `/provinces/:provinceId/employees/:employeeId`
-
-### 5. Delete Employee
-
-DELETE `/provinces/:provinceId/employees/:employeeId`
-
----
-
-## 🧭 Client Flow Summary
-
-### Global Admin
-
-- GET `/provinces`
-- Navigate to `/provinces/:provinceId/employees`
-- **Full CRUD** on employees (create, read, update, delete)
-- **Performance management** (add, edit, delete records)
-
-### Province Admin
-
-- Redirect to `/provinces/:provinceId/employees`
-- **Full CRUD** on employees only inside their province
-- **Performance management** for their province's employees
-
-### UI Features
-
-- Material-UI components with custom theme
-- Reusable dialogs (EditEmployeeDialog, PerformanceDialog, ConfirmDialog)
-- Custom hooks for data fetching (useEmployee, useApiMutation)
-- Loading and error states with feedback components
-
----
-
-## 🔒 Access Control Summary
-
-| Role           | Can Access                | Notes                           |
-| -------------- | ------------------------- | ------------------------------- |
-| GLOBAL_ADMIN   | All provinces & employees | Full CRUD in any province       |
-| PROVINCE_ADMIN | Only their province       | CRUD only inside their province |
-
----
-
-## 📁 URL Structure Overview
-
-```
-/
-└── auth
-    ├── POST /auth/login
-    └── POST /auth/logout
-
-└── provinces
-    ├── GET /provinces
-    └── /:provinceId
-         └── employees
-             ├── GET /provinces/:provinceId/employees
-             ├── POST /provinces/:provinceId/employees
-             ├── GET /provinces/:provinceId/employees/:employeeId
-             ├── PUT /provinces/:provinceId/employees/:employeeId
-             └── DELETE /provinces/:provinceId/employees/:employeeId
-```
+- Employee routes are deliberately nested under provinces to keep access control simple.
+- The current implementation also includes global employee export/reset actions outside the province namespace.
+- When behavior and documentation diverge, prefer `server/src/routes` and `server/src/middleware/auth.ts`.

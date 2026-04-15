@@ -1,11 +1,10 @@
 # IRC Employee Management System
 
-A lightweight, role‑based employee management system designed for organizations with a **Global Admin** and fixed **Province Admins**.  
-The system provides a clean separation of access, scoped data visibility, and a simple front‑end flow.
+Role-based staff management for organizations with one global administrator and province-scoped administrators. The app is split into a React client and an Express + MongoDB server, with session-based authentication and province-scoped employee management.
 
 ---
 
-## 📸 Screenshots
+## Screenshots
 
 Below are some screenshots of the IRC Employee Management System in action:
 
@@ -40,397 +39,207 @@ Below are some screenshots of the IRC Employee Management System in action:
 
 </div>
 
-## 📦 Repository layout
+## Repository Layout
 
-The project is organized as a pnpm workspace with two sub‑projects:
-
-```
+```text
 .
-├── client/                 # React + Vite front‑end
-│   ├── public/
+├── client/                 # React + Vite front end
 │   ├── src/
-│   ├── package.json
-│   └── …
-├── server/                 # Express + TypeORM back‑end
+│   ├── public/
+│   └── package.json
+├── server/                 # Express + Mongoose back end
 │   ├── src/
 │   ├── jest.config.js
-│   └── …
-├── PERFORMANCE_LOCK_*.md   # design notes for the performance‑lock feature
-├── routing.md              # api routing notes
-└── README.md               # you are here
+│   └── package.json
+├── PERFORMANCE_LOCK_*.md   # notes for the lock feature
+├── routing.md              # API routing notes
+└── README.md
 ```
 
-## �️ Tech Stack
+## Tech Stack
 
 **Backend**
 
 - Node.js + Express + TypeScript
-- MongoDB with TypeORM
-- Session-based authentication
-- Jest for unit/integration tests
+- MongoDB via Mongoose
+- `express-session` + `connect-mongo`
+- Jest + Supertest
+- ExcelJS export utilities
 
 **Frontend**
 
-- React 18 + TypeScript + Vite
-- Material-UI (MUI) v5
-- React Router + Axios
-- ESLint/Prettier configured via `eslint.config.js`
+- React 19 + TypeScript + Vite
+- React Router 7
+- MUI 7 (`@mui/material`, `@mui/x-data-grid`)
+- Axios
+- Recharts
 
----
+## Current Features
 
-## 🔧 Getting started
+- Login and logout with cookie-backed sessions
+- Global admin province dashboard
+- Province-scoped employee CRUD
+- Employee detail page with edit dialogs
+- Performance record management
+- Global performance lock toggle
+- Reset all performance metrics
+- Province Excel export and global Excel export
+- Admin dashboard statistics endpoint and charts UI
+- Province image serving from the backend
+
+## Roles
+
+- `globalAdmin` - can access all provinces, employees, exports, and global settings
+- `provinceAdmin` - can manage employees only inside the assigned province
+
+## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ (or LTS)
-- pnpm (see https://pnpm.io/)
-- MongoDB instance (local or remote)
+- Node.js 18+
+- pnpm
+- MongoDB instance
 
-### Installation
+### Install
 
-Clone the repository and install dependencies from the root:
-
-```sh
-git clone <repo-url>
-cd IRC-StaffSystem
-pnpm install
-```
-
-This will install packages for both `client` and `server`.
-
-### Environment
-
-Create a `.env` file in `server/` with at least:
-
-```env
-PORT=4000
-MONGO_URI=mongodb://localhost:27017/irc-staff
-SESSION_SECRET=super-secret
-```
-
-The client does not require environment variables for basic development; see `client/vite.config.ts` for the few that exist (`VITE_API_BASE`).
-
-### Running the server
+Install each package from its own directory:
 
 ```sh
 cd server
-pnpm dev          # ts-node‑dev / nodemon – watches files
-# or to build & start
-pnpm build
-pnpm start
+pnpm install
+
+cd ../client
+pnpm install
 ```
 
-The server listens on `http://localhost:4000` by default.
+### Server environment
 
-### Running the client
+Create `server/.env` with at least:
+
+```env
+PORT=3000
+MONGODB_URI=mongodb://localhost:27017/ircdb
+SESSION_SECRET=super-secret
+CORS_ORIGIN=http://localhost:5173
+```
+
+The server reads configuration from `server/src/config/index.ts`.
+
+### Client environment
+
+Optional `client/.env`:
+
+```env
+VITE_API_BASE_URL=http://localhost:3000
+```
+
+If unset, the client defaults to `http://localhost:3000`.
+
+### Run the server
+
+```sh
+cd server
+pnpm dev
+```
+
+The API listens on `http://localhost:3000` by default.
+
+### Run the client
 
 ```sh
 cd client
 pnpm dev
 ```
 
-Open http://localhost:5173 (or the port printed by Vite).
+Open the Vite URL shown in the terminal, typically `http://localhost:5173`.
 
-### Running both
+## API Overview
 
-From the repo root you can run the two concurrently with tools such as `concurrently`, or use two terminals:
+### Auth
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| POST | `/auth/login` | Authenticate and create a session |
+| POST | `/auth/logout` | Destroy the current session |
+
+### Provinces
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| GET | `/provinces` | List provinces for global admins |
+| GET | `/provinces/:provinceId` | Get one province |
+
+### Employees
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| GET | `/provinces/:provinceId/employees` | List employees with pagination |
+| GET | `/provinces/:provinceId/employees/export-excel` | Export one province to Excel |
+| POST | `/provinces/:provinceId/employees` | Create an employee |
+| GET | `/provinces/:provinceId/employees/:employeeId` | Fetch one employee |
+| PUT | `/provinces/:provinceId/employees/:employeeId` | Update an employee |
+| DELETE | `/provinces/:provinceId/employees/:employeeId` | Delete an employee |
+
+### Global employee actions
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| GET | `/employees/export-all` | Export all employees to Excel |
+| DELETE | `/employees/clear-performances` | Reset performance data globally |
+
+### Global settings
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| GET | `/global-settings` | Read the performance lock status |
+| POST | `/global-settings/toggle-performance-lock` | Toggle the performance lock |
+
+### Misc
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| GET | `/admin-dashboard/stats` | Global admin dashboard metrics |
+| GET | `/health` | Health check |
+| GET | `/api-docs` | API docs entry point |
+
+## Frontend Flow
+
+1. Users land on `/` and submit credentials.
+2. `globalAdmin` users are redirected to `/provinces`.
+3. `provinceAdmin` users are redirected to `/provinces/:provinceId/employees`.
+4. Authenticated pages are wrapped in `client/src/components/ProtectedRoute.tsx`.
+5. Route pages are lazy-loaded from `client/src/App.tsx`.
+
+## Testing
+
+### Server
 
 ```sh
-pnpm --filter server dev
-pnpm --filter client dev
+cd server
+pnpm test
 ```
 
-The client is configured to proxy API requests to the server (`/api/*`), see `vite.config.ts`.
+Backend tests live in `server/src/__tests__/`.
 
----
+### Client
 
-## �🚀 Overview
+The client currently has linting configured but no automated test suite:
 
-The system manages employees across multiple provinces.  
-There are **only two roles**:
-
-- **Global Admin** — can view all provinces and browse employees within any province.
-- **Province Admin** — can only manage employees within _their own_ province.
-
-Province admins themselves are **fixed** (not created through the UI or API).
-
----
-
-## 🗂️ Core Features
-
-- Secure login (`/auth/login`)
-- Global Admin dashboard showing all provinces
-- Province‑scoped employee management
-- **Create, edit, delete employees** (province‑scoped)
-- **Performance record management** (add, edit, delete)
-- **Global Performance Lock** — Prevent all employees from editing performance records system-wide
-- Fetch employees belonging to a selected province
-- Material-UI frontend with custom theme
-- No generic `/employees` root — everything is province‑scoped
-
----
-
-## 🧩 API Structure
-
-All employee data is nested under provinces.
-
-### **Authentication**
-
-| Method | Endpoint      | Description                             |
-| ------ | ------------- | --------------------------------------- |
-| POST   | `/auth/login` | Login as Global Admin or Province Admin |
-
----
-
-## **🔹 Provinces**
-
-| Method | Endpoint                 | Description                            |
-| ------ | ------------------------ | -------------------------------------- |
-| GET    | `/provinces`             | List all provinces (Global Admin only) |
-| GET    | `/provinces/:provinceId` | Get details of a specific province     |
-
----
-
-## **🔹 Global Settings**
-
-| Method | Endpoint                                   | Description                                         |
-| ------ | ------------------------------------------ | --------------------------------------------------- |
-| GET    | `/global-settings`                         | Get global settings (performance lock status)       |
-| POST   | `/global-settings/toggle-performance-lock` | Toggle performance editing lock (Global Admin only) |
-
----
-
-## **🔹 Employees (Province‑Scoped)**
-
-All employee operations must include the province they belong to.
-
-| Method | Endpoint                                       | Description                           |
-| ------ | ---------------------------------------------- | ------------------------------------- |
-| GET    | `/provinces/:provinceId/employees`             | List all employees of the province    |
-| POST   | `/provinces/:provinceId/employees`             | Create a new employee in the province |
-| GET    | `/provinces/:provinceId/employees/:employeeId` | Fetch a single employee               |
-| PUT    | `/provinces/:provinceId/employees/:employeeId` | Update an employee                    |
-| DELETE | `/provinces/:provinceId/employees/:employeeId` | Delete an employee                    |
-
----
-
-## 🧭 Front-End Flow
-
-### **1. Login Page (`/`)**
-
-- User enters credentials
-- Sends POST → `/auth/login`
-- Redirects based on role
-
----
-
-### **2. Global Admin Flow**
-
-**GlobalAdminDashboardPage**
-
-Displays a list of all provinces (`GET /provinces`).
-
-User selects a province → redirect to:
-
-`/provinces/:provinceId/employees`
-
-Which loads the employee list for that province.
-
----
-
-### **3. Province Admin Flow**
-
-**ProvinceEmployeesPage**
-
-Displays all employees of their province:
-
-`GET /provinces/:provinceId/employees`
-
-Actions:
-
-- "Create Employee" → `NewEmployeeFormPage`
-- Select employee → `EmployeePage` (`/provinces/:provinceId/employees/:employeeId`)
-- Edit employee → `EditEmployeeDialog` (modal)
-- Manage performance → `PerformanceManager` component
-
----
-
-## � Performance Lock Feature
-
-The Global Admin can lock/unlock performance editing across the entire system.
-
-### **How It Works**
-
-1. **Locking**: Global Admin clicks the lock toggle on the dashboard
-   - Sets `performanceLocked: true` in global settings
-   - All employees receive HTTP 423 (Locked) when attempting to edit performance
-
-2. **UI Feedback**:
-   - Lock toggle button shows current state (🔒 locked / 🔓 unlocked)
-   - Toast notification displays with distinct messages and colors:
-     - **Warning (orange)**: "Performance editing is now LOCKED"
-     - **Success (green)**: "Performance editing is now UNLOCKED"
-   - Employees see alert when locked: "Performance records are currently locked. You cannot make changes at this time."
-
-3. **Reset All** button is disabled when lock is active (prevents accidental resets during lock period)
-
-### **Reset All Performances**
-
-Global Admin can reset all employee performance metrics to defaults:
-
-- **Preserved**: Employee status (remains unchanged)
-- **Reset to defaults**:
-  - Daily performance: 0
-  - Shift count per location: 0
-  - Shift duration: 8 hours
-  - Overtime: 0
-  - Daily leave: 0
-  - Sick leave: 0
-  - Absence: 0
-  - Travel assignment: 0
-  - Notes: cleared
-
-### **API Response**
-
-```json
-{
-	"success": true,
-	"data": {
-		"_id": "...",
-		"performanceLocked": true,
-		"lastLockedBy": "admin_user_id",
-		"lockedAt": "2025-12-28T...",
-		"createdAt": "...",
-		"updatedAt": "..."
-	}
-}
+```sh
+cd client
+pnpm lint
 ```
 
----
+## Notes
 
-## �📦 Data Model
+- Province images are served from `server/src/img` under `/img`.
+- The performance lock blocks employee update operations and global performance resets.
+- Some supplemental markdown files are design notes rather than guaranteed source-of-truth docs; prefer the route and config files when behavior differs.
 
-### **User**
+## Additional Documentation
 
-```
-{
-  id: string,
-  email: string,
-  password: string (hashed),
-  role: "global" | "province",
-  provinceId?: string
-}
-```
-
-### **Province**
-
-```
-{
-  id: string,
-  name: string
-}
-```
-
-### **Employee**
-
-```
-{
-  id: string,
-  firstName: string,
-  lastName: string,
-  phone: string,
-  nationalId: string,
-  provinceId: string
-}
-```
-
-Employees always reference the province they belong to.
-
-### **GlobalSettings**
-
-```
-{
-  id: string,
-  performanceLocked: boolean,
-  lastLockedBy: string (user id),
-  lockedAt: Date,
-  createdAt: Date,
-  updatedAt: Date
-}
-```
-
-Stores system-wide settings including the performance lock status.
-
----
-
-## 🎯 Design Principles
-
-- **Minimalistic & strict**: no unnecessary endpoints
-- **100% province‑scoped employees**
-- **Global admin ≠ province admin list viewer**
-- **Predictable URL structure**
-- **Easy to port into any client framework**
-
----
-
-## 📘 Summary
-
-This system provides:
-
-- Clean role‑based structure
-- Simple routes
-- Hierarchical API (`/provinces → employees`)
-- No redundant admin management
-- Production‑ready separation of access
-
-Perfect for organizational employee management with fixed province administration.
-
----
-
-## 🛠 Testing & linting
-
-- **Server tests** live in `server/src/__tests__`; run with:
-
-  ```sh
-  cd server
-  pnpm test
-  ```
-
-- **Client** currently has no automated tests – end‑to‑end tests may be added in the future.
-
-- **Linting/formatting** (frontend) is enforced by running:
-
-  ```sh
-  cd client
-  pnpm lint
-  pnpm format
-  ```
-
-The `server` project uses TypeScript's `strict` mode and `eslint` is enabled via `npm run lint` inside `server`.
-
-## 🧭 Development notes
-
-- **Routing** is defined in `server/src/routes`; see `routing.md` for the decision‑making process.
-- **Performance lock** logic lives in `server/src/controllers/globalSettingsController.ts` and is documented in `PERFORMANCE_LOCK_FEATURE.md`.
-- Front‑end pages and components reside under `client/src/pages` and `client/src/components`; look for `GlobalAdminDashboardPage`, `ProvinceEmployeesPage`, etc.
-
-## 📦 Build for production
-
-1. Build the server: `cd server && pnpm build`.
-2. Build the client: `cd client && pnpm build`.
-3. Serve the `client/dist` folder with a static server, or configure the Express app to serve it (not implemented out‑of‑the-box).
-
-## 📖 Additional documentation
-
-- [routing.md](routing.md) – rationale for API structure.
-- [PERFORMANCE_LOCK_FEATURE.md](PERFORMANCE_LOCK_FEATURE.md) – deep dive on the lock feature.
-- `client/IMPLEMENTATION.md` – frontend implementation notes.
-- `server/TEST_SETUP.md` – instructions for test database seeding.
-
-## 📜 License
-
-This project is licensed under the [MIT License](LICENSE).
-
----
-
-_This README has been updated to reflect the current codebase structure and development workflow._
+- `client/CLIENT_README.md`
+- `client/IMPLEMENTATION.md`
+- `routing.md`
+- `PERFORMANCE_LOCK_FEATURE.md`
+- `server/TEST_SETUP.md`
