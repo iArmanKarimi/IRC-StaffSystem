@@ -75,7 +75,7 @@ export default function NewEmployeeFormPage() {
 
 	const updateBasicInfo = (
 		key: keyof IBasicInfo,
-		value: string | number | boolean
+		value: string | number | boolean,
 	) => {
 		setForm((prev) => ({
 			...prev,
@@ -92,7 +92,7 @@ export default function NewEmployeeFormPage() {
 
 	const updateAdditionalSpecs = (
 		key: keyof IAdditionalSpecifications,
-		value: string
+		value: string,
 	) => {
 		setForm((prev) => ({
 			...prev,
@@ -121,19 +121,19 @@ export default function NewEmployeeFormPage() {
 
 			if (form.additionalSpecifications.dateOfBirth) {
 				const gregorianDate = toGregorianDate(
-					form.additionalSpecifications.dateOfBirth
+					form.additionalSpecifications.dateOfBirth,
 				);
 				if (gregorianDate) additionalSpecs.dateOfBirth = gregorianDate;
 			}
 			if (form.additionalSpecifications.jobStartDate) {
 				const gregorianDate = toGregorianDate(
-					form.additionalSpecifications.jobStartDate
+					form.additionalSpecifications.jobStartDate,
 				);
 				if (gregorianDate) additionalSpecs.jobStartDate = gregorianDate;
 			}
 			if (form.additionalSpecifications.jobEndDate) {
 				const gregorianDate = toGregorianDate(
-					form.additionalSpecifications.jobEndDate
+					form.additionalSpecifications.jobEndDate,
 				);
 				if (gregorianDate) additionalSpecs.jobEndDate = gregorianDate;
 			}
@@ -305,7 +305,7 @@ export default function NewEmployeeFormPage() {
 											onChange={(e) =>
 												updateAdditionalSpecs(
 													"educationalDegree",
-													e.target.value
+													e.target.value,
 												)
 											}
 										/>
@@ -335,6 +335,7 @@ export default function NewEmployeeFormPage() {
 											required
 											sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
 											value={form.additionalSpecifications.jobStartDate}
+											maxYearOffset={0}
 											onChange={(e) =>
 												updateAdditionalSpecs("jobStartDate", e.target.value)
 											}
@@ -359,7 +360,7 @@ export default function NewEmployeeFormPage() {
 									component={Link}
 									to={ROUTES.PROVINCE_EMPLOYEES.replace(
 										":provinceId",
-										provinceId || ""
+										provinceId || "",
 									)}
 									variant="outlined"
 									startIcon={<ArrowBackIcon sx={{ transform: "scaleX(-1)" }} />}
