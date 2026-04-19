@@ -20,6 +20,7 @@ import Breadcrumbs from "../components/Breadcrumbs";
 import { PersianDateInput } from "../components/PersianDateInput";
 import { toGregorianDate } from "../utils/dateUtils";
 import { useIsGlobalAdmin } from "../hooks/useAuth";
+import { PhoneField } from "../components/common/PhoneField";
 import type {
 	CreateEmployeeInput,
 	IBasicInfo,
@@ -313,6 +314,7 @@ export default function NewEmployeeFormPage() {
 											label="تاریخ تولد"
 											required
 											sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
+											maxYearOffset={18}
 											value={form.additionalSpecifications.dateOfBirth}
 											onChange={(e) =>
 												updateAdditionalSpecs("dateOfBirth", e.target.value)
@@ -320,11 +322,7 @@ export default function NewEmployeeFormPage() {
 										/>
 									</Box>
 									<Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
-										<TextField
-											label="شماره تماس"
-											required
-											inputProps={{ pattern: "\\d{11}" }}
-											sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
+										<PhoneField
 											value={form.additionalSpecifications.contactNumber}
 											onChange={(e) =>
 												updateAdditionalSpecs("contactNumber", e.target.value)
