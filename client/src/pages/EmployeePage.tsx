@@ -27,7 +27,7 @@ import { useEmployee } from "../hooks/useEmployee";
 import { usePerformanceManager } from "../hooks/usePerformanceManager";
 import { useApiMutation } from "../hooks/useApiMutation";
 import { useIsGlobalAdmin } from "../hooks/useAuth";
-import { useGlobalSettings } from "../hooks/useGlobalSettings";
+import { useProvince } from "../hooks/useProvince";
 import { formatEmployeeName } from "../utils/formatters";
 
 /**
@@ -39,7 +39,7 @@ import { formatEmployeeName } from "../utils/formatters";
  * - Edit employee basic info and additional specifications
  * - Manage performance records (view, add, edit, delete)
  * - Delete employee with confirmation
- * - Integration with global performance lock
+ * - Integration with province performance lock
  * - Automatic initialization of default performance data for new employees
  *
  * URL Parameters:
@@ -53,7 +53,7 @@ export default function EmployeePage() {
 	}>();
 	const navigate = useNavigate();
 	const { isGlobalAdmin } = useIsGlobalAdmin();
-	const { settings } = useGlobalSettings();
+	const { province } = useProvince(provinceId);
 	const { employee, loading, error, refetch } = useEmployee(
 		provinceId,
 		employeeId
@@ -193,6 +193,11 @@ export default function EmployeePage() {
 						{performanceSaveError}
 					</Alert>
 				)}
+				{province?.is_locked && (
+					<Alert severity="warning" sx={{ mb: 3 }}>
+						ویرایش عملکرد برای این استان در حال حاضر قفل شده است.
+					</Alert>
+				)}
 
 				<Stack spacing={3}>
 					{/* Employee Information Card */}
@@ -220,7 +225,7 @@ export default function EmployeePage() {
 										onChange={(e) =>
 											handlePerformanceChange("status", e.target.value)
 										}
-										disabled={settings?.performanceLocked}
+										disabled={province?.is_locked}
 									>
 										<MenuItem value="active">فعال</MenuItem>
 										<MenuItem value="inactive">غیرفعال</MenuItem>
@@ -234,7 +239,7 @@ export default function EmployeePage() {
 									disabled={
 										performanceSaving ||
 										!hasUnsavedChanges ||
-										settings?.performanceLocked
+										province?.is_locked
 									}
 									size="small"
 								>
@@ -247,7 +252,7 @@ export default function EmployeePage() {
 								performance={localPerformance}
 								onChange={handlePerformanceChange}
 								locked={
-									settings?.performanceLocked ||
+									province?.is_locked ||
 									localPerformance.status !== "active"
 								}
 							/>

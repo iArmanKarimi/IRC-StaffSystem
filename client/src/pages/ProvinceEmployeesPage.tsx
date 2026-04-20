@@ -28,7 +28,7 @@ import { SearchFilterBar } from "../components/SearchFilterBar";
 import { useEmployees } from "../hooks/useEmployees";
 import { useEmployeeFilters } from "../hooks/useEmployeeFilters";
 import { useIsGlobalAdmin } from "../hooks/useAuth";
-import { useGlobalSettings } from "../hooks/useGlobalSettings";
+import { useProvince } from "../hooks/useProvince";
 import { LoadingView } from "../components/states/LoadingView";
 import { ErrorView } from "../components/states/ErrorView";
 import { EmptyState } from "../components/states/EmptyState";
@@ -48,7 +48,7 @@ import { provinceApi } from "../api/api";
  * - Search and filter bar with multiple criteria
  * - Client-side performance metric filtering
  * - Excel export functionality
- * - Integration with global performance lock
+ * - Integration with province performance lock
  *
  * URL Parameters:
  * - provinceId: The province identifier
@@ -60,7 +60,7 @@ export default function ProvinceEmployeesPage() {
 	const { provinceId } = useParams<{ provinceId: string }>();
 	const navigate = useNavigate();
 	const { isGlobalAdmin } = useIsGlobalAdmin();
-	const { settings } = useGlobalSettings();
+	const { province } = useProvince(provinceId);
 	const theme = useTheme();
 
 	// Extract filtering and pagination logic to custom hook
@@ -94,7 +94,7 @@ export default function ProvinceEmployeesPage() {
 		provinceId,
 		page + 1,
 		limit,
-		serverFilters
+		serverFilters,
 	);
 
 	// Auto-close toast after 4 seconds
@@ -125,29 +125,30 @@ export default function ProvinceEmployeesPage() {
 		searchField,
 		searchTerm,
 		performanceMetric,
-		performanceValue
+		performanceValue,
 	);
 
 	// Extract province name from first employee if available
 	const provinceName =
-		employees.length > 0 &&
+		province?.name ||
+		(employees.length > 0 &&
 		typeof employees[0].provinceId === "object" &&
 		employees[0].provinceId?.name
 			? employees[0].provinceId.name
-			: null;
+			: null);
 
 	// Employee stats
 	const activeCount = employees.filter(
-		(e) => e.performance?.status === "active"
+		(e) => e.performance?.status === "active",
 	).length;
 	const inactiveCount = employees.filter(
-		(e) => e.performance?.status === "inactive"
+		(e) => e.performance?.status === "inactive",
 	).length;
 	const onLeaveCount = employees.filter(
-		(e) => e.performance?.status === "on_leave"
+		(e) => e.performance?.status === "on_leave",
 	).length;
 	const truckDriverCount = employees.filter(
-		(e) => e.additionalSpecifications?.truckDriver
+		(e) => e.additionalSpecifications?.truckDriver,
 	).length;
 
 	const handleExportProvinceEmployees = async () => {
@@ -161,8 +162,8 @@ export default function ProvinceEmployeesPage() {
 			link.setAttribute(
 				"download",
 				`employees_${provinceName || "province"}_${getTodayPersian(
-					"compact"
-				)}.xlsx`
+					"compact",
+				)}.xlsx`,
 			);
 			document.body.appendChild(link);
 			link.click();
@@ -172,7 +173,7 @@ export default function ProvinceEmployeesPage() {
 			setToastMessage(
 				`✅ خروجی ${
 					pagination?.total || employees.length
-				} کارمند با موفقیت انجام شد`
+				} کارمند با موفقیت انجام شد`,
 			);
 			setToastSeverity("success");
 			setToastOpen(true);
@@ -203,7 +204,7 @@ export default function ProvinceEmployeesPage() {
 			sortable: false,
 			renderCell: (params) => {
 				const rowIndex = filteredEmployees.findIndex(
-					(emp) => emp._id === params.row._id
+					(emp) => emp._id === params.row._id,
 				);
 				return rowIndex + 1 + page * limit;
 			},
@@ -244,8 +245,8 @@ export default function ProvinceEmployeesPage() {
 							employee.performance.status === "active"
 								? "success"
 								: employee.performance.status === "inactive"
-								? "error"
-								: "warning"
+									? "error"
+									: "warning"
 						}
 						size="small"
 						variant="outlined"
@@ -267,7 +268,7 @@ export default function ProvinceEmployeesPage() {
 				const employee = params.row as IEmployee;
 				const viewUrl = ROUTES.PROVINCE_EMPLOYEE_DETAIL.replace(
 					":provinceId",
-					provinceId || ""
+					provinceId || "",
 				).replace(":employeeId", params.row._id);
 				const perf = employee.performance;
 				const performanceSummary = perf ? (
@@ -478,10 +479,9 @@ export default function ProvinceEmployeesPage() {
 			<Container
 				sx={{ py: 2, display: "flex", flexDirection: "column", gap: 2 }}
 			>
-				{settings?.performanceLocked && (
+				{province?.is_locked && (
 					<Alert severity="warning" icon={<LockIcon />}>
-						ویرایش عملکرد در حال حاضر قفل شده است. کارمندان نمی‌توانند سوابق
-						عملکرد خود را تغییر دهند.
+						ویرایش عملکرد در حال حاضر قفل شده است.
 					</Alert>
 				)}
 
@@ -547,7 +547,7 @@ export default function ProvinceEmployeesPage() {
 							component={Link}
 							to={ROUTES.PROVINCE_EMPLOYEE_NEW.replace(
 								":provinceId",
-								provinceId || ""
+								provinceId || "",
 							)}
 							variant="contained"
 							color="secondary"

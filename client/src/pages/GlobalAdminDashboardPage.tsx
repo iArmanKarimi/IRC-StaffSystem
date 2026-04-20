@@ -23,18 +23,19 @@ import WarningIcon from "@mui/icons-material/Warning";
 import { ROUTES } from "../const/endpoints";
 import NavBar from "../components/NavBar";
 import { useProvinces } from "../hooks/useProvinces";
-import { useGlobalSettings } from "../hooks/useGlobalSettings";
 import { provinceApi, globalApi } from "../api/api";
 import { LoadingView } from "../components/states/LoadingView";
 import { ErrorView } from "../components/states/ErrorView";
 import { EmptyState } from "../components/states/EmptyState";
 import { useState, useEffect } from "react";
+import { CardActions } from "@mui/material";
 
 export default function GlobalAdminDashboardPage() {
 	const { provinces, loading, error, refetch } = useProvinces();
-	const { settings, togglePerformanceLock } = useGlobalSettings();
 	const [clearing, setClearing] = useState(false);
-	const [toggling, setToggling] = useState(false);
+	const [togglingProvinceId, setTogglingProvinceId] = useState<string | null>(
+		null,
+	);
 	const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
 	const [countdown, setCountdown] = useState(5);
 	const [toastOpen, setToastOpen] = useState(false);
@@ -71,7 +72,7 @@ export default function GlobalAdminDashboardPage() {
 			link.href = url;
 			link.setAttribute(
 				"download",
-				`employees_all_${new Date().toISOString().split("T")[0]}.xlsx`
+				`employees_all_${new Date().toISOString().split("T")[0]}.xlsx`,
 			);
 			document.body.appendChild(link);
 			link.click();
@@ -95,16 +96,21 @@ export default function GlobalAdminDashboardPage() {
 		setCountdown(5);
 	};
 
-	const handleToggleLockClick = async () => {
-		setToggling(true);
+	const handleToggleLockClick = async (
+		provinceId: string,
+		provinceName: string,
+		isLocked: boolean,
+	) => {
+		setTogglingProvinceId(provinceId);
 		setToastOpen(false);
 		try {
-			const response = await togglePerformanceLock();
-			const newStatus = response?.performanceLocked;
-
-			// Force update with new message and severity
+			const response = await provinceApi.toggleLock(provinceId);
+			const newStatus = response.data?.is_locked ?? !isLocked;
+			await refetch();
 			setToastMessage(
-				newStatus ? "🔒 ویرایش عملکرد قفل شد" : "🔓 ویرایش عملکرد باز شد"
+				newStatus
+					? `🔒 عملکرد استان ${provinceName} قفل شد`
+					: `🔓 عملکرد استان ${provinceName} باز شد`,
 			);
 			setToastSeverity(newStatus ? "warning" : "success");
 			setToastOpen(true);
@@ -118,7 +124,7 @@ export default function GlobalAdminDashboardPage() {
 			setToastSeverity("error");
 			setToastOpen(true);
 		} finally {
-			setToggling(false);
+			setTogglingProvinceId(null);
 		}
 	};
 
@@ -130,7 +136,7 @@ export default function GlobalAdminDashboardPage() {
 			setToastMessage(
 				`داده‌های عملکرد ${
 					response.data?.modifiedCount || 0
-				} کارمند با موفقیت بازنشانی شد`
+				} کارمند با موفقیت بازنشانی شد`,
 			);
 			setToastSeverity("success");
 			setToastOpen(true);
@@ -189,92 +195,12 @@ export default function GlobalAdminDashboardPage() {
 						alignItems="center"
 						sx={{ flexWrap: "wrap" }}
 					>
-						{/* Performance Lock Toggle */}
-						<Stack direction="row" alignItems="center" spacing={1}>
-							<Typography
-								variant="body2"
-								sx={{ fontWeight: 600, minWidth: "fit-content" }}
-							>
-								عملکرد:
-							</Typography>
-							<Box
-								sx={{
-									display: "flex",
-									border: "2px solid",
-									borderColor: "divider",
-									borderRadius: 1,
-									overflow: "hidden",
-								}}
-							>
-								<Button
-									onClick={handleToggleLockClick}
-									disabled={toggling}
-									sx={{
-										padding: "6px 16px",
-										minWidth: "auto",
-										color: !settings?.performanceLocked
-											? "primary.main"
-											: "text.secondary",
-										backgroundColor: !settings?.performanceLocked
-											? "action.selected"
-											: "transparent",
-										border: "none",
-										borderRadius: 0,
-										"&:hover": {
-											backgroundColor: !settings?.performanceLocked
-												? "action.selected"
-												: "action.hover",
-										},
-										"&:focus": {
-											outline: "none",
-										},
-										"&:focus-visible": {
-											outline: "none",
-										},
-									}}
-								>
-									<LockOpenIcon sx={{ fontSize: "1.25rem" }} />
-								</Button>
-								<Box sx={{ width: "1px", backgroundColor: "divider" }} />
-								<Button
-									onClick={handleToggleLockClick}
-									disabled={toggling}
-									sx={{
-										padding: "6px 16px",
-										minWidth: "auto",
-										color: settings?.performanceLocked
-											? "error.main"
-											: "text.secondary",
-										backgroundColor: settings?.performanceLocked
-											? "action.selected"
-											: "transparent",
-										border: "none",
-										borderRadius: 0,
-										"&:hover": {
-											backgroundColor: settings?.performanceLocked
-												? "action.selected"
-												: "action.hover",
-										},
-										"&:focus": {
-											outline: "none",
-										},
-										"&:focus-visible": {
-											outline: "none",
-										},
-									}}
-								>
-									<LockIcon sx={{ fontSize: "1.25rem" }} />
-								</Button>
-							</Box>
-						</Stack>
-
-						{/* Action Buttons */}
 						<Button
 							onClick={handleOpenClearDialog}
 							variant="outlined"
 							color="error"
 							startIcon={<DeleteSweepIcon />}
-							disabled={clearing || settings?.performanceLocked}
+							disabled={clearing}
 							size="small"
 						>
 							{clearing ? "در حال بازنشانی..." : "بازنشانی همه"}
@@ -286,7 +212,7 @@ export default function GlobalAdminDashboardPage() {
 							startIcon={<FileDownloadIcon />}
 							size="small"
 						>
-							خروجی همه
+							خروجی اکسل
 						</Button>
 					</Stack>
 				</Stack>
@@ -321,7 +247,7 @@ export default function GlobalAdminDashboardPage() {
 								component={Link}
 								to={ROUTES.PROVINCE_EMPLOYEES.replace(
 									":provinceId",
-									province._id
+									province._id,
 								)}
 								sx={{
 									height: "100%",
@@ -377,6 +303,32 @@ export default function GlobalAdminDashboardPage() {
 									</Typography>
 								</CardContent>
 							</CardActionArea>
+							<Box sx={{ p: 1, pt: 0 }} onClick={(e) => e.stopPropagation()}>
+								<Button
+									fullWidth
+									size="small"
+									variant={province.is_locked ? "outlined" : "contained"}
+									color={province.is_locked ? "success" : "info"}
+									startIcon={
+										province.is_locked ? <LockOpenIcon /> : <LockIcon />
+									}
+									onClick={(e) => {
+										e.stopPropagation();
+										handleToggleLockClick(
+											province._id,
+											province.name,
+											province.is_locked,
+										);
+									}}
+									disabled={togglingProvinceId === province._id}
+								>
+									{togglingProvinceId === province._id
+										? "در حال تغییر..."
+										: province.is_locked
+											? "باز کردن"
+											: "قفل کردن"}
+								</Button>
+							</Box>
 						</Card>
 					))}
 				</Box>

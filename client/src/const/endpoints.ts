@@ -14,11 +14,10 @@ export const API_ENDPOINTS = {
 	LOGOUT: "/auth/logout",
 	PROVINCES: "/provinces",
 	provinceById: (provinceId: string) => `/provinces/${provinceId}`,
+	toggleProvinceLock: (provinceId: string) => `/provinces/${provinceId}/toggle-lock`,
 	provinceEmployees: (provinceId: string) => `/provinces/${provinceId}/employees`,
 	provinceEmployeeById: (provinceId: string, employeeId: string) => `/provinces/${provinceId}/employees/${employeeId}`,
 	CLEAR_ALL_PERFORMANCES: "/employees/clear-performances",
-	GLOBAL_SETTINGS: "/global-settings",
-	TOGGLE_PERFORMANCE_LOCK: "/global-settings/toggle-performance-lock",
 	ADMIN_DASHBOARD_STATS: "/admin-dashboard/stats"
 } as const;
 

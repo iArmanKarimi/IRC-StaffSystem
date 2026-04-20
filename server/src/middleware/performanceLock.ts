@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { GlobalSettings } from "../models/GlobalSettings";
+import { Province } from "../models/Province";
 
 /**
- * Middleware to check if performance records are locked
+ * Middleware to check if a province's performance records are locked
  * Used before performance update/reset operations
- * Returns 423 Locked if performanceLocked is true
+ * Returns 423 Locked if the current province is locked
  */
 export const checkPerformanceLocked = async (
 	req: Request,
@@ -12,12 +12,18 @@ export const checkPerformanceLocked = async (
 	next: NextFunction
 ) => {
 	try {
-		const settings = await GlobalSettings.findOne({});
+		const { provinceId } = req.params;
 
-		if (settings?.performanceLocked) {
+		if (!provinceId) {
+			return next();
+		}
+
+		const province = await Province.findById(provinceId).select("is_locked");
+
+		if (province?.is_locked) {
 			return res.status(423).json({
 				success: false,
-				error: "Performance records are locked by global admin",
+				error: "Performance records are locked for this province",
 				code: "PERFORMANCE_LOCKED",
 			});
 		}

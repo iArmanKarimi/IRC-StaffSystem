@@ -118,5 +118,44 @@ describe('Province Routes', () => {
 
 			expect(response.status).toBe(400);
 		}, 15000);
+
+		it('should allow province admin to get own province details', async () => {
+			const response = await request(app)
+				.get(`/provinces/${testProvince._id}`)
+				.set('Cookie', provinceAdminCookie);
+
+			expect(response.status).toBe(200);
+			expect(response.body.success).toBe(true);
+			expect(response.body.data._id).toBe(testProvince._id.toString());
+		}, 15000);
+	});
+
+	describe('POST /provinces/:provinceId/toggle-lock', () => {
+		it('should toggle province lock as global admin', async () => {
+			const response = await request(app)
+				.post(`/provinces/${testProvince._id}/toggle-lock`)
+				.set('Cookie', globalAdminCookie);
+
+			expect(response.status).toBe(200);
+			expect(response.body.success).toBe(true);
+			expect(response.body.data.is_locked).toBe(true);
+		}, 15000);
+
+		it('should toggle province lock as province admin in own province', async () => {
+			const response = await request(app)
+				.post(`/provinces/${testProvince._id}/toggle-lock`)
+				.set('Cookie', provinceAdminCookie);
+
+			expect(response.status).toBe(200);
+			expect(response.body.success).toBe(true);
+			expect(response.body.data.is_locked).toBe(true);
+		}, 15000);
+
+		it('should require authentication', async () => {
+			const response = await request(app)
+				.post(`/provinces/${testProvince._id}/toggle-lock`);
+
+			expect(response.status).toBe(401);
+		}, 15000);
 	});
 });

@@ -99,6 +99,10 @@ export const provinceApi = {
 	 * @returns Province object
 	 */
 	get: (provinceId: string) => api.get<ApiResponse<Province>>(API_ENDPOINTS.provinceById(provinceId)).then(unwrap),
+	toggleLock: (provinceId: string) =>
+		api
+			.post<ApiResponse<Province>>(API_ENDPOINTS.toggleProvinceLock(provinceId), {})
+			.then(unwrap),
 
 	/**
 	 * List employees for a province with server-side filtering, sorting, and pagination

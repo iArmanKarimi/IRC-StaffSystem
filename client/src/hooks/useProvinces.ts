@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { provinceApi, type Province } from "../api/api";
 
 type UseProvincesResult = {
 	provinces: Province[];
 	loading: boolean;
 	error: string | null;
+	setProvinces: Dispatch<SetStateAction<Province[]>>;
 	refetch: () => Promise<void>;
 };
 
@@ -38,5 +39,5 @@ export function useProvinces(): UseProvincesResult {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	return { provinces, loading, error, refetch: fetchProvinces };
+	return { provinces, loading, error, setProvinces, refetch: fetchProvinces };
 }

@@ -65,6 +65,7 @@ export interface IProvince {
 	name: string;
 	admin: string | IUser;
 	employees: string[];
+	is_locked: boolean;
 	imageUrl?: string;
 }
 
@@ -74,14 +75,6 @@ export interface IUser {
 	username: string;
 	role: UserRoleType;
 	provinceId?: string | IProvince;
-}
-
-// Global Settings model
-export interface IGlobalSettings {
-	_id: string;
-	performanceLocked: boolean;
-	lastLockedBy?: IUser | string;
-	lockedAt?: Date | string;
 }
 
 // Form types for creating/updating

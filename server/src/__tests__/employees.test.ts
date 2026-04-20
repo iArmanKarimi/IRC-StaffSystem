@@ -226,4 +226,73 @@ describe('Employee Routes', () => {
 			expect(response.status).toBe(400);
 		}, 15000);
 	});
+
+	describe('PUT /provinces/:provinceId/employees/:employeeId', () => {
+		it('should update employee when province is unlocked', async () => {
+			const employee = await Employee.create({
+				provinceId: testProvince1._id,
+				...sampleEmployee,
+				performance: {
+					dailyPerformance: 1,
+					shiftCountPerLocation: 1,
+					shiftDuration: 8,
+					overtime: 0,
+					dailyLeave: 0,
+					sickLeave: 0,
+					absence: 0,
+					travelAssignment: 0,
+					status: 'active',
+					notes: '',
+				},
+			});
+
+			const response = await request(app)
+				.put(`/provinces/${testProvince1._id}/employees/${employee._id}`)
+				.set('Cookie', provinceAdminCookie)
+				.send({
+					performance: {
+						...employee.performance,
+						dailyPerformance: 9,
+					},
+				});
+
+			expect(response.status).toBe(200);
+			expect(response.body.success).toBe(true);
+			expect(response.body.data.performance.dailyPerformance).toBe(9);
+		}, 15000);
+
+		it('should block employee updates when the province is locked', async () => {
+			const employee = await Employee.create({
+				provinceId: testProvince1._id,
+				...sampleEmployee,
+				performance: {
+					dailyPerformance: 1,
+					shiftCountPerLocation: 1,
+					shiftDuration: 8,
+					overtime: 0,
+					dailyLeave: 0,
+					sickLeave: 0,
+					absence: 0,
+					travelAssignment: 0,
+					status: 'active',
+					notes: '',
+				},
+			});
+
+			await Province.findByIdAndUpdate(testProvince1._id, { is_locked: true });
+
+			const response = await request(app)
+				.put(`/provinces/${testProvince1._id}/employees/${employee._id}`)
+				.set('Cookie', provinceAdminCookie)
+				.send({
+					performance: {
+						...employee.performance,
+						dailyPerformance: 9,
+					},
+				});
+
+			expect(response.status).toBe(423);
+			expect(response.body.code).toBe('PERFORMANCE_LOCKED');
+		}, 15000);
+	});
 });
