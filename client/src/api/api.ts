@@ -106,6 +106,16 @@ export const provinceApi = {
 		api
 			.post<ApiResponse<Province>>(API_ENDPOINTS.toggleProvinceLock(provinceId), {})
 			.then(unwrap),
+	setAllLocks: (locked: boolean) =>
+		api
+			.post<
+				ApiResponse<{
+					matchedCount: number;
+					modifiedCount: number;
+					provinces: Province[];
+				}>
+			>(API_ENDPOINTS.bulkProvinceLock, { locked })
+			.then(unwrap),
 
 	/**
 	 * List employees for a province with server-side filtering, sorting, and pagination

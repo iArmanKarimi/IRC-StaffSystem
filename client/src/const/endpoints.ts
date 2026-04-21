@@ -14,6 +14,7 @@ export const API_ENDPOINTS = {
 	LOGOUT: "/auth/logout",
 	ME: "/auth/me",
 	PROVINCES: "/provinces",
+	bulkProvinceLock: "/provinces/bulk-lock",
 	provinceById: (provinceId: string) => `/provinces/${provinceId}`,
 	toggleProvinceLock: (provinceId: string) => `/provinces/${provinceId}/toggle-lock`,
 	provinceEmployees: (provinceId: string) => `/provinces/${provinceId}/employees`,

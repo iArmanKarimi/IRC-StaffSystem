@@ -36,6 +36,7 @@ export default function GlobalAdminDashboardPage() {
 	const [togglingProvinceId, setTogglingProvinceId] = useState<string | null>(
 		null,
 	);
+	const [bulkLocking, setBulkLocking] = useState<"lock" | "unlock" | null>(null);
 	const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
 	const [countdown, setCountdown] = useState(5);
 	const [toastOpen, setToastOpen] = useState(false);
@@ -155,6 +156,33 @@ export default function GlobalAdminDashboardPage() {
 		}
 	};
 
+	const handleBulkProvinceLock = async (locked: boolean) => {
+		setBulkLocking(locked ? "lock" : "unlock");
+		setToastOpen(false);
+		try {
+			const response = await provinceApi.setAllLocks(locked);
+			await refetch();
+			setToastMessage(
+				locked
+					? `🔒 همه استان‌ها قفل شدند (${response.data?.modifiedCount || 0} تغییر)`
+					: `🔓 همه استان‌ها باز شدند (${response.data?.modifiedCount || 0} تغییر)`,
+			);
+			setToastSeverity(locked ? "warning" : "success");
+			setToastOpen(true);
+		} catch (err: any) {
+			const errorMessage =
+				err?.response?.data?.error ||
+				err?.response?.data?.message ||
+				err?.message ||
+				"تغییر وضعیت همه استان‌ها ناموفق بود";
+			setToastMessage(`❌ ${errorMessage}`);
+			setToastSeverity("error");
+			setToastOpen(true);
+		} finally {
+			setBulkLocking(null);
+		}
+	};
+
 	if (loading) {
 		return <LoadingView title="استان‌ها - مدیر کل" />;
 	}
@@ -195,6 +223,28 @@ export default function GlobalAdminDashboardPage() {
 						alignItems="center"
 						sx={{ flexWrap: "wrap" }}
 					>
+						<Button
+							onClick={() => handleBulkProvinceLock(true)}
+							variant="outlined"
+							color="warning"
+							startIcon={<LockIcon />}
+							disabled={bulkLocking !== null}
+							size="small"
+						>
+							{bulkLocking === "lock" ? "در حال قفل کردن..." : "قفل کردن همه"}
+						</Button>
+						<Button
+							onClick={() => handleBulkProvinceLock(false)}
+							variant="outlined"
+							color="success"
+							startIcon={<LockOpenIcon />}
+							disabled={bulkLocking !== null}
+							size="small"
+						>
+							{bulkLocking === "unlock"
+								? "در حال باز کردن..."
+								: "باز کردن همه"}
+						</Button>
 						<Button
 							onClick={handleOpenClearDialog}
 							variant="outlined"

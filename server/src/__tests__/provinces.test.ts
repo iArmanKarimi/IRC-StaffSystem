@@ -158,4 +158,39 @@ describe('Province Routes', () => {
 			expect(response.status).toBe(401);
 		}, 15000);
 	});
+
+	describe('POST /provinces/bulk-lock', () => {
+		it('should lock all provinces as global admin', async () => {
+			const response = await request(app)
+				.post('/provinces/bulk-lock')
+				.set('Cookie', globalAdminCookie)
+				.send({ locked: true });
+
+			expect(response.status).toBe(200);
+			expect(response.body.success).toBe(true);
+			expect(response.body.data.provinces.every((province: any) => province.is_locked)).toBe(true);
+		}, 15000);
+
+		it('should unlock all provinces as global admin', async () => {
+			await Province.updateMany({}, { is_locked: true });
+
+			const response = await request(app)
+				.post('/provinces/bulk-lock')
+				.set('Cookie', globalAdminCookie)
+				.send({ locked: false });
+
+			expect(response.status).toBe(200);
+			expect(response.body.success).toBe(true);
+			expect(response.body.data.provinces.every((province: any) => !province.is_locked)).toBe(true);
+		}, 15000);
+
+		it('should reject province admin access', async () => {
+			const response = await request(app)
+				.post('/provinces/bulk-lock')
+				.set('Cookie', provinceAdminCookie)
+				.send({ locked: true });
+
+			expect(response.status).toBe(403);
+		}, 15000);
+	});
 });

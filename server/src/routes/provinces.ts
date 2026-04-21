@@ -131,6 +131,43 @@ router.post("/:provinceId/toggle-lock", validateProvinceId, requireAnyRole, asyn
 	}
 });
 
+// POST /provinces/bulk-lock - Lock or unlock all provinces (Global Admin only)
+router.post("/bulk-lock", auth(USER_ROLE.GLOBAL_ADMIN), async (req: Request, res: Response, next: NextFunction) => {
+	try {
+		const shouldLock = req.body?.locked;
+
+		if (typeof shouldLock !== "boolean") {
+			throw new HttpError(400, "locked must be a boolean");
+		}
+
+		const result = await Province.updateMany({}, { $set: { is_locked: shouldLock } });
+		const provinces = await Province.find().populate({
+			path: 'admin',
+			select: '_id username role provinceId'
+		});
+
+		logger.info("Province performance locks updated in bulk", {
+			locked: shouldLock,
+			matchedCount: result.matchedCount,
+			modifiedCount: result.modifiedCount,
+			userId: req.user?.id,
+		});
+
+		sendSuccess(
+			res,
+			{
+				matchedCount: result.matchedCount,
+				modifiedCount: result.modifiedCount,
+				provinces: provinces.map((province) => withImageUrl(province, req)),
+			},
+			200,
+			"Province locks updated successfully",
+		);
+	} catch (err: unknown) {
+		next(err);
+	}
+});
+
 // Mount employee routes as nested routes
 import employeeRoutes from './employees';
 router.use('/:provinceId/employees', employeeRoutes);
