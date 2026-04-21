@@ -131,7 +131,7 @@ router.delete("/clear-performances", auth(USER_ROLE.GLOBAL_ADMIN), async (req: R
 			{
 				$set: {
 					"performance.dailyPerformance": 0,
-					"performance.shiftCountPerLocation": 0,
+					"performance.shiftCountPerLocation": 24,
 					"performance.shiftDuration": 8,
 					"performance.overtime": 0,
 					"performance.dailyLeave": 0,

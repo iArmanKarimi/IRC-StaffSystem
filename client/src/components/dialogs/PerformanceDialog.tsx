@@ -12,6 +12,9 @@ import { FormDialog } from "./FormDialog";
 import type { IPerformance } from "../../types/models";
 import {
 	performanceNumberFieldGroups,
+	getShiftCountFromDuration,
+	getShiftDurationFromCount,
+	shiftCountPerLocationOptions,
 	shiftDurationOptions,
 } from "../common/performanceFields";
 
@@ -38,10 +41,31 @@ export function PerformanceDialog({
 		field: keyof IPerformance,
 		value: IPerformance[keyof IPerformance]
 	) => {
-		setFormData((prev) => ({
-			...prev,
-			[field]: value,
-		}));
+		setFormData((prev) => {
+			if (field === "shiftDuration") {
+				return {
+					...prev,
+					shiftDuration: value as IPerformance["shiftDuration"],
+					shiftCountPerLocation: getShiftCountFromDuration(
+						value as IPerformance["shiftDuration"],
+					),
+				};
+			}
+
+			if (field === "shiftCountPerLocation") {
+				const shiftDuration = getShiftDurationFromCount(value as number);
+				return {
+					...prev,
+					shiftCountPerLocation: value as number,
+					...(shiftDuration ? { shiftDuration } : {}),
+				};
+			}
+
+			return {
+				...prev,
+				[field]: value,
+			};
+		});
 	};
 
 	const handleSave = async () => {
@@ -87,25 +111,47 @@ export function PerformanceDialog({
 					</Box>
 				))}
 
-				<FormControl
-					sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
-					required
-				>
-					<InputLabel>مدت شیفت</InputLabel>
-					<Select
-						value={formData.shiftDuration}
-						label="مدت شیفت"
-						onChange={(e) =>
-							handleFieldChange("shiftDuration", Number(e.target.value))
-						}
+				<Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+					<FormControl
+						sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
+						required
 					>
-						{shiftDurationOptions.map((option) => (
-							<MenuItem key={option.value} value={option.value}>
-								{option.label}
-							</MenuItem>
-						))}
-					</Select>
-				</FormControl>
+						<InputLabel>تعداد شیفت در هر مکان</InputLabel>
+						<Select
+							value={formData.shiftCountPerLocation}
+							label="تعداد شیفت در هر مکان"
+							onChange={(e) =>
+								handleFieldChange("shiftCountPerLocation", Number(e.target.value))
+							}
+						>
+							{shiftCountPerLocationOptions.map((option) => (
+								<MenuItem key={option.value} value={option.value}>
+									{option.label}
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
+
+					<FormControl
+						sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
+						required
+					>
+						<InputLabel>مدت شیفت</InputLabel>
+						<Select
+							value={formData.shiftDuration}
+							label="مدت شیفت"
+							onChange={(e) =>
+								handleFieldChange("shiftDuration", Number(e.target.value))
+							}
+						>
+							{shiftDurationOptions.map((option) => (
+								<MenuItem key={option.value} value={option.value}>
+									{option.label}
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
+				</Box>
 
 				<TextField
 					label="یادداشت‌ها"

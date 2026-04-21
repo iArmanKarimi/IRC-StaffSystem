@@ -104,8 +104,8 @@ async function seedEmployees() {
 				gregorianJob.gd,
 			);
 			const dailyPerformance = 5 + (i % 6);
-			const shiftCountPerLocation = 1 + (i % 3);
-			const shiftDuration = [8, 16, 24][i % 3];
+			const shiftDuration = [8, 12, 16, 24][i % 4];
+			const shiftCountPerLocation = [24, 16, 12, 8][i % 4];
 			const overtime = i % 4;
 			const dailyLeave = i % 2;
 			const sickLeave = (i + 1) % 3;

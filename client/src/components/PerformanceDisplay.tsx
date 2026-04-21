@@ -13,6 +13,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import type { IPerformance } from "../types/models";
 import {
 	performanceNumberFieldGroups,
+	shiftCountPerLocationOptions,
 	shiftDurationOptions,
 } from "./common/performanceFields";
 
@@ -56,24 +57,47 @@ const PerformanceDisplay: React.FC<PerformanceDisplayProps> = ({
 				</Box>
 			))}
 
-			<FormControl
-				sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
-				required
-				disabled={locked}
-			>
-				<InputLabel>مدت شیفت</InputLabel>
-				<Select
-					value={performance.shiftDuration}
-					label="مدت شیفت"
-					onChange={(e) => onChange("shiftDuration", Number(e.target.value))}
+			<Box sx={{ display: "flex", gap: 2.5, flexWrap: "wrap" }}>
+				<FormControl
+					sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
+					required
+					disabled={locked}
 				>
-					{shiftDurationOptions.map((option) => (
-						<MenuItem key={option.value} value={option.value}>
-							{option.label}
-						</MenuItem>
-					))}
-				</Select>
-			</FormControl>
+					<InputLabel>تعداد شیفت در هر مکان</InputLabel>
+					<Select
+						value={performance.shiftCountPerLocation}
+						label="تعداد شیفت در هر مکان"
+						onChange={(e) =>
+							onChange("shiftCountPerLocation", Number(e.target.value))
+						}
+					>
+						{shiftCountPerLocationOptions.map((option) => (
+							<MenuItem key={option.value} value={option.value}>
+								{option.label}
+							</MenuItem>
+						))}
+					</Select>
+				</FormControl>
+
+				<FormControl
+					sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
+					required
+					disabled={locked}
+				>
+					<InputLabel>مدت شیفت</InputLabel>
+					<Select
+						value={performance.shiftDuration}
+						label="مدت شیفت"
+						onChange={(e) => onChange("shiftDuration", Number(e.target.value))}
+					>
+						{shiftDurationOptions.map((option) => (
+							<MenuItem key={option.value} value={option.value}>
+								{option.label}
+							</MenuItem>
+						))}
+					</Select>
+				</FormControl>
+			</Box>
 
 			<TextField
 				label="یادداشت‌ها"

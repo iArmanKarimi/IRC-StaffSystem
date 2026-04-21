@@ -15,7 +15,10 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import type { IPerformance } from "../types/models";
 import {
+	getShiftCountFromDuration,
+	getShiftDurationFromCount,
 	performanceNumberFieldGroups,
+	shiftCountPerLocationOptions,
 	shiftDurationOptions,
 	performanceStatusOptions,
 } from "./common/performanceFields";
@@ -31,6 +34,21 @@ const PerformanceAccordion: React.FC<PerformanceAccordionProps> = ({
 	index,
 	onChange,
 }) => {
+	const handleChange = (key: keyof IPerformance, value: any) => {
+		onChange(key, value);
+
+		if (key === "shiftDuration") {
+			onChange("shiftCountPerLocation", getShiftCountFromDuration(value));
+		}
+
+		if (key === "shiftCountPerLocation") {
+			const shiftDuration = getShiftDurationFromCount(value);
+			if (shiftDuration) {
+				onChange("shiftDuration", shiftDuration);
+			}
+		}
+	};
+
 	return (
 		<Accordion defaultExpanded={index === 0}>
 			<AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -52,31 +70,51 @@ const PerformanceAccordion: React.FC<PerformanceAccordionProps> = ({
 									inputProps={{ min: field.min, max: field.max }}
 									sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
 									value={performance[field.key] as number}
-									onChange={(e) => onChange(field.key, Number(e.target.value))}
+									onChange={(e) => handleChange(field.key, Number(e.target.value))}
 								/>
 							))}
 						</Box>
 					))}
 
-					<FormControl
-						sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
-						required
-					>
-						<InputLabel>مدت شیفت</InputLabel>
-						<Select
-							value={performance.shiftDuration}
-							label="مدت شیفت"
-							onChange={(e) =>
-								onChange("shiftDuration", Number(e.target.value))
-							}
+					<Box sx={{ display: "flex", gap: 2.5, flexWrap: "wrap" }}>
+						<FormControl
+							sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
+							required
 						>
-							{shiftDurationOptions.map((option) => (
-								<MenuItem key={option.value} value={option.value}>
-									{option.label}
-								</MenuItem>
-							))}
-						</Select>
-					</FormControl>
+							<InputLabel>تعداد شیفت در هر مکان</InputLabel>
+							<Select
+								value={performance.shiftCountPerLocation}
+								label="تعداد شیفت در هر مکان"
+								onChange={(e) =>
+									handleChange("shiftCountPerLocation", Number(e.target.value))
+								}
+							>
+								{shiftCountPerLocationOptions.map((option) => (
+									<MenuItem key={option.value} value={option.value}>
+										{option.label}
+									</MenuItem>
+								))}
+							</Select>
+						</FormControl>
+
+						<FormControl
+							sx={{ flex: "1 1 calc(50% - 12px)", minWidth: 200 }}
+							required
+						>
+							<InputLabel>مدت شیفت</InputLabel>
+							<Select
+								value={performance.shiftDuration}
+								label="مدت شیفت"
+								onChange={(e) => handleChange("shiftDuration", Number(e.target.value))}
+							>
+								{shiftDurationOptions.map((option) => (
+									<MenuItem key={option.value} value={option.value}>
+										{option.label}
+									</MenuItem>
+								))}
+							</Select>
+						</FormControl>
+					</Box>
 					<FormControl fullWidth>
 						<InputLabel>وضعیت</InputLabel>
 						<Select

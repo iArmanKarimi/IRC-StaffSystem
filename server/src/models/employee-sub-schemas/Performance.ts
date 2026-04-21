@@ -16,7 +16,7 @@ export interface IPerformance {
 export const PerformanceSchema = new Schema<IPerformance>({
 	dailyPerformance: { type: Number, required: true, min: 0 },
 	shiftCountPerLocation: { type: Number, required: true, min: 0 },
-	shiftDuration: { type: Number, required: true, enum: [8, 16, 24] },
+	shiftDuration: { type: Number, required: true, enum: [8, 12, 16, 24] },
 	overtime: { type: Number, default: 0, min: 0 },
 	dailyLeave: { type: Number, default: 0, min: 0 },
 	sickLeave: { type: Number, default: 0, min: 0 },

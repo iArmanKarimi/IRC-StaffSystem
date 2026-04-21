@@ -26,7 +26,9 @@ import type {
 	IBasicInfo,
 	IWorkPlace,
 	IAdditionalSpecifications,
+	IPerformance,
 } from "../types/models";
+import { FormControl, FormLabel, Radio, RadioGroup } from "@mui/material";
 
 // Form uses string for dates (Persian format), will be converted to Date before submission
 type FormAdditionalSpecifications = Omit<
@@ -42,6 +44,7 @@ type EmployeeFormData = {
 	basicInfo: IBasicInfo;
 	workPlace: IWorkPlace;
 	additionalSpecifications: FormAdditionalSpecifications;
+	performance: IPerformance;
 };
 
 export default function NewEmployeeFormPage() {
@@ -70,6 +73,18 @@ export default function NewEmployeeFormPage() {
 			jobEndDate: undefined,
 			truckDriver: false,
 		},
+		performance: {
+			status: "active",
+			dailyPerformance: 0,
+			shiftCountPerLocation: 24,
+			shiftDuration: 8,
+			overtime: 0,
+			dailyLeave: 0,
+			sickLeave: 0,
+			absence: 0,
+			travelAssignment: 0,
+			notes: "",
+		},
 	});
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -93,7 +108,7 @@ export default function NewEmployeeFormPage() {
 
 	const updateAdditionalSpecs = (
 		key: keyof IAdditionalSpecifications,
-		value: string,
+		value: string | boolean,
 	) => {
 		setForm((prev) => ({
 			...prev,
@@ -101,6 +116,16 @@ export default function NewEmployeeFormPage() {
 				...prev.additionalSpecifications,
 				[key]: value,
 			},
+		}));
+	};
+
+	const updatePerformance = (
+		key: keyof IPerformance,
+		value: IPerformance[keyof IPerformance],
+	) => {
+		setForm((prev) => ({
+			...prev,
+			performance: { ...prev.performance, [key]: value },
 		}));
 	};
 
@@ -144,6 +169,7 @@ export default function NewEmployeeFormPage() {
 				basicInfo: form.basicInfo,
 				workPlace: form.workPlace,
 				additionalSpecifications: additionalSpecs,
+				performance: form.performance,
 			};
 			await provinceApi.createEmployee(provinceId, payload);
 			navigate(ROUTES.PROVINCE_EMPLOYEES.replace(":provinceId", provinceId), {
@@ -339,16 +365,67 @@ export default function NewEmployeeFormPage() {
 											}
 										/>
 									</Box>
-									<Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
-										<PersianDateInput
-											label="تاریخ پایان کار"
-											sx={{ flex: "1 1 calc(50% - 8px)", minWidth: 200 }}
-											value={form.additionalSpecifications.jobEndDate || ""}
-											onChange={(e) =>
-												updateAdditionalSpecs("jobEndDate", e.target.value)
-											}
-											maxYearOffset={0}
-										/>
+									<Box>
+										<FormControl required>
+											<FormLabel id="truck-driver-radio-buttons">
+												راننده کامیون سنگین؟
+											</FormLabel>
+											<RadioGroup
+												row
+												aria-labelledby="truck-driver-radio-buttons"
+												value={String(
+													form.additionalSpecifications.truckDriver,
+												)}
+												onChange={(e) =>
+													updateAdditionalSpecs(
+														"truckDriver",
+														e.target.value === "true",
+													)
+												}
+												name="truck-driver-radio-buttons"
+											>
+												<FormControlLabel
+													value="true"
+													control={<Radio />}
+													label="بله"
+												/>
+												<FormControlLabel
+													value="false"
+													control={<Radio />}
+													label="خیر"
+												/>
+											</RadioGroup>
+										</FormControl>
+									</Box>
+									<Box>
+										<FormControl required>
+											<FormLabel id="status-radio-buttons">وضعیت</FormLabel>
+											<RadioGroup
+												row
+												aria-labelledby="status-radio-buttons"
+												value={form.performance.status}
+												onChange={(e) =>
+													updatePerformance("status", e.target.value as IPerformance["status"])
+												}
+												name="status-radio-buttons"
+											>
+												<FormControlLabel
+													value="active"
+													control={<Radio />}
+													label="فعال"
+												/>
+												<FormControlLabel
+													value="inactive"
+													control={<Radio />}
+													label="غیرفعال"
+												/>
+												<FormControlLabel
+													value="on_leave"
+													control={<Radio />}
+													label="در مرخصی"
+												/>
+											</RadioGroup>
+										</FormControl>
 									</Box>
 								</Stack>
 							</Box>

@@ -65,7 +65,7 @@ export function PerformanceManager({
 	const handleAddClick = () => {
 		setPerformanceData({
 			dailyPerformance: 0,
-			shiftCountPerLocation: 0,
+			shiftCountPerLocation: 24,
 			shiftDuration: 8,
 			overtime: 0,
 			dailyLeave: 0,

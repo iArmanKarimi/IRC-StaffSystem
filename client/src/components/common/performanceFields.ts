@@ -3,7 +3,6 @@ import type { IPerformance } from "../../types/models";
 export type PerformanceNumberFieldKey = keyof Pick<
 	IPerformance,
 	| "dailyPerformance"
-	| "shiftCountPerLocation"
 	| "overtime"
 	| "dailyLeave"
 	| "sickLeave"
@@ -32,15 +31,6 @@ export const performanceNumberFieldGroups: PerformanceNumberField[][] = [
 			max: 31,
 			required: true,
 		},
-		{
-			key: "shiftCountPerLocation",
-			label: "تعداد شیفت در هر مکان",
-			min: 0,
-			max: 31,
-			required: true,
-		},
-	],
-	[
 		{
 			key: "overtime",
 			label: "اضافه کاری",
@@ -82,8 +72,42 @@ export const shiftDurationOptions: Array<{
 	label: string;
 }> = [
 	{ value: 8, label: "8 ساعت" },
+	{ value: 12, label: "12 ساعت" },
 	{ value: 16, label: "16 ساعت" },
 	{ value: 24, label: "24 ساعت" },
+];
+
+const shiftDurationToCountMap: Record<IPerformance["shiftDuration"], number> = {
+	8: 24,
+	12: 16,
+	16: 12,
+	24: 8,
+};
+
+const shiftCountToDurationMap: Record<number, IPerformance["shiftDuration"]> = {
+	8: 24,
+	12: 16,
+	16: 12,
+	24: 8,
+};
+
+export const getShiftCountFromDuration = (
+	shiftDuration: IPerformance["shiftDuration"],
+): number => shiftDurationToCountMap[shiftDuration];
+
+export const getShiftDurationFromCount = (
+	shiftCountPerLocation: number,
+): IPerformance["shiftDuration"] | null =>
+	shiftCountToDurationMap[shiftCountPerLocation] ?? null;
+
+export const shiftCountPerLocationOptions: Array<{
+	value: number;
+	label: string;
+}> = [
+	{ value: 24, label: "24 شیفت" },
+	{ value: 16, label: "16 شیفت" },
+	{ value: 12, label: "12 شیفت" },
+	{ value: 8, label: "8 شیفت" },
 ];
 
 export const performanceStatusOptions: Array<{

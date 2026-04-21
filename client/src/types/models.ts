@@ -37,7 +37,7 @@ export interface IAdditionalSpecifications {
 export interface IPerformance {
 	dailyPerformance: number;
 	shiftCountPerLocation: number;
-	shiftDuration: 8 | 16 | 24;
+	shiftDuration: 8 | 12 | 16 | 24;
 	overtime: number;
 	dailyLeave: number;
 	sickLeave: number;

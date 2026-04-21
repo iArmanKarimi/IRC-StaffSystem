@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { provinceApi } from "../api/api";
 import type { IPerformance } from "../types/models";
+import {
+	getShiftCountFromDuration,
+	getShiftDurationFromCount,
+} from "../components/common/performanceFields";
 
 /**
  * Custom hook to manage employee performance data and operations
@@ -52,12 +56,12 @@ export function usePerformanceManager(
 				status: "active",
 				dailyPerformance: 0,
 				shiftDuration: 8,
+				shiftCountPerLocation: 24,
 				overtime: 0,
 				dailyLeave: 0,
 				sickLeave: 0,
 				absence: 0,
 				travelAssignment: 0,
-				shiftCountPerLocation: 0,
 				notes: "",
 			});
 			setHasUnsavedChanges(false);
@@ -72,6 +76,23 @@ export function usePerformanceManager(
 
 		setLocalPerformance((prev) => {
 			if (!prev) return prev;
+			if (key === "shiftDuration") {
+				return {
+					...prev,
+					shiftDuration: value,
+					shiftCountPerLocation: getShiftCountFromDuration(value),
+				};
+			}
+
+			if (key === "shiftCountPerLocation") {
+				const shiftDuration = getShiftDurationFromCount(value);
+				return {
+					...prev,
+					shiftCountPerLocation: value,
+					...(shiftDuration ? { shiftDuration } : {}),
+				};
+			}
+
 			return { ...prev, [key]: value };
 		});
 		setHasUnsavedChanges(true);
