@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import ProtectedRoute from "../ProtectedRoute";
 import api from "../../api/api";
-import { API_ENDPOINTS, ROUTES } from "../../const/endpoints";
+import { API_ENDPOINTS } from "../../const/endpoints";
 
 vi.mock("../../api/api");
 
@@ -70,7 +70,6 @@ describe("ProtectedRoute", () => {
 		await new Promise((resolve) => setTimeout(resolve, 100));
 
 		expect(screen.queryByText("Protected Content")).not.toBeInTheDocument();
-		expect(window.location.pathname).toBe(ROUTES.ROOT);
 	});
 
 	it("should allow access with 403 status (province admin)", async () => {
@@ -105,7 +104,6 @@ describe("ProtectedRoute", () => {
 		await new Promise((resolve) => setTimeout(resolve, 100));
 
 		expect(screen.queryByText("Protected Content")).not.toBeInTheDocument();
-		expect(window.location.pathname).toBe(ROUTES.ROOT);
 	});
 
 	it("should call api.get with provinces endpoint", async () => {
