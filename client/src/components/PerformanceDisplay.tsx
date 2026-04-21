@@ -31,8 +31,7 @@ const PerformanceDisplay: React.FC<PerformanceDisplayProps> = ({
 		<Stack spacing={2.5}>
 			{locked && (
 				<Alert severity="warning" icon={<LockIcon />}>
-					سوابق عملکرد در حال حاضر قفل شده است. شما نمی‌توانید در این زمان
-					تغییراتی ایجاد کنید.
+					سوابق عملکرد در حال حاضر قابل ویرایش نمی باشد.
 				</Alert>
 			)}
 
@@ -80,10 +79,11 @@ const PerformanceDisplay: React.FC<PerformanceDisplayProps> = ({
 				label="یادداشت‌ها"
 				multiline
 				rows={3}
+				disabled={locked}
 				fullWidth
 				value={performance.notes ?? ""}
 				onChange={(e) => onChange("notes", e.target.value)}
-				placeholder="یادداشت‌های اضافی را اضافه کنید..."
+				placeholder="یادداشت‌های اضافی را بنویسید..."
 			/>
 		</Stack>
 	);

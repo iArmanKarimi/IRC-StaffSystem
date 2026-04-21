@@ -64,6 +64,7 @@ export const performanceNumberFieldGroups: PerformanceNumberField[][] = [
 			key: "absence",
 			label: "غیبت",
 			min: 0,
+			max: 31,
 		},
 	],
 	[
@@ -71,11 +72,15 @@ export const performanceNumberFieldGroups: PerformanceNumberField[][] = [
 			key: "travelAssignment",
 			label: "ماموریت سفر",
 			min: 0,
+			max: 31,
 		},
 	],
 ];
 
-export const shiftDurationOptions: Array<{ value: IPerformance["shiftDuration"]; label: string }> = [
+export const shiftDurationOptions: Array<{
+	value: IPerformance["shiftDuration"];
+	label: string;
+}> = [
 	{ value: 8, label: "8 ساعت" },
 	{ value: 16, label: "16 ساعت" },
 	{ value: 24, label: "24 ساعت" },
@@ -85,7 +90,7 @@ export const performanceStatusOptions: Array<{
 	value: IPerformance["status"];
 	label: string;
 }> = [
-		{ value: "active", label: "فعال" },
-		{ value: "inactive", label: "غیرفعال" },
-		{ value: "on_leave", label: "در مرخصی" },
-	];
+	{ value: "active", label: "فعال" },
+	{ value: "inactive", label: "غیرفعال" },
+	{ value: "on_leave", label: "در مرخصی" },
+];

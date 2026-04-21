@@ -56,7 +56,7 @@ export default function EmployeePage() {
 	const { province } = useProvince(provinceId);
 	const { employee, loading, error, refetch } = useEmployee(
 		provinceId,
-		employeeId
+		employeeId,
 	);
 
 	// Extract performance management logic to custom hook
@@ -71,14 +71,14 @@ export default function EmployeePage() {
 		provinceId,
 		employeeId,
 		employee?.performance,
-		refetch
+		refetch,
 	);
 
 	const { mutate: deleteEmployee, loading: deleting } = useApiMutation(
 		async () => {
 			if (!provinceId || !employeeId) throw new Error("Missing identifiers");
 			return await provinceApi.deleteEmployee(provinceId, employeeId);
-		}
+		},
 	);
 
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -107,7 +107,7 @@ export default function EmployeePage() {
 			const res = await provinceApi.updateEmployee(
 				provinceId,
 				employeeId,
-				data
+				data,
 			);
 			if (!res.success || !res.data) {
 				console.error("Failed to update employee:", res.error);
@@ -167,6 +167,7 @@ export default function EmployeePage() {
 					}}
 				>
 					<Button
+						disabled={province?.is_locked}
 						variant="contained"
 						color="primary"
 						startIcon={<EditIcon />}
@@ -177,6 +178,7 @@ export default function EmployeePage() {
 						ویرایش کارمند
 					</Button>
 					<Button
+						disabled={province?.is_locked}
 						variant="contained"
 						color="error"
 						startIcon={<DeleteIcon />}
@@ -195,7 +197,7 @@ export default function EmployeePage() {
 				)}
 				{province?.is_locked && (
 					<Alert severity="warning" sx={{ mb: 3 }}>
-						ویرایش عملکرد برای این استان در حال حاضر قفل شده است.
+						ویرایش عملکرد برای این استان در حال حاضر امکان پذیر نمی باشد.
 					</Alert>
 				)}
 
@@ -252,8 +254,7 @@ export default function EmployeePage() {
 								performance={localPerformance}
 								onChange={handlePerformanceChange}
 								locked={
-									province?.is_locked ||
-									localPerformance.status !== "active"
+									province?.is_locked || localPerformance.status !== "active"
 								}
 							/>
 						) : (
