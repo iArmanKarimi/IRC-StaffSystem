@@ -142,13 +142,15 @@ describe('Province Routes', () => {
 		}, 15000);
 
 		it('should toggle province lock as province admin in own province', async () => {
+			const provinceBefore = await Province.findById(testProvince._id);
+
 			const response = await request(app)
 				.post(`/provinces/${testProvince._id}/toggle-lock`)
 				.set('Cookie', provinceAdminCookie);
 
 			expect(response.status).toBe(200);
 			expect(response.body.success).toBe(true);
-			expect(response.body.data.is_locked).toBe(true);
+			expect(response.body.data.is_locked).toBe(!provinceBefore?.is_locked);
 		}, 15000);
 
 		it('should require authentication', async () => {
@@ -191,6 +193,24 @@ describe('Province Routes', () => {
 				.send({ locked: true });
 
 			expect(response.status).toBe(403);
+		}, 15000);
+
+		it('should require authentication', async () => {
+			const response = await request(app)
+				.post('/provinces/bulk-lock')
+				.send({ locked: true });
+
+			expect(response.status).toBe(401);
+		}, 15000);
+
+		it('should return 400 when locked is not boolean', async () => {
+			const response = await request(app)
+				.post('/provinces/bulk-lock')
+				.set('Cookie', globalAdminCookie)
+				.send({ locked: 'true' });
+
+			expect(response.status).toBe(400);
+			expect(response.body.error).toBe('locked must be a boolean');
 		}, 15000);
 	});
 });

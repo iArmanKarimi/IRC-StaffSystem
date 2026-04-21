@@ -281,8 +281,16 @@ describe('Employee Routes', () => {
 				.set('Cookie', provinceAdminCookie)
 				.send({
 					performance: {
-						...employee.performance,
 						dailyPerformance: 9,
+						shiftCountPerLocation: 24,
+						shiftDuration: 8,
+						overtime: 0,
+						dailyLeave: 0,
+						sickLeave: 0,
+						absence: 0,
+						travelAssignment: 0,
+						status: 'active',
+						notes: '',
 					},
 				});
 
@@ -316,8 +324,16 @@ describe('Employee Routes', () => {
 				.set('Cookie', provinceAdminCookie)
 				.send({
 					performance: {
-						...employee.performance,
 						dailyPerformance: 9,
+						shiftCountPerLocation: 24,
+						shiftDuration: 8,
+						overtime: 0,
+						dailyLeave: 0,
+						sickLeave: 0,
+						absence: 0,
+						travelAssignment: 0,
+						status: 'active',
+						notes: '',
 					},
 				});
 
@@ -350,14 +366,81 @@ describe('Employee Routes', () => {
 				.set('Cookie', globalAdminCookie)
 				.send({
 					performance: {
-						...employee.performance,
 						dailyPerformance: 9,
+						shiftCountPerLocation: 24,
+						shiftDuration: 8,
+						overtime: 0,
+						dailyLeave: 0,
+						sickLeave: 0,
+						absence: 0,
+						travelAssignment: 0,
+						status: 'active',
+						notes: '',
 					},
 				});
 
 			expect(response.status).toBe(200);
 			expect(response.body.success).toBe(true);
 			expect(response.body.data.performance.dailyPerformance).toBe(9);
+		}, 15000);
+	});
+
+	describe('GET /provinces/:provinceId/employees/export-excel', () => {
+		it('should return 404 when province has no employees', async () => {
+			const response = await request(app)
+				.get(`/provinces/${testProvince1._id}/employees/export-excel`)
+				.set('Cookie', globalAdminCookie);
+
+			expect(response.status).toBe(404);
+			expect(response.body.success).toBe(false);
+			expect(response.body.error).toBe('No employees found for this province');
+		}, 15000);
+
+		it('should export province employees as an Excel file', async () => {
+			await Employee.create({
+				provinceId: testProvince1._id,
+				...sampleEmployee,
+			});
+
+			const response = await request(app)
+				.get(`/provinces/${testProvince1._id}/employees/export-excel`)
+				.set('Cookie', globalAdminCookie);
+
+			expect(response.status).toBe(200);
+			expect(response.headers['content-type']).toContain('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+			expect(response.headers['content-disposition']).toMatch(/^attachment; filename=/);
+		}, 15000);
+	});
+
+	describe('DELETE /provinces/:provinceId/employees/:employeeId', () => {
+		it('should delete employee as global admin', async () => {
+			const employee = await Employee.create({
+				provinceId: testProvince1._id,
+				...sampleEmployee,
+			});
+
+			const response = await request(app)
+				.delete(`/provinces/${testProvince1._id}/employees/${employee._id}`)
+				.set('Cookie', globalAdminCookie);
+
+			expect(response.status).toBe(200);
+			expect(response.body.success).toBe(true);
+			expect(response.body.data.message).toBe('Employee deleted');
+
+			const deletedEmployee = await Employee.findById(employee._id);
+			expect(deletedEmployee).toBeNull();
+		}, 15000);
+
+		it('should return 401 without authentication', async () => {
+			const employee = await Employee.create({
+				provinceId: testProvince1._id,
+				...sampleEmployee,
+			});
+
+			const response = await request(app)
+				.delete(`/provinces/${testProvince1._id}/employees/${employee._id}`);
+
+			expect(response.status).toBe(401);
 		}, 15000);
 	});
 });

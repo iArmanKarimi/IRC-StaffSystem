@@ -121,5 +121,35 @@ describe('Authentication Routes', () => {
 
 			expect(response.status).toBe(401);
 		}, 15000);
+
+		it('should include null provinceId for global admin sessions', async () => {
+			const hashedPassword = await bcrypt.hash('password123', 10);
+			const uniqueUsername = `globalme_${Date.now()}`;
+			await User.create({
+				username: uniqueUsername,
+				passwordHash: hashedPassword,
+				role: 'globalAdmin',
+			});
+
+			const loginResponse = await request(app)
+				.post('/auth/login')
+				.set('X-Forwarded-For', `127.0.0.${Math.floor(Math.random() * 200) + 20}`)
+				.send({
+					username: uniqueUsername,
+					password: 'password123',
+				});
+
+			expect(loginResponse.status).toBe(200);
+			expect(loginResponse.headers['set-cookie']).toBeDefined();
+			const cookie = loginResponse.headers['set-cookie'][0];
+
+			const meResponse = await request(app)
+				.get('/auth/me')
+				.set('Cookie', cookie);
+
+			expect(meResponse.status).toBe(200);
+			expect(meResponse.body.success).toBe(true);
+			expect(meResponse.body.data.provinceId).toBeNull();
+		}, 15000);
 	});
 });
