@@ -54,6 +54,7 @@ export default function EmployeePage() {
 	const navigate = useNavigate();
 	const { isGlobalAdmin } = useIsGlobalAdmin();
 	const { province } = useProvince(provinceId);
+	const isLockedForUser = Boolean(province?.is_locked && !isGlobalAdmin);
 	const { employee, loading, error, refetch } = useEmployee(
 		provinceId,
 		employeeId,
@@ -167,7 +168,7 @@ export default function EmployeePage() {
 					}}
 				>
 					<Button
-						disabled={province?.is_locked}
+						disabled={isLockedForUser}
 						variant="contained"
 						color="primary"
 						startIcon={<EditIcon />}
@@ -178,7 +179,7 @@ export default function EmployeePage() {
 						ویرایش کارمند
 					</Button>
 					<Button
-						disabled={province?.is_locked}
+						disabled={isLockedForUser}
 						variant="contained"
 						color="error"
 						startIcon={<DeleteIcon />}
@@ -195,7 +196,7 @@ export default function EmployeePage() {
 						{performanceSaveError}
 					</Alert>
 				)}
-				{province?.is_locked && (
+				{isLockedForUser && (
 					<Alert severity="warning" sx={{ mb: 3 }}>
 						ویرایش عملکرد برای این استان در حال حاضر امکان پذیر نمی باشد.
 					</Alert>
@@ -224,11 +225,11 @@ export default function EmployeePage() {
 									<Select
 										value={localPerformance?.status || "active"}
 										label="وضعیت"
-										onChange={(e) =>
-											handlePerformanceChange("status", e.target.value)
-										}
-										disabled={province?.is_locked}
-									>
+									onChange={(e) =>
+										handlePerformanceChange("status", e.target.value)
+									}
+									disabled={isLockedForUser}
+								>
 										<MenuItem value="active">فعال</MenuItem>
 										<MenuItem value="inactive">غیرفعال</MenuItem>
 										<MenuItem value="on_leave">در مرخصی</MenuItem>
@@ -241,7 +242,7 @@ export default function EmployeePage() {
 									disabled={
 										performanceSaving ||
 										!hasUnsavedChanges ||
-										province?.is_locked
+										isLockedForUser
 									}
 									size="small"
 								>
@@ -254,7 +255,7 @@ export default function EmployeePage() {
 								performance={localPerformance}
 								onChange={handlePerformanceChange}
 								locked={
-									province?.is_locked || localPerformance.status !== "active"
+									isLockedForUser || localPerformance.status !== "active"
 								}
 							/>
 						) : (

@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { Province } from "../models/Province";
+import { USER_ROLE } from "../types/roles";
 
 /**
  * Middleware to check if a province's performance records are locked
@@ -15,6 +16,10 @@ export const checkPerformanceLocked = async (
 		const { provinceId } = req.params;
 
 		if (!provinceId) {
+			return next();
+		}
+
+		if (req.user?.role === USER_ROLE.GLOBAL_ADMIN) {
 			return next();
 		}
 

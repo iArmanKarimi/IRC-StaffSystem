@@ -61,6 +61,7 @@ export default function ProvinceEmployeesPage() {
 	const navigate = useNavigate();
 	const { isGlobalAdmin } = useIsGlobalAdmin();
 	const { province } = useProvince(provinceId);
+	const isLockedForUser = Boolean(province?.is_locked && !isGlobalAdmin);
 	const theme = useTheme();
 
 	// Extract filtering and pagination logic to custom hook
@@ -481,10 +482,10 @@ export default function ProvinceEmployeesPage() {
 			<Container
 				sx={{ py: 2, display: "flex", flexDirection: "column", gap: 2 }}
 			>
-				{province?.is_locked && (
-					<Alert severity="warning" icon={<LockIcon />}>
-						ویرایش عملکرد در حال حاضر قفل شده است.
-					</Alert>
+					{isLockedForUser && (
+						<Alert severity="warning" icon={<LockIcon />}>
+							ویرایش عملکرد در حال حاضر قفل شده است.
+						</Alert>
 				)}
 				{error && <Alert severity="error">{error}</Alert>}
 
