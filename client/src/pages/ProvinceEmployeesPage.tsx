@@ -459,11 +459,13 @@ export default function ProvinceEmployeesPage() {
 		},
 	];
 
-	if (loading) {
+	const isInitialLoading = loading && employees.length === 0;
+
+	if (isInitialLoading) {
 		return <LoadingView title="کارمندان استان" />;
 	}
 
-	if (error) {
+	if (error && employees.length === 0) {
 		return (
 			<ErrorView title="کارمندان استان" message={error} onRetry={refetch} />
 		);
@@ -482,6 +484,11 @@ export default function ProvinceEmployeesPage() {
 				{province?.is_locked && (
 					<Alert severity="warning" icon={<LockIcon />}>
 						ویرایش عملکرد در حال حاضر قفل شده است.
+					</Alert>
+				)}
+				{error && (
+					<Alert severity="error">
+						{error}
 					</Alert>
 				)}
 

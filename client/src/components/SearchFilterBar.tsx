@@ -152,8 +152,15 @@ export function SearchFilterBar({
 		onToggleFiltersChange?.(updatedFilters);
 	};
 
+	const handleKeyDown = (event: React.KeyboardEvent) => {
+		if (event.key === "Enter") {
+			event.preventDefault();
+		}
+	};
+
 	return (
 		<Box
+			onKeyDown={handleKeyDown}
 			sx={{
 				display: "flex",
 				gap: { xs: 1.5, sm: 2, md: 2.5 },
