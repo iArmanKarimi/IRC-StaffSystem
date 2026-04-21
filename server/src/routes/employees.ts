@@ -57,6 +57,42 @@ const validateProvinceAccess = (req: Request, provinceId: string): Authenticated
 	return user;
 };
 
+const escapeRegex = (value: string) =>
+	value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const buildSearchQuery = (searchTerm: string) => {
+	const escaped = escapeRegex(searchTerm.trim());
+	const regex = new RegExp(escaped, "i");
+
+	return {
+		$or: [
+			{ "basicInfo.firstName": regex },
+			{ "basicInfo.lastName": regex },
+			{ "basicInfo.nationalID": regex },
+			{ "additionalSpecifications.contactNumber": regex },
+			{ "workPlace.branch": regex },
+			{ "workPlace.rank": regex },
+			{ "workPlace.licensedWorkplace": regex },
+			{ "additionalSpecifications.educationalDegree": regex },
+			{
+				$expr: {
+					$regexMatch: {
+						input: {
+							$concat: [
+								{ $ifNull: ["$basicInfo.firstName", ""] },
+								" ",
+								{ $ifNull: ["$basicInfo.lastName", ""] },
+							],
+						},
+						regex: escaped,
+						options: "i",
+					},
+				},
+			},
+		],
+	};
+};
+
 /**
  * Fetches an employee by ID, validates it belongs to the specified province,
  * and ensures user has access. Throws HttpError if validation fails.
@@ -95,16 +131,7 @@ router.get("/", requireAnyRole, async (req: Request<{ provinceId: string }>, res
 		// Search filter
 		if (req.query.search) {
 			const searchTerm = String(req.query.search).trim();
-			query.$or = [
-				{ 'basicInfo.name': { $regex: searchTerm, $options: 'i' } },
-				{ 'basicInfo.lastName': { $regex: searchTerm, $options: 'i' } },
-				{ 'basicInfo.nationalID': { $regex: searchTerm, $options: 'i' } },
-				{ 'additionalSpecifications.contactNumber': { $regex: searchTerm, $options: 'i' } },
-				{ 'workPlace.branch': { $regex: searchTerm, $options: 'i' } },
-				{ 'workPlace.rank': { $regex: searchTerm, $options: 'i' } },
-				{ 'workPlace.licensedWorkplace': { $regex: searchTerm, $options: 'i' } },
-				{ 'additionalSpecifications.educationalDegree': { $regex: searchTerm, $options: 'i' } }
-			];
+			Object.assign(query, buildSearchQuery(searchTerm));
 		}
 
 		// Gender filter

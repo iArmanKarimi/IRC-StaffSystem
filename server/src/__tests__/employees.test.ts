@@ -186,6 +186,36 @@ describe('Employee Routes', () => {
 			expect(response.body.pagination.total).toBe(5);
 			expect(response.body.data.length).toBe(2);
 		}, 15000);
+
+		it('should find employees by first name and full name search', async () => {
+			await Employee.create({
+				provinceId: testProvince1._id,
+				basicInfo: {
+					...sampleEmployee.basicInfo,
+					firstName: 'Ali',
+					lastName: 'Rezaei',
+					nationalID: 'SEARCH001',
+				},
+				workPlace: sampleEmployee.workPlace,
+				additionalSpecifications: sampleEmployee.additionalSpecifications,
+			});
+
+			const firstNameResponse = await request(app)
+				.get(`/provinces/${testProvince1._id}/employees?search=Ali`)
+				.set('Cookie', globalAdminCookie);
+
+			expect(firstNameResponse.status).toBe(200);
+			expect(firstNameResponse.body.data).toHaveLength(1);
+			expect(firstNameResponse.body.data[0].basicInfo.firstName).toBe('Ali');
+
+			const fullNameResponse = await request(app)
+				.get(`/provinces/${testProvince1._id}/employees?search=Ali%20Rezaei`)
+				.set('Cookie', globalAdminCookie);
+
+			expect(fullNameResponse.status).toBe(200);
+			expect(fullNameResponse.body.data).toHaveLength(1);
+			expect(fullNameResponse.body.data[0].basicInfo.lastName).toBe('Rezaei');
+		}, 15000);
 	});
 
 	describe('GET /provinces/:provinceId/employees/:employeeId', () => {
