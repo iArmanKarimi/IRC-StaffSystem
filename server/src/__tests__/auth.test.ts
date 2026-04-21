@@ -88,4 +88,38 @@ describe('Authentication Routes', () => {
 			expect(response.body.success).toBe(true);
 		}, 15000);
 	});
+
+	describe('GET /auth/me', () => {
+		it('should return current user session data when authenticated', async () => {
+			const hashedPassword = await bcrypt.hash('password123', 10);
+			await User.create({
+				username: 'meuser',
+				passwordHash: hashedPassword,
+				role: 'globalAdmin',
+			});
+
+			const loginResponse = await request(app)
+				.post('/auth/login')
+				.send({
+					username: 'meuser',
+					password: 'password123',
+				});
+
+			const cookie = loginResponse.headers['set-cookie'][0];
+
+			const response = await request(app)
+				.get('/auth/me')
+				.set('Cookie', cookie);
+
+			expect(response.status).toBe(200);
+			expect(response.body.success).toBe(true);
+			expect(response.body.data.role).toBe('globalAdmin');
+		}, 15000);
+
+		it('should return 401 when not authenticated', async () => {
+			const response = await request(app).get('/auth/me');
+
+			expect(response.status).toBe(401);
+		}, 15000);
+	});
 });

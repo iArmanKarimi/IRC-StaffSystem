@@ -76,6 +76,9 @@ export const authApi = {
 	login: (payload: LoginRequest) =>
 		api.post<ApiResponse<LoginResponse>>(API_ENDPOINTS.LOGIN, payload).then(unwrap),
 
+	me: () =>
+		api.get<ApiResponse<LoginResponse>>(API_ENDPOINTS.ME).then(unwrap),
+
 	/**
 	 * Log out current user and clear session
 	 * @returns Success confirmation

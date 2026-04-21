@@ -1,8 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
 import { useIsGlobalAdmin } from '../useAuth';
-import api from '../../api/api';
-import { API_ENDPOINTS } from '../../const/endpoints';
+import { authApi } from '../../api/api';
 
 vi.mock('../../api/api');
 
@@ -12,7 +11,10 @@ describe('useIsGlobalAdmin', () => {
 	});
 
 	it('should return true when user has global admin access', async () => {
-		vi.mocked(api.get).mockResolvedValueOnce({ data: [] });
+		vi.mocked(authApi.me).mockResolvedValueOnce({
+			success: true,
+			data: { role: 'globalAdmin' },
+		} as any);
 
 		const { result } = renderHook(() => useIsGlobalAdmin());
 
@@ -24,11 +26,14 @@ describe('useIsGlobalAdmin', () => {
 		});
 
 		expect(result.current.isGlobalAdmin).toBe(true);
-		expect(api.get).toHaveBeenCalledWith(API_ENDPOINTS.PROVINCES);
+		expect(authApi.me).toHaveBeenCalled();
 	});
 
 	it('should return false when user does not have global admin access', async () => {
-		vi.mocked(api.get).mockRejectedValueOnce(new Error('Forbidden'));
+		vi.mocked(authApi.me).mockResolvedValueOnce({
+			success: true,
+			data: { role: 'provinceAdmin', provinceId: '123' },
+		} as any);
 
 		const { result } = renderHook(() => useIsGlobalAdmin());
 
@@ -39,11 +44,11 @@ describe('useIsGlobalAdmin', () => {
 		});
 
 		expect(result.current.isGlobalAdmin).toBe(false);
-		expect(api.get).toHaveBeenCalledWith(API_ENDPOINTS.PROVINCES);
+		expect(authApi.me).toHaveBeenCalled();
 	});
 
 	it('should handle network errors gracefully', async () => {
-		vi.mocked(api.get).mockRejectedValueOnce(new Error('Network Error'));
+		vi.mocked(authApi.me).mockRejectedValueOnce(new Error('Network Error'));
 
 		const { result } = renderHook(() => useIsGlobalAdmin());
 

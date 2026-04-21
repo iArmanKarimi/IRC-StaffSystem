@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import api from "../api/api";
-import { API_ENDPOINTS } from "../const/endpoints";
+import { authApi } from "../api/api";
 
 /**
  * Custom hook to check if the current user has global admin access
@@ -24,8 +23,8 @@ export function useIsGlobalAdmin() {
 	useEffect(() => {
 		const checkAccess = async () => {
 			try {
-				await api.get(API_ENDPOINTS.PROVINCES);
-				setIsGlobalAdmin(true);
+				const response = await authApi.me();
+				setIsGlobalAdmin(response.data?.role === "globalAdmin");
 			} catch (err) {
 				setIsGlobalAdmin(false);
 			} finally {

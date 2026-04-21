@@ -69,5 +69,21 @@ router.post("/logout", (req: Request, res: Response) => {
 	});
 });
 
+router.get("/me", (req: Request, res: Response) => {
+	if (!req.session.userId || !req.session.role) {
+		return sendError(res, "Not authenticated", 401);
+	}
+
+	return sendSuccess(
+		res,
+		{
+			role: req.session.role,
+			provinceId: req.session.provinceId ?? null,
+		},
+		200,
+		"Current user retrieved successfully",
+	);
+});
+
 export default router;
 

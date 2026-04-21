@@ -171,10 +171,17 @@ export default function NewEmployeeFormPage() {
 				additionalSpecifications: additionalSpecs,
 				performance: form.performance,
 			};
-			await provinceApi.createEmployee(provinceId, payload);
-			navigate(ROUTES.PROVINCE_EMPLOYEES.replace(":provinceId", provinceId), {
-				replace: true,
-			});
+			const response = await provinceApi.createEmployee(provinceId, payload);
+			const employeeId = response.data?._id;
+			if (!employeeId) {
+				throw new Error("شناسه کارمند ایجاد شده دریافت نشد");
+			}
+			navigate(
+				ROUTES.PROVINCE_EMPLOYEE_DETAIL
+					.replace(":provinceId", provinceId)
+					.replace(":employeeId", employeeId),
+				{ replace: true },
+			);
 		} catch (err) {
 			setError("ایجاد کارمند با خطا مواجه شد");
 		} finally {
