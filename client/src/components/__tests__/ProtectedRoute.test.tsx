@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import ProtectedRoute from "../ProtectedRoute";
 import api from "../../api/api";
-import { API_ENDPOINTS } from "../../const/endpoints";
+import { API_ENDPOINTS, ROUTES } from "../../const/endpoints";
 
 vi.mock("../../api/api");
 
@@ -12,9 +12,11 @@ describe("ProtectedRoute", () => {
 		vi.clearAllMocks();
 	});
 
-	it("should show loading state initially", () => {
-		vi.mocked(api.get).mockImplementation(
-			() => new Promise(() => {}) // Never resolves
+	it("should show loading indicator initially", () => {
+		vi.mocked(api.get).mockReturnValue(
+			new Promise(() => {
+				// Never resolves
+			})
 		);
 
 		render(
@@ -25,79 +27,103 @@ describe("ProtectedRoute", () => {
 			</MemoryRouter>
 		);
 
-		expect(screen.getByText("Verifying authorization...")).toBeInTheDocument();
+		expect(screen.getByText(/Verifying authorization.../i)).toBeInTheDocument();
 		expect(screen.getByRole("progressbar")).toBeInTheDocument();
+		expect(screen.queryByText("Protected Content")).not.toBeInTheDocument();
 	});
 
-	it("should render children when user is authorized (200 response)", async () => {
-		vi.mocked(api.get).mockResolvedValueOnce({ data: [] });
+	it("should render children when authorization succeeds", async () => {
+		vi.mocked(api.get).mockResolvedValueOnce({
+			success: true,
+			data: [],
+		} as any);
 
 		render(
 			<MemoryRouter>
 				<ProtectedRoute>
+					<div data-testid="content">Protected Content</div>
+				</ProtectedRoute>
+			</MemoryRouter>
+		);
+
+		await new Promise((resolve) => setTimeout(resolve, 100));
+
+		expect(screen.getByTestId("content")).toBeInTheDocument();
+		expect(
+			screen.queryByText(/Verifying authorization.../i)
+		).not.toBeInTheDocument();
+	});
+
+	it("should redirect to root when unauthorized", async () => {
+		vi.mocked(api.get).mockRejectedValueOnce({
+			response: { status: 401 },
+		});
+
+		render(
+			<MemoryRouter initialEntries={["/employees"]}>
+				<ProtectedRoute>
 					<div>Protected Content</div>
 				</ProtectedRoute>
 			</MemoryRouter>
 		);
 
-		await waitFor(() => {
-			expect(screen.getByText("Protected Content")).toBeInTheDocument();
-		});
+		await new Promise((resolve) => setTimeout(resolve, 100));
 
-		expect(api.get).toHaveBeenCalledWith(API_ENDPOINTS.PROVINCES);
+		expect(screen.queryByText("Protected Content")).not.toBeInTheDocument();
+		expect(window.location.pathname).toBe(ROUTES.ROOT);
 	});
 
-	it("should render children when user gets 403 (authenticated province admin)", async () => {
-		const error = new Error("Forbidden");
-		(error as any).response = { status: 403 };
-		(error as any).isAxiosError = true;
-		vi.mocked(api.get).mockRejectedValueOnce(error);
+	it("should allow access with 403 status (province admin)", async () => {
+		vi.mocked(api.get).mockRejectedValueOnce({
+			response: { status: 403 },
+		});
 
 		render(
 			<MemoryRouter>
 				<ProtectedRoute>
-					<div>Protected Content</div>
+					<div data-testid="content">Protected Content</div>
 				</ProtectedRoute>
 			</MemoryRouter>
 		);
 
-		await waitFor(() => {
-			expect(screen.getByText("Protected Content")).toBeInTheDocument();
-		});
+		await new Promise((resolve) => setTimeout(resolve, 100));
+
+		expect(screen.getByTestId("content")).toBeInTheDocument();
 	});
 
-	it("should redirect to login when user is unauthorized (401)", async () => {
-		const error = new Error("Unauthorized");
-		(error as any).response = { status: 401 };
-		(error as any).isAxiosError = true;
-		vi.mocked(api.get).mockRejectedValueOnce(error);
-
-		render(
-			<MemoryRouter initialEntries={["/protected"]}>
-				<ProtectedRoute>
-					<div>Protected Content</div>
-				</ProtectedRoute>
-			</MemoryRouter>
-		);
-
-		await waitFor(() => {
-			expect(screen.queryByText("Protected Content")).not.toBeInTheDocument();
-		});
-	});
-
-	it("should redirect to login on network error", async () => {
+	it("should redirect to root on network error", async () => {
 		vi.mocked(api.get).mockRejectedValueOnce(new Error("Network Error"));
 
 		render(
-			<MemoryRouter initialEntries={["/protected"]}>
+			<MemoryRouter>
 				<ProtectedRoute>
 					<div>Protected Content</div>
 				</ProtectedRoute>
 			</MemoryRouter>
 		);
 
-		await waitFor(() => {
-			expect(screen.queryByText("Protected Content")).not.toBeInTheDocument();
-		});
+		await new Promise((resolve) => setTimeout(resolve, 100));
+
+		expect(screen.queryByText("Protected Content")).not.toBeInTheDocument();
+		expect(window.location.pathname).toBe(ROUTES.ROOT);
+	});
+
+	it("should call api.get with provinces endpoint", async () => {
+		vi.mocked(api.get).mockResolvedValueOnce({
+			success: true,
+			data: [],
+		} as any);
+
+		render(
+			<MemoryRouter>
+				<ProtectedRoute>
+					<div>Protected Content</div>
+				</ProtectedRoute>
+			</MemoryRouter>
+		);
+
+		await new Promise((resolve) => setTimeout(resolve, 100));
+
+		expect(api.get).toHaveBeenCalledWith(API_ENDPOINTS.PROVINCES);
 	});
 });
