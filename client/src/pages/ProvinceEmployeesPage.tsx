@@ -59,9 +59,11 @@ import { provinceApi } from "../api/api";
 export default function ProvinceEmployeesPage() {
 	const { provinceId } = useParams<{ provinceId: string }>();
 	const navigate = useNavigate();
-	const { isGlobalAdmin } = useIsGlobalAdmin();
+	const { isGlobalAdmin, loading: authLoading } = useIsGlobalAdmin();
 	const { province } = useProvince(provinceId);
-	const isLockedForUser = Boolean(province?.is_locked && !isGlobalAdmin);
+	const isLockedForUser = Boolean(
+		!authLoading && province?.is_locked && !isGlobalAdmin,
+	);
 	const theme = useTheme();
 
 	// Extract filtering and pagination logic to custom hook

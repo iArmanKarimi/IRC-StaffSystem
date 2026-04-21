@@ -52,9 +52,11 @@ export default function EmployeePage() {
 		employeeId: string;
 	}>();
 	const navigate = useNavigate();
-	const { isGlobalAdmin } = useIsGlobalAdmin();
+	const { isGlobalAdmin, loading: authLoading } = useIsGlobalAdmin();
 	const { province } = useProvince(provinceId);
-	const isLockedForUser = Boolean(province?.is_locked && !isGlobalAdmin);
+	const isLockedForUser = Boolean(
+		!authLoading && province?.is_locked && !isGlobalAdmin,
+	);
 	const { employee, loading, error, refetch } = useEmployee(
 		provinceId,
 		employeeId,
