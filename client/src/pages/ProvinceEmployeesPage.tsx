@@ -138,18 +138,18 @@ export default function ProvinceEmployeesPage() {
 			: null);
 
 	// Employee stats
-	const activeCount = employees.filter(
-		(e) => e.performance?.status === "active",
-	).length;
-	const inactiveCount = employees.filter(
-		(e) => e.performance?.status === "inactive",
-	).length;
-	const onLeaveCount = employees.filter(
-		(e) => e.performance?.status === "on_leave",
-	).length;
-	const truckDriverCount = employees.filter(
-		(e) => e.additionalSpecifications?.truckDriver,
-	).length;
+	// const activeCount = employees.filter(
+	// 	(e) => e.performance?.status === "active",
+	// ).length;
+	// const inactiveCount = employees.filter(
+	// 	(e) => e.performance?.status === "inactive",
+	// ).length;
+	// const onLeaveCount = employees.filter(
+	// 	(e) => e.performance?.status === "on_leave",
+	// ).length;
+	// const truckDriverCount = employees.filter(
+	// 	(e) => e.additionalSpecifications?.truckDriver,
+	// ).length;
 
 	const handleExportProvinceEmployees = async () => {
 		if (!provinceId) return;
@@ -486,11 +486,7 @@ export default function ProvinceEmployeesPage() {
 						ویرایش عملکرد در حال حاضر قفل شده است.
 					</Alert>
 				)}
-				{error && (
-					<Alert severity="error">
-						{error}
-					</Alert>
-				)}
+				{error && <Alert severity="error">{error}</Alert>}
 
 				<Breadcrumbs
 					provinceName={provinceName || undefined}
@@ -519,8 +515,8 @@ export default function ProvinceEmployeesPage() {
 					<Stack direction="row" gap={1} alignItems="center" flexWrap="wrap">
 						{pagination && (
 							<>
-								<Chip label={`${pagination.total} کل`} color="primary" />
-								<Chip
+								<Chip label={`کل کارمندان: ${pagination.total}`} color="primary" />
+								{/* <Chip
 									label={`فعال: ${activeCount}`}
 									color="success"
 									variant="outlined"
@@ -539,7 +535,7 @@ export default function ProvinceEmployeesPage() {
 									label={`رانندگان کامیون: ${truckDriverCount}`}
 									color="info"
 									variant="outlined"
-								/>
+								/> */}
 							</>
 						)}
 						<Button
